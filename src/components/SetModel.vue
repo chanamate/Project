@@ -35,7 +35,7 @@ export default {
 
   data: () => ({
     model: "",
-    lineId: 1,
+    lineId: null,
   }),
 
   async mounted() {
