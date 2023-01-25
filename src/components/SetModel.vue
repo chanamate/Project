@@ -22,9 +22,6 @@
 </template>
 
 <script>
-// import { model_F } from "../assets/constant_F";
-// import { model_S } from "../assets/constant_S";
-
 import axiosInstance from "../utils/axios.instance";
 
 export default {
