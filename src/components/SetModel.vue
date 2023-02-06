@@ -27,6 +27,7 @@ import axiosInstance from "../utils/axios.instance";
 export default {
   name: "SetModel",
   props: ["selectedValueModel"],
+
   computed: {
     type() {
       return this.$route.params.type;
@@ -41,8 +42,8 @@ export default {
   async mounted() {
     const line = await axiosInstance.get("/line");
     this.lineList = line;
-    console.log(this.lineList);
-    console.log(this.lineId);
+    // console.log(this.lineList);
+    // console.log(this.lineId);
   },
 
   methods: {
@@ -66,7 +67,7 @@ export default {
     }
     const model = await axiosInstance.get(`/model/line/${this.lineId}`);
     this.model = model;
-    console.log(model);
+    // console.log(model);
   },
 };
 </script>

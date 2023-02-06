@@ -22,7 +22,7 @@
                   class="d-flex justify-center pa-6 text-h6"
                   dark
                   @click="toggle"
-                  :to="item.url"
+                  :to="item.url + gettype()"
                 >
                   {{ item.name }}
                 </v-card>
@@ -285,7 +285,6 @@
                   <v-row>
                     <v-col cols="6"> </v-col>
                   </v-row>
-                  sdsds
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
@@ -317,19 +316,18 @@
 </template>
 
 <script>
-//import logo from "../assets/logo.svg";
 import { ref } from "vue";
 import Datepicker from "@vuepic/vue-datepicker";
-import axios from "../api/axios.js";
 import "@vuepic/vue-datepicker/dist/main.css";
 import moment from "moment";
+import axiosInstance from "../utils/axios.instance";
 
 import SetModel from "../components/SetModel.vue";
 import SetPinStampNumber from "../components/SetPinStampNumber.vue";
 import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
 import SetStationInspec from "../components/SetStationInspec.vue";
-import { title, btn_img1, cause, scrap_f } from "../assets/constant_F";
+import { btn_img1, cause, scrap_f } from "../assets/constant_F";
 
 const date = ref();
 
@@ -343,13 +341,12 @@ export default {
     SetStationInspec,
   },
 
-  // mounted() {
-  //   axios.get("/products").then((res) => {
-  //     console.log(res.data.products);
-  //     let name = res.data.products.map((item) => item.title);
-  //     this.name = name;
-  //   });
-  // },
+  computed: {
+    type() {
+      return this.$route.params.type;
+    },
+  },
+
   methods: {
     getdatenow() {
       return moment().format("MMMM Do YYYY");
@@ -366,12 +363,30 @@ export default {
     updateValue(event) {
       this[event.key] = event.value;
     },
+    gettype() {
+      return this.type;
+    },
   },
 
   name: "NG_F_Frame",
   data: () => ({
-    title: title,
-
+    title: [
+      {
+        name: "Finished Goods",
+        id: "1",
+        url: "/FG_F/",
+      },
+      {
+        name: "Defect Type",
+        id: "2",
+        url: "/NG_F/",
+      },
+      {
+        name: "Failure Mode",
+        id: "3",
+        url: "/DT_F/",
+      },
+    ],
     scrap_f: scrap_f,
     cause: cause,
     btn_img1: btn_img1,

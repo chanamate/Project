@@ -10,13 +10,13 @@
   </v-row>
 
   <v-item-group mandatory>
-    <v-card elevation="0" class="ml-4">
+    <v-card elevation="0" class="mx-4">
       <v-row class="mt-2">
         <v-col v-for="(item, index) in title" :key="index">
           <v-item v-slot="{ isSelected, toggle }" :value="item.id">
             <v-card
               :color="item.color"
-              class="d-flex justify-center align-center pa-6 text-h6"
+              class="d-flex justify-center align-center pa-6 text-h4"
               dark
               height="800px"
               @click="toggle"

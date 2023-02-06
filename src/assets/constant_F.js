@@ -33,17 +33,17 @@ export const title = [
     {
         name: "Finished Goods",
         id: "1",
-        url: "/FG_F",
+        url: "/FG_F/:type",
     },
     {
         name: "Defect Type",
         id: "2",
-        url: "/NG_F",
+        url: "/NG_F/:type",
     },
     {
         name: "Failure Mode",
         id: "3",
-        url: "/DT_F",
+        url: "/DT_F/:type",
     },
 ]
 export const model_F = [

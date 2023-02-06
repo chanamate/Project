@@ -22,7 +22,7 @@
                   class="d-flex justify-center pa-6 text-h6"
                   dark
                   @click="toggle"
-                  :to="item.url"
+                  :to="item.url + gettype()"
                 >
                   {{ item.name }}
                 </v-card>
@@ -224,14 +224,21 @@
 import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
 import moment from "moment";
+import axiosInstance from "../utils/axios.instance";
 
-import { name, title } from "../assets/constant_F";
+import { name } from "../assets/constant_F";
 
 export default {
   name: "FG_F_Frame",
   components: {
     SetEmployeeName,
     SetShitf,
+  },
+
+  computed: {
+    type() {
+      return this.$route.params.type;
+    },
   },
 
   methods: {
@@ -249,7 +256,23 @@ export default {
   },
 
   data: () => ({
-    title: title,
+    title: [
+      {
+        name: "Finished Goods",
+        id: "1",
+        url: "/FG_F/",
+      },
+      {
+        name: "Defect Type",
+        id: "2",
+        url: "/NG_F/",
+      },
+      {
+        name: "Failure Mode",
+        id: "3",
+        url: "/DT_F/",
+      },
+    ],
     station: [
       {
         name: "OP1",
@@ -354,6 +377,9 @@ export default {
     },
     getdatenow() {
       return moment().format("MMMM Do YYYY");
+    },
+    gettype() {
+      return this.type;
     },
   },
 };

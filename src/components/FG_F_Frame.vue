@@ -22,7 +22,7 @@
                   class="d-flex justify-center pa-6 text-h6"
                   dark
                   @click="toggle"
-                  :to="item.url"
+                  :to="item.url + gettype()"
                 >
                   {{ item.name }}
                 </v-card>
@@ -44,7 +44,6 @@
 
               <!-- Pin Stamp Number -->
               <SetPinStampNumber
-                type="F"
                 @updateValue="updateValue"
                 v-if="number >= 1"
               />
@@ -68,22 +67,49 @@ import axiosInstance from "../utils/axios.instance";
 import SetModel from "../components/SetModel.vue";
 import SetPinStampNumber from "../components/SetPinStampNumber.vue";
 
-import { title } from "../assets/constant_F";
+// import { title } from "../assets/constant_F";
 
 export default {
   components: { SetModel, SetPinStampNumber },
-
   name: "FG_F_Frame",
+
   computed: {
     type() {
       return this.$route.params.type;
     },
   },
+
+  data: () => ({
+    selectedValueModel: "",
+    title: [
+      {
+        name: "Finished Goods",
+        id: "1",
+        url: "/FG_F/",
+      },
+      {
+        name: "Defect Type",
+        id: "2",
+        url: "/NG_F/",
+      },
+      {
+        name: "Failure Mode",
+        id: "3",
+        url: "/DT_F/",
+      },
+    ],
+    dataPin: { pinNumber: null, machine: null },
+
+    // อย่าลืมมาแก้ number เป็น 0 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    number: 2,
+  }),
+
   methods: {
     async submit() {
       console.log(this.selectedValueModel);
       console.log(this.dataPin);
       console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
+      // console.log(moment().toDate());
 
       const b = await axiosInstance.post("/product", {
         modelId: this.selectedValueModel,
@@ -101,15 +127,9 @@ export default {
         this.number = 2;
       }
     },
+    gettype() {
+      return this.type;
+    },
   },
-
-  data: () => ({
-    selectedValueModel: "",
-    title: title,
-    dataPin: { pinNumber: null, machine: null },
-
-    // อย่าลืมมาแก้ number เป็น 0 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    number: 2,
-  }),
 };
 </script>

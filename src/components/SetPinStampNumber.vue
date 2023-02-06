@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" color="#CFCFCF" class="pa-4 mt-4" height="185px">
+  <v-card elevation="3" color="#CFCFCF" class="pa-4 mt-4" height="195px">
     <div class="text-h6 mb-1">Pin Stamp Number :</div>
     <v-row class="mt-3 ml-0 w-100">
       <Datepicker
@@ -13,8 +13,8 @@
       <Datepicker
         class="text-h6 w-50"
         v-model="time"
-        timePicker
         placeholder="Select Time"
+        timePicker
         utc
       />
     </v-row>
@@ -29,6 +29,7 @@
             bg-color="#FFFFFF"
             class="mt-2"
             v-model="pinNumber"
+            :rules="[rules.required, rules.counter, rules.number]"
           ></v-text-field>
         </v-responsive>
       </v-col>
@@ -130,6 +131,12 @@ export default {
 
   data: () => ({
     listmachine: machine_F,
+    rules: {
+      required: (value) => !!value || "Required.",
+      counter: (value) => value.length <= 3 || "Max 3 characters",
+      number: (value) =>
+        (!isNaN(parseFloat(value)) && isFinite(value)) || "Number only",
+    },
   }),
 };
 </script>
