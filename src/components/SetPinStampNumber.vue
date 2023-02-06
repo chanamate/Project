@@ -5,6 +5,7 @@
       <Datepicker
         class="text-h6 w-50"
         v-model="date"
+        placeholder="Select Date"
         :enableTimePicker="false"
         locale="th"
         utc
