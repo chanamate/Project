@@ -4,7 +4,7 @@
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
         <v-card-title align="center" class="text-h4 my-4">
-          Input data for Defect Type : Fabrication F Frame
+          Input data for Defect Type : Fabrication {{ type }} Frame
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -33,7 +33,7 @@
       </v-col>
 
       <v-col>
-        <v-card height="870" color="#AAAAAA" class="pa-4 mr-4">
+        <v-card height="850" color="#AAAAAA" class="pa-4 mr-4">
           <v-row>
             <v-col cols="6">
               <!-- Model -->
@@ -70,45 +70,21 @@
                 <v-window v-model="tab">
                   <!-- Scrap -->
                   <v-window-item value="one">
-                    <v-card
-                      color="#CFCFCF"
-                      height="460px"
-                      class="py-3 overflow-y-auto"
-                    >
-                      <v-col cols="12" class="pa-0">
-                        <v-item-group mandatory>
-                          <v-col
-                            class="pb-1 pt-1"
-                            v-for="(item, index) in scrap_f"
-                            :key="index"
-                          >
-                            <v-item v-slot="{ isSelected, toggle }">
-                              <v-card
-                                :color="isSelected ? 'primary' : ''"
-                                class="d-flex justify-center text-h6"
-                                dark
-                                @click="toggle"
-                              >
-                                {{ item.name }}
-                              </v-card>
-                            </v-item>
-                          </v-col>
-                        </v-item-group>
-                      </v-col>
-                    </v-card>
+                    <!-- StationInspection -->
+                    <SetScrap @updateValue="updateValue" />
                   </v-window-item>
 
                   <!-- Repair -->
                   <v-window-item value="two">
-                    <v-carousel height="460px">
-                      <v-card height="460px">
+                    <v-carousel height="471px">
+                      <v-card height="471px">
                         <v-card elevation="3" opacity="100">
                           -----ข้อมูลที่เลือก-----
                         </v-card>
 
                         <!-- pic_1 -->
                         <v-carousel-item
-                          src="src/assets/pic_1.png"
+                          src="../src/assets/pic_1.png"
                           @click="dialog = true"
                         >
                           <!-- pic_1 dialog -->
@@ -116,7 +92,7 @@
                             <v-card class="center">
                               <div width="550" height="360">
                                 <v-img
-                                  src="src/assets/pic_1.png"
+                                  src="../src/assets/pic_1.png"
                                   width="550"
                                   height="360"
                                 >
@@ -152,14 +128,14 @@
 
                         <!-- pic_2 -->
                         <v-carousel-item
-                          src="src/assets/pic_2.png"
+                          src="../src/assets/pic_2.png"
                           max-height="500"
                         >
                         </v-carousel-item>
 
                         <!-- pic_3 -->
                         <v-carousel-item
-                          src="src/assets/pic_3.png"
+                          src="../src/assets/pic_3.png"
                           max-height="500"
                         >
                         </v-carousel-item>
@@ -197,7 +173,7 @@
                   <v-window-item value="three">
                     <v-card
                       color="#CFCFCF"
-                      height="460px"
+                      height="471px"
                       class="py-3 overflow-y-auto"
                     >
                       Three
@@ -327,11 +303,14 @@ import SetPinStampNumber from "../components/SetPinStampNumber.vue";
 import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
 import SetStationInspec from "../components/SetStationInspec.vue";
+import SetScrap from "../components/SetScrap.vue";
 import { btn_img1, cause, scrap_f } from "../assets/constant_F";
 
 const date = ref();
 
 export default {
+  name: "NG_F_Frame",
+
   components: {
     Datepicker,
     SetModel,
@@ -339,6 +318,7 @@ export default {
     SetEmployeeName,
     SetShitf,
     SetStationInspec,
+    SetScrap,
   },
 
   computed: {
@@ -347,28 +327,6 @@ export default {
     },
   },
 
-  methods: {
-    getdatenow() {
-      return moment().format("MMMM Do YYYY");
-    },
-    submit() {
-      console.log(this.selectedValueModel);
-      console.log(this.dataPin);
-      console.log(this.selectName);
-      console.log(this.selectedDayNight);
-      console.log(this.selectedOT);
-      console.log(this.selectedStaInspec);
-      console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
-    },
-    updateValue(event) {
-      this[event.key] = event.value;
-    },
-    gettype() {
-      return this.type;
-    },
-  },
-
-  name: "NG_F_Frame",
   data: () => ({
     title: [
       {
@@ -387,7 +345,8 @@ export default {
         url: "/DT_F/",
       },
     ],
-    scrap_f: scrap_f,
+    lineId: null,
+    scrap: "",
     cause: cause,
     btn_img1: btn_img1,
 
@@ -406,8 +365,31 @@ export default {
     selectedDayNight: "",
     selectedOT: "",
     selectedStaInspec: "",
+    selectedScrap: "",
     dataPin: { pinNumber: null, machine: null },
   }),
+
+  methods: {
+    getdatenow() {
+      return moment().format("MMMM Do YYYY");
+    },
+    submit() {
+      console.log("selectedValueModel", this.selectedValueModel);
+      console.log("dataPin", this.dataPin);
+      console.log("selectName", this.selectName);
+      console.log("selectedDayNight", this.selectedDayNight);
+      console.log("selectedOT", this.selectedOT);
+      console.log("selectedStaInspec", this.selectedStaInspec);
+      console.log("selectedScrap", this.selectedScrap);
+      console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
+    },
+    updateValue(event) {
+      this[event.key] = event.value;
+    },
+    gettype() {
+      return this.type;
+    },
+  },
 };
 </script>
 

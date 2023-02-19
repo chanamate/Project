@@ -3,6 +3,7 @@ import FirstPage from "../views/View_FirstPage.vue"
 import FG_F from "../views/View_FG_F.vue"
 import NG_F from "../views/View_NG_F.vue"
 import DT_F from "../views/View_DT_F.vue"
+import test from "../views/View_test.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/DT_F/:type',
       name: 'DT_F',
       component: DT_F
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     },
 
     // {

@@ -10,7 +10,6 @@
         locale="th"
         utc
       />
-
       <Datepicker
         class="text-h6 w-50"
         v-model="time"
@@ -104,7 +103,7 @@ export default {
 
         let pindata = {
           date: moment(newdate).format("DDMMYY"),
-          time: moment(newtime).format("HH:mm"),
+          time: moment(newtime).format("HH:mm:00"),
           pinNumber: newPin,
           machine: newMachine,
         };

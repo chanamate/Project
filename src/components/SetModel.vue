@@ -1,7 +1,7 @@
 <template>
   <v-item-group mandatory :model-value="selectedValueModel">
     <v-card elevation="3" color="#CFCFCF">
-      <div class="ml-4 mt-4 text-h6">Model :{{ type }}</div>
+      <div class="ml-4 mt-4 text-h6">Model :</div>
       <v-col class="pb-4 pt-1" v-for="(item, index) in model" :key="index">
         <v-item v-slot="{ isSelected, toggle }" :value="item.modelName">
           <v-card
@@ -10,7 +10,7 @@
             dark
             @click="
               toggle();
-              update(item.modelId); // ADD THIS SHIT
+              update(item.modelId);
             "
           >
             {{ item.modelName }}
@@ -55,7 +55,7 @@ export default {
       });
     },
   },
-  // ของใหม่ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  // ของใหม่ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
   async created() {
     switch (this.type) {
       case "F":

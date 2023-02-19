@@ -33,7 +33,7 @@
       </v-col>
 
       <v-col>
-        <v-card height="870" color="#AAAAAA" class="pa-4 mr-4">
+        <v-card height="850" color="#AAAAAA" class="pa-4 mr-4">
           <v-row>
             <v-col cols="6">
               <!-- Model -->
@@ -43,14 +43,12 @@
               />
 
               <!-- Pin Stamp Number -->
-              <SetPinStampNumber
-                @updateValue="updateValue"
-                v-if="number >= 1"
-              />
+              <SetPinStampNumber @updateValue="updateValue" />
+              <!-- v-if="number >= 1" -->
 
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
-                <v-btn @click="submit" v-if="number >= 2"> Enter </v-btn>
+                <v-btn @click="submit" :disabled="check"> Enter </v-btn>
               </div>
             </v-col>
           </v-row>
@@ -77,6 +75,16 @@ export default {
     type() {
       return this.$route.params.type;
     },
+    check() {
+      if (
+        this.selectedValueModel !== "" &&
+        this.dataPin.pinNumber !== null &&
+        this.dataPin.machine !== null
+      ) {
+        return false;
+      }
+      return true;
+    },
   },
 
   data: () => ({
@@ -99,34 +107,27 @@ export default {
       },
     ],
     dataPin: { pinNumber: null, machine: null },
-
-    // อย่าลืมมาแก้ number เป็น 0 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    number: 2,
   }),
 
   methods: {
     async submit() {
-      console.log(this.selectedValueModel);
-      console.log(this.dataPin);
-      console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
-      // console.log(moment().toDate());
+      console.log("FG-Model", this.selectedValueModel);
+      console.log("FG-dataPin", this.dataPin);
 
       const b = await axiosInstance.post("/product", {
         modelId: this.selectedValueModel,
         serialNumber: this.dataPin.pinNumber,
-        timestamp: moment().toDate(),
+        timestamp: moment(
+          this.dataPin.date + this.dataPin.time,
+          "DDMMYYHH:mm:00"
+        ).toDate(),
       });
     },
+
     updateValue(event) {
       this[event.key] = event.value;
-
-      if (this.selectedValueModel !== "") {
-        this.number = 1;
-      }
-      if (this.dataPin.pinNumber !== null && this.dataPin.machine !== null) {
-        this.number = 2;
-      }
     },
+
     gettype() {
       return this.type;
     },

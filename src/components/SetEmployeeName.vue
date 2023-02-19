@@ -11,7 +11,7 @@
       :items="name"
       dense
       variant="filled"
-      label="Employee Name and ID"
+      label="Select ID and Name"
       bg-color="#FFFFFF"
       class="mt-4"
       @update:modelValue="update"
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { name } from "../assets/constant_F";
+import axiosInstance from "../utils/axios.instance";
 
 export default {
   name: "SetEmployeeName",
@@ -35,7 +35,13 @@ export default {
     },
   },
   data: () => ({
-    name: name,
+    name: [],
   }),
+  async created() {
+    const name = await axiosInstance.get(`/employee`);
+    // this.name = name;
+    this.name = name.map((n) => `${n.employeeId} ${n.employeeName}`);
+    // console.log("name", name);
+  },
 };
 </script>

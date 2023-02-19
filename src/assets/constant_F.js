@@ -7,7 +7,7 @@ export const name = [
     "HLD1065    Mr. Apichet Thongkanya (เจมส์)",
     "HLD960     Mr.Theerasak Signha (เอ็ม)",
     "79754      Mr. Nathaphong Thongprom (อ๊อฟ)",
-    "HLD 786    Mr. Nakarin  Sasom (แจ็ค)",
+    "HLD786    Mr. Nakarin  Sasom (แจ็ค)",
     "HLD1061    Mr. Kiadtisak Wengkum (กิ๊บ)",
     "HLD1164    Mr.Arthit satjayat (บีม)",
     "HLD991     Mr.Phattharaphon Rueangram (นิก)",
