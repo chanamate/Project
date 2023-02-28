@@ -3,8 +3,15 @@
     <v-row>
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
-        <v-card-title align="center" class="text-h4 my-4">
-          Input data for Finished Goods : Fabrication {{ type }} Frame
+        <v-card-title
+          align="center"
+          class="text-h4 my-4"
+          v-if="type == 'F' || type == 'S'"
+        >
+          Input data for Defect Type : Fabrication {{ type }} Frame
+        </v-card-title>
+        <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
+          Input data for Defect Type : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -111,8 +118,12 @@ export default {
 
   methods: {
     async submit() {
-      console.log("FG-Model", this.selectedValueModel);
-      console.log("FG-dataPin", this.dataPin);
+      console.log("modelId", this.selectedValueModel);
+      console.log("serialNumber", this.dataPin.pinNumber);
+      console.log(
+        "timestamp",
+        moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm:00").toDate()
+      );
 
       const b = await axiosInstance.post("/product", {
         modelId: this.selectedValueModel,

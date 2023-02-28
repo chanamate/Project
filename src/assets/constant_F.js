@@ -63,20 +63,24 @@ export const model_F = [
 export const OT = [
     {
         name: "OT",
+        send: "OVERTIME",
         id: 1,
     },
     {
         name: "No OT",
+        send: "NOT_OVERTIME",
         id: 2,
     },
 ]
 export const DayNight = [
     {
         name: "Day",
+        send: "DAY",
         id: 1,
     },
     {
         name: "Night",
+        send: "NIGHT",
         id: 2,
     },
 ]

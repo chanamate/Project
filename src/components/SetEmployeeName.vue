@@ -6,14 +6,25 @@
     height="140px"
     width="100%"
   >
-    <div class="text-h6">Employee Name and ID :</div>
+    <v-row class="ml-0 mt-0"
+      ><div class="text-h6">Employee ID and Name :</div>
+      <v-radio-group
+        v-model="selectedGroup"
+        inline
+        @update:modelValue="update2"
+      >
+        <v-radio label="Group A" value="A"></v-radio>
+        <v-radio label="Group B" value="B"></v-radio>
+      </v-radio-group>
+    </v-row>
+
     <v-autocomplete
       :items="name"
       dense
       variant="filled"
       label="Select ID and Name"
       bg-color="#FFFFFF"
-      class="mt-4"
+      class=""
       @update:modelValue="update"
     ></v-autocomplete>
   </v-card>
@@ -28,15 +39,26 @@ export default {
   methods: {
     // ADD THIS SHIT
     update(e) {
+      // console.log("selectName", e);
       this.$emit("updateValue", {
         key: "selectName", // VALUE NAME ที่ จะอัพเดท ใน parent()
-        value: e, // ค่าที่จะ UPDATE
+        value: e.split(" ")[0], // ค่าที่จะ UPDATE
+      });
+    },
+    update2(e) {
+      // console.log("selectedGroup", e);
+      this.$emit("updateValue", {
+        key: "selectedGroup", // VALUE NAME ที่ จะอัพเดท ใน parent()
+        value: e.split(" ")[0], // ค่าที่จะ UPDATE
       });
     },
   },
+
   data: () => ({
     name: [],
+    selectedGroup: "",
   }),
+
   async created() {
     const name = await axiosInstance.get(`/employee`);
     // this.name = name;

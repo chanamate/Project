@@ -16,7 +16,7 @@
               dark
               @click="
                 toggle();
-                update1(item.name); // ADD THIS SHIT
+                update1(item.send); // ADD THIS SHIT
               "
             >
               {{ item.name }}
@@ -36,7 +36,7 @@
               dark
               @click="
                 toggle();
-                update2(item.name); // ADD THIS SHIT
+                update2(item.send); // ADD THIS SHIT
               "
             >
               {{ item.name }}

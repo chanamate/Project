@@ -3,8 +3,15 @@
     <v-row>
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
-        <v-card-title align="center" class="text-h4 my-4">
+        <v-card-title
+          align="center"
+          class="text-h4 my-4"
+          v-if="type == 'F' || type == 'S'"
+        >
           Input data for Defect Type : Fabrication {{ type }} Frame
+        </v-card-title>
+        <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
+          Input data for Defect Type : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -328,6 +335,7 @@ export default {
   },
 
   data: () => ({
+    isShowTitle: "",
     title: [
       {
         name: "Finished Goods",
@@ -366,6 +374,7 @@ export default {
     selectedOT: "",
     selectedStaInspec: "",
     selectedScrap: "",
+    selectedGroup: "",
     dataPin: { pinNumber: null, machine: null },
   }),
 
@@ -373,15 +382,44 @@ export default {
     getdatenow() {
       return moment().format("MMMM Do YYYY");
     },
-    submit() {
-      console.log("selectedValueModel", this.selectedValueModel);
-      console.log("dataPin", this.dataPin);
-      console.log("selectName", this.selectName);
-      console.log("selectedDayNight", this.selectedDayNight);
-      console.log("selectedOT", this.selectedOT);
-      console.log("selectedStaInspec", this.selectedStaInspec);
-      console.log("selectedScrap", this.selectedScrap);
-      console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
+    async submit() {
+      console.log("modelId :", this.selectedValueModel);
+      console.log("serialNumber :", this.dataPin.pinNumber);
+      console.log(
+        "timestamp :",
+        moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm:00").toDate()
+      );
+      console.log("defect_____________");
+      console.log("stationId :", this.selectedStaInspec);
+      console.log("failureDetailId :", this.selectedScrap);
+      console.log("position :", "1");
+      console.log("employee___________");
+      console.log("employeeId :", this.selectName);
+      console.log("shift :", this.selectedDayNight);
+      console.log("workingTimeType :", this.selectedOT);
+      console.log("group :", this.selectedGroup);
+
+      // console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
+
+      const b = await axiosInstance.post("/product", {
+        modelId: this.selectedValueModel,
+        serialNumber: this.dataPin.pinNumber,
+        timestamp: moment(
+          this.dataPin.date + this.dataPin.time,
+          "DDMMYYHH:mm:00"
+        ).toDate(),
+        defect: {
+          stationId: this.selectedStaInspec,
+          failureDetailId: this.selectedScrap,
+          position: "1",
+        },
+        employee: {
+          employeeId: this.selectName,
+          shift: this.selectedDayNight,
+          workingTimeType: this.selectedOT,
+          group: this.selectedGroup,
+        },
+      });
     },
     updateValue(event) {
       this[event.key] = event.value;

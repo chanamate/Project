@@ -3,8 +3,15 @@
     <v-row>
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
-        <v-card-title align="center" class="text-h4 my-4">
-          Input data for Failure Mode : Fabrication F Frame
+        <v-card-title
+          align="center"
+          class="text-h4 my-4"
+          v-if="type == 'F' || type == 'S'"
+        >
+          Input data for Defect Type : Fabrication {{ type }} Frame
+        </v-card-title>
+        <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
+          Input data for Defect Type : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -53,7 +60,12 @@
                             <!--strong>New Icon</strong-->
                             <div class="">
                               ถ้าเครื่องจักรหยุดทำงานให้กดปุ่ม
-                              <v-btn class="ml-2" @click="valueclicks = 1">
+                              <v-btn
+                                class="ml-2"
+                                @click="
+                                  (valueclicks = 1), (startAtDT = new Date())
+                                "
+                              >
                                 time start
                               </v-btn>
                             </div>
@@ -100,7 +112,9 @@
                                 หลังจากกลับมาเดินเครื่องกดปุ่ม
                                 <v-btn
                                   class="ml-2 mb-3"
-                                  @click="valueclicks = 2"
+                                  @click="
+                                    (valueclicks = 2), (endAtDT = new Date())
+                                  "
                                 >
                                   time stop
                                 </v-btn>
@@ -116,7 +130,7 @@
                       <SetEmployeeName @updateValue="updateValue" />
                     </v-col>
 
-                    <v-divider vertical color="black" thickness="1"></v-divider>
+                    <v-divider vertical thickness="3"></v-divider>
 
                     <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
@@ -127,72 +141,15 @@
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
                       <!-- Station -->
-                      <v-card
-                        color="#CFCFCF"
-                        class="pt-3 overflow-y-auto mt-2"
-                        elevation="8"
-                        height="170px"
-                      >
-                        <div class="text-h6 ml-3">Station :</div>
-                        <v-col cols="12" class="">
-                          <v-item-group mandatory>
-                            <v-row>
-                              <v-col
-                                cols="4"
-                                class="pb-1 pt-1"
-                                v-for="(item, index) in station"
-                                :key="index"
-                              >
-                                <v-item v-slot="{ isSelected, toggle }">
-                                  <v-card
-                                    :color="isSelected ? 'primary' : ''"
-                                    class="d-flex justify-center text-h6"
-                                    dark
-                                    @click="toggle"
-                                  >
-                                    {{ item.name }}
-                                  </v-card>
-                                </v-item>
-                              </v-col>
-                            </v-row>
-                          </v-item-group>
-                        </v-col>
-                      </v-card>
+                      <SetStation @updateValue="updateValue" />
 
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
                       <!-- Caused -->
-                      <v-card
-                        color="#CFCFCF"
-                        height="300px"
-                        class="py-3 overflow-y-auto mt-2 mb-3"
-                        elevation="8"
-                        ><div class="text-h6 ml-3">
-                          Select the problem that caused the downtime :
-                        </div>
-                        <v-col cols="12" class="pa-0">
-                          <v-item-group mandatory>
-                            <v-col
-                              class="pb-1 pt-1"
-                              v-for="(item, index) in downtime_f"
-                              :key="index"
-                            >
-                              <v-item v-slot="{ isSelected, toggle }">
-                                <v-card
-                                  :color="isSelected ? 'primary' : ''"
-                                  class="d-flex justify-center text-h6"
-                                  dark
-                                  @click="toggle"
-                                >
-                                  {{ item.name }}
-                                </v-card>
-                              </v-item>
-                            </v-col>
-                          </v-item-group>
-                        </v-col>
-                      </v-card>
+                      <SetdtCaused @updateValue="updateValue" />
+
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn> Enter </v-btn>
+                        <v-btn @click="submit1"> Enter </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -202,14 +159,76 @@
 
                 <!-- ตัวเลือก Edit -->
                 <v-window-item value="two">
-                  <v-card
-                    height="735px"
-                    color="#CFCFCF"
-                    elevation="0"
-                    class="text-h6"
-                  >
-                    Select Time :</v-card
-                  >
+                  <v-row>
+                    <v-col cols="7" class="d-flex flex-column">
+                      <div class="d-flex justify-center flex-row">
+                        <div class="">
+                          <div class="text-h6 mb-1">start at:</div>
+                          <Datepicker
+                            v-model="startAtDate"
+                            inline
+                            text-input
+                            auto-apply
+                            mode-height="84"
+                            :enableTimePicker="false"
+                          />
+                          <Datepicker
+                            v-model="startAtTime"
+                            time-picker
+                            inline
+                            text-input
+                            auto-apply
+                            mode-height="84"
+                          />
+                        </div>
+                        <!-- @@@@@@@@@@@@ -->
+                        <div>
+                          <div class="text-h6 mb-1">end at:</div>
+                          <Datepicker
+                            v-model="endAtDate"
+                            inline
+                            text-input
+                            auto-apply
+                            mode-height="84"
+                            :enableTimePicker="false"
+                          />
+                          <Datepicker
+                            v-model="endAtTime"
+                            time-picker
+                            inline
+                            text-input
+                            auto-apply
+                            mode-height="84"
+                          />
+                        </div>
+                      </div>
+                      <!-- Employee Name and ID -->
+                      <SetEmployeeName @updateValue="updateValue" />
+                    </v-col>
+
+                    <v-divider vertical thickness="3"></v-divider>
+
+                    <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+                    <v-col>
+                      <!-- Shift -->
+                      <SetShitf @updateValue="updateValue" />
+
+                      <v-divider class="mt-3 mr-3" thickness="3" />
+
+                      <!-- Station -->
+                      <SetStation @updateValue="updateValue" />
+
+                      <v-divider class="mt-3 mr-3" thickness="3" />
+
+                      <!-- Caused -->
+                      <SetdtCaused @updateValue="updateValue" />
+
+                      <div cols="6" class="d-flex justify-end mt-4">
+                        <v-btn @click="submit2"> Enter </v-btn>
+                      </div>
+                    </v-col>
+                  </v-row>
                 </v-window-item>
               </v-window>
             </v-card-text>
@@ -223,35 +242,35 @@
 <script>
 import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
+import SetStation from "../components/SetStation.vue";
+import SetdtCaused from "../components/SetdtCaused.vue";
+
+import Datepicker from "@vuepic/vue-datepicker";
+// import VueDatePicker from "@vuepic/vue-datepicker";
+
 import moment from "moment";
+import "@vuepic/vue-datepicker/dist/main.css";
+const date = ref(new Date());
+
 import axiosInstance from "../utils/axios.instance";
 
 import { name } from "../assets/constant_F";
+
+import { ref } from "vue";
 
 export default {
   name: "FG_F_Frame",
   components: {
     SetEmployeeName,
     SetShitf,
+    SetStation,
+    SetdtCaused,
+    Datepicker,
   },
 
   computed: {
     type() {
       return this.$route.params.type;
-    },
-  },
-
-  methods: {
-    // getdatenow() {
-    //   return moment().format("MMMM Do YYYY");
-    // },
-    submit() {
-      // console.log(this.selectedValueModel);
-      // console.log(this.dataPin);
-      // console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
-    },
-    updateValue(event) {
-      this[event.key] = event.value;
     },
   },
 
@@ -325,31 +344,26 @@ export default {
         id: 3,
       },
     ],
-    downtime_f: [
-      { name: "Machine Weld cell 1 Break Down", id: 1 },
-      { name: "Machine Weld cell 2 Break Down", id: 2 },
-      { name: "Machine Weld cell X Change Over", id: 3 },
-      { name: "Machine Weld cell X Robot Teaching", id: 4 },
-      { name: "Machine Makino cell 1 Break Down", id: 5 },
-      { name: "Man Power Absentee", id: 6 },
-      { name: "Material Shortage", id: 7 },
-      { name: "Material Reject", id: 8 },
-      { name: "Quality check and inspection Down time", id: 9 },
-      { name: "Electrical  EE ,Gas GA,Air Ai ,", id: 10 },
-    ],
-
     name: name,
     tab: null,
     interval: {},
     value: 0,
     valueS: 0,
-    valueSS: 0,
-    valueM: 0,
-    valueMM: 0,
-    valueH: 0,
-    valueHH: 0,
     valueclicks: 0,
-    selectName: null,
+    startAtDate: ref(new Date()),
+    endAtDate: ref(new Date()),
+    startAtTime: ref(moment().format("HHmm")),
+    endAtTime: ref(moment().format("HHmm")),
+    selectName: "",
+    selectedDayNight: "",
+    selectedDT: "",
+    selectedOT: "",
+    selectedStation: "",
+    selectedGroup: "",
+    startAt: "",
+    endAt: "",
+    startAtDT: "",
+    endAtDT: "",
   }),
   beforeUnmount() {
     clearInterval(this.interval);
@@ -372,6 +386,84 @@ export default {
     }, 1000);
   },
   methods: {
+    async submit1() {
+      console.log("startAt :", this.startAtDT);
+      console.log("endAt :", this.endAtDT);
+      console.log("stationId :", this.selectedStation);
+      console.log("availabilityId :", this.selectedDT);
+      console.log("employee____________");
+      console.log("employeeId :", this.selectName);
+      console.log("shift :", this.selectedDayNight);
+      console.log("workingTimeType :", this.selectedOT);
+      console.log("group :", this.selectedGroup);
+
+      const b = await axiosInstance.post("/downtime", {
+        startAt: this.startAtDT,
+        endAt: this.endAtDT,
+        stationId: this.selectedStation,
+        availabilityId: this.selectedDT,
+        employee: {
+          employeeId: this.selectName,
+          shift: this.selectedDayNight,
+          workingTimeType: this.selectedOT,
+          group: this.selectedGroup,
+        },
+      });
+    },
+    async submit2() {
+      // console.log("startAtDate", moment(this.startAtDate).format("DDMMYY"));
+      // console.log("-startAtTime", moment(this.startAtTime).format("HHmm"));
+      // console.log("endAtDate", moment(this.endAtDate).format("DDMMYY"));
+      // console.log("-endAtTime", moment(this.endAtTime).format("HHmm"));
+
+      console.log(
+        "startAt",
+        moment(
+          moment(this.startAtDate).format("DDMMYY") +
+            moment(this.startAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate()
+      );
+      console.log(
+        "endAt",
+        moment(
+          moment(this.endAtDate).format("DDMMYY") +
+            moment(this.endAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate()
+      );
+      console.log("stationId :", this.selectedStation);
+      console.log("availabilityId :", this.selectedDT);
+      console.log("employee____________");
+      console.log("employeeId :", this.selectName);
+      console.log("shift :", this.selectedDayNight);
+      console.log("workingTimeType :", this.selectedOT);
+      console.log("group :", this.selectedGroup);
+
+      const b = await axiosInstance.post("/downtime", {
+        startAt: moment(
+          moment(this.startAtDate).format("DDMMYY") +
+            moment(this.startAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate(),
+        endAt: moment(
+          moment(this.endAtDate).format("DDMMYY") +
+            moment(this.endAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate(),
+        stationId: this.selectedStation,
+        availabilityId: this.selectedDT,
+        employee: {
+          employeeId: this.selectName,
+          shift: this.selectedDayNight,
+          workingTimeType: this.selectedOT,
+          group: this.selectedGroup,
+        },
+      });
+    },
+    updateValue(event) {
+      this[event.key] = event.value;
+    },
     countsec() {
       return moment.utc(this.value * 1000).format("HH:mm:ss");
     },
