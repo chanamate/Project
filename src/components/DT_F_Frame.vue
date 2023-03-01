@@ -8,7 +8,7 @@
           class="text-h4 my-4"
           v-if="type == 'F' || type == 'S'"
         >
-          Input data for Defect Type : Fabrication {{ type }} Frame
+          Input data for Failure Mode : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
           Input data for Defect Type : Paint

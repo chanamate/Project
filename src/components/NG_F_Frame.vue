@@ -196,7 +196,7 @@
               </div>
 
               <v-dialog v-model="dialogEnter">
-                <v-card height="550px" width="775px" class="px-3 center">
+                <v-card height="600px" width="775px" class="px-3 center">
                   <v-col class="text-h4 d-flex justify-center">
                     <div>NCM TAG</div>
                   </v-col>
