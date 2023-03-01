@@ -2,23 +2,24 @@
   <v-row>
     <!-- หัวข้อบนสุด -->
     <v-col cols="12">
-      <v-card-title align="center" class="text-h4 my-4">
+      <v-card-title align="center" class="text-h1 my-4">
         Home Page
       </v-card-title>
-      <v-divider thickness="2" class="mt-2"></v-divider>
+      <v-divider thickness="3" class="mt-2"></v-divider>
     </v-col>
   </v-row>
 
-  <v-item-group mandatory>
+  <v-item-group mandatory class="d-flex justify-center">
     <v-card elevation="0" class="mx-4">
       <v-row class="mt-2">
         <v-col v-for="(item, index) in title" :key="index">
           <v-item v-slot="{ isSelected, toggle }" :value="item.id">
             <v-card
               :color="item.color"
-              class="d-flex justify-center align-center pa-6 text-h4"
+              class="d-flex justify-center align-center pa-6 text-h4 rounded-xl text-white"
               dark
-              height="800px"
+              height="750px"
+              width="400px"
               @click="toggle"
               :to="item.url"
             >
@@ -40,19 +41,19 @@ export default {
         name: "Fabrication F Frame",
         id: "1",
         url: "/FG_F/F",
-        color: "#D9D9D9",
+        color: "#0288D1",
       },
       {
         name: "Fabrication S Frame",
         id: "2",
         url: "/FG_F/S",
-        color: "#A9A9A9",
+        color: "#3949AB",
       },
       {
         name: "Paint",
         id: "3",
         url: "/FG_F/P",
-        color: "#B9B9B9",
+        color: "primary",
       },
     ],
   }),
