@@ -22,7 +22,7 @@
                 dark
                 @click="
                   toggle();
-                  update(item.stationId);
+                  update(item.stationId + ` ` + item.stationName);
                 "
               >
                 {{ item.stationId }}

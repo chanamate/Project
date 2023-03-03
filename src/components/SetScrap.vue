@@ -10,7 +10,7 @@
               dark
               @click="
                 toggle();
-                update(item.failureDetailId);
+                update(item.failureDetailId + ` ` + item.details);
               "
             >
               {{ item.details }}

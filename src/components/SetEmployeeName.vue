@@ -42,7 +42,7 @@ export default {
       // console.log("selectName", e);
       this.$emit("updateValue", {
         key: "selectName", // VALUE NAME ที่ จะอัพเดท ใน parent()
-        value: e.split(" ")[0], // ค่าที่จะ UPDATE
+        value: e, // ค่าที่จะ UPDATE
       });
     },
     update2(e) {

@@ -192,7 +192,7 @@
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
                 <!-- <v-btn class="mr-4"> PRINT </v-btn> -->
-                <v-btn :disabled="check" @click="dialogEnter = true">
+                <v-btn :disabled="check" @click="dialogcheck = true">
                   Enter
                 </v-btn>
               </div>
@@ -292,6 +292,76 @@
                   </v-card-actions>
                 </v-card>
               </v-dialog>
+
+              <!-- dialog check -->
+              <v-dialog v-model="dialogcheck" persistent width="auto">
+                <v-card
+                  color="white"
+                  width="600"
+                  height="500"
+                  class="d-flex justify-center px-4"
+                >
+                  <div align="center" class="text-h4 my-4">
+                    Check for Completeness
+                    <v-divider thickness="2" class="mt-2"></v-divider>
+                  </div>
+                  <div align="center" class="text-h5 my-4">
+                    <table>
+                      <tr>
+                        <td>Model :</td>
+                        <td colspan="2">{{ this.modelCheck }}</td>
+                      </tr>
+                      <td>Pin Stamp Number :</td>
+                      <td>{{ this.dataPin.date }}</td>
+                      <td>{{ this.dataPin.time }}</td>
+                      <tr>
+                        <td></td>
+                        <td>{{ this.dataPin.pinNumber }}</td>
+                        <td>{{ this.dataPin.machine }}</td>
+                      </tr>
+                      <tr>
+                        <td>Employee ID and Name :</td>
+                        <td colspan="2">Group : {{ selectedGroup }}</td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td colspan="2">{{ this.selectName }}</td>
+                      </tr>
+                      <tr>
+                        <td>Shitf :</td>
+                        <td>{{ this.selectedDayNight }}</td>
+                        <td>{{ this.selectedOT }}</td>
+                      </tr>
+                      <tr>
+                        <td>Station Inspection :</td>
+                        <td colspan="2">{{ this.selectedStaInspecCheck }}</td>
+                      </tr>
+                      <tr>
+                        <td>Defect Type :</td>
+                        <td colspan="2">{{ this.selectedScrap }}</td>
+                      </tr>
+                    </table>
+                    <v-btn
+                      color="primary"
+                      variant="text"
+                      @click="dialogcheck = false"
+                    >
+                      cancel
+                    </v-btn>
+
+                    <v-btn
+                      color="green-darken-1"
+                      variant="text"
+                      @click="
+                        submit();
+                        dialogcheck = false;
+                      "
+                    >
+                      Agree
+                    </v-btn>
+                  </div>
+                </v-card>
+              </v-dialog>
             </v-col>
           </v-row>
         </v-card>
@@ -380,6 +450,7 @@ export default {
     dialog: false,
     dialog2: false,
     dialogEnter: false,
+    dialogcheck: false,
     selectName: null,
     //date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
     menu: false,
@@ -391,6 +462,7 @@ export default {
     selectedDayNight: "",
     selectedOT: "",
     selectedStaInspec: "",
+    selectedStaInspecCheck: "",
     selectedScrap: "",
     selectedGroup: "",
     dataPin: { pinNumber: null, machine: null },
@@ -428,11 +500,11 @@ export default {
         ).toDate(),
         defect: {
           stationId: this.selectedStaInspec,
-          failureDetailId: this.selectedScrap,
+          failureDetailId: this.selectedScrap.split(" ")[0],
           position: "1",
         },
         employee: {
-          employeeId: this.selectName,
+          employeeId: this.selectName.split(" ")[0],
           shift: this.selectedDayNight,
           workingTimeType: this.selectedOT,
           group: this.selectedGroup,
@@ -441,6 +513,29 @@ export default {
     },
     updateValue(event) {
       this[event.key] = event.value;
+
+      switch (this.selectedValueModel) {
+        case 1:
+          this.modelCheck = "Model F01";
+          break;
+        case 2:
+          this.modelCheck = "Model F02";
+          break;
+        case 3:
+          this.modelCheck = "Model F03";
+          break;
+      }
+      switch (this.selectedStaInspec) {
+        case "OP05":
+          this.selectedStaInspecCheck = "OP05 Inspection 1";
+          break;
+        case "OP08":
+          this.selectedStaInspecCheck = "OP08 Inspection 2";
+          break;
+        case "OP10":
+          this.selectedStaInspecCheck = "OP10 Q-Gate Inspection 3";
+          break;
+      }
     },
     gettype() {
       return this.type;

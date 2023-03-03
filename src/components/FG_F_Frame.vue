@@ -76,10 +76,9 @@
                     <table>
                       <tr>
                         <td>Model :</td>
-                        <td>{{ this.modelCheck }}&nbsp;&nbsp;&nbsp;</td>
-                        <td></td>
+                        <td colspan="2">{{ this.modelCheck }}</td>
                       </tr>
-                      <td>Pin Stamp Number :&nbsp;&nbsp;&nbsp;</td>
+                      <td>Pin Stamp Number :</td>
                       <td>{{ this.dataPin.date }}</td>
                       <td>{{ this.dataPin.time }}</td>
                       <tr>
@@ -170,13 +169,6 @@ export default {
     modelCheck: "",
   }),
 
-  watch: {
-    dialogcheck(val) {
-      if (!val) return;
-      setTimeout(() => (this.dialogcheck = false), 10000);
-    },
-  },
-
   methods: {
     async submit() {
       console.log("modelId", this.selectedValueModel);
@@ -198,6 +190,8 @@ export default {
 
     updateValue(event) {
       this[event.key] = event.value;
+      console.log("modelId", this.selectedValueModel);
+
       switch (this.selectedValueModel) {
         case 1:
           this.modelCheck = "Model F01";
@@ -217,3 +211,45 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.center {
+  margin: 0 auto;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 4px 20px;
+}
+
+th {
+  background-color: rgb(235, 235, 235);
+}
+
+td {
+  text-align: left;
+}
+
+tr:nth-child(even) td {
+  background-color: rgb(250, 250, 250);
+}
+
+tr:nth-child(odd) td {
+  background-color: rgb(240, 240, 240);
+}
+</style>

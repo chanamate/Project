@@ -149,9 +149,7 @@
                       <SetdtCaused @updateValue="updateValue" />
 
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn :disabled="check1" @click="submit1">
-                          Enter
-                        </v-btn>
+                        <v-btn @click="dialogcheck1 = true"> Enter </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -225,11 +223,9 @@
 
                       <!-- Caused -->
                       <SetdtCaused @updateValue="updateValue" />
-
+                      <!-- :disabled="check2" -->
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn :disabled="check2" @click="submit2">
-                          Enter
-                        </v-btn>
+                        <v-btn @click="dialogcheck2 = true"> Enter </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -241,6 +237,126 @@
       </v-col>
     </v-row>
   </v-card>
+  <v-dialog v-model="dialogcheck1" persistent width="auto">
+    <v-card
+      color="white"
+      width="650"
+      height="450"
+      class="d-flex justify-center px-4"
+    >
+      <div align="center" class="text-h4 my-4">
+        Check for Completeness
+        <v-divider thickness="2" class="mt-2"></v-divider>
+      </div>
+      <div align="center" class="text-h5 my-4">
+        <table>
+          <tr>
+            <td>Start at :</td>
+            <td colspan="2">{{ this.startAtDT }}</td>
+          </tr>
+          <tr>
+            <td>End at :</td>
+            <td colspan="2">{{ this.endAtDT }}</td>
+          </tr>
+          <tr>
+            <td>Employee ID and Name :</td>
+            <td colspan="2">Group : {{ selectedGroup }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">{{ this.selectName }}</td>
+          </tr>
+          <tr>
+            <td>Shitf :</td>
+            <td>{{ this.selectedDayNight }}</td>
+            <td>{{ this.selectedOT }}</td>
+          </tr>
+          <tr>
+            <td>Station Inspection :</td>
+            <td colspan="2">{{ this.selectedStation }}</td>
+          </tr>
+          <tr>
+            <td>Failure Mode :</td>
+            <td colspan="2">{{ this.selectedDT }}</td>
+          </tr>
+        </table>
+        <v-btn color="primary" variant="text" @click="dialogcheck1 = false">
+          cancel
+        </v-btn>
+
+        <v-btn
+          color="green-darken-1"
+          variant="text"
+          @click="
+            submit1();
+            dialogcheck1 = false;
+          "
+        >
+          Agree
+        </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="dialogcheck2" persistent width="auto">
+    <v-card
+      color="white"
+      width="600"
+      height="550"
+      class="d-flex justify-center px-4"
+    >
+      <div align="center" class="text-h4 my-4">
+        Check for Completeness
+        <v-divider thickness="2" class="mt-2"></v-divider>
+      </div>
+      <div align="center" class="text-h5 my-4">
+        <table>
+          <tr>
+            <td>Start at :</td>
+            <td colspan="2">{{ this.startAtDate }}</td>
+          </tr>
+          <tr>
+            <td>End at :</td>
+            <td colspan="2">{{ this.endAtDT }}</td>
+          </tr>
+          <tr>
+            <td>Employee ID and Name :</td>
+            <td colspan="2">Group : {{ selectedGroup }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="2">{{ this.selectName }}</td>
+          </tr>
+          <tr>
+            <td>Shitf :</td>
+            <td>{{ this.selectedDayNight }}</td>
+            <td>{{ this.selectedOT }}</td>
+          </tr>
+          <tr>
+            <td>Station Inspection :</td>
+            <td colspan="2">{{ this.selectedStation }}</td>
+          </tr>
+          <tr>
+            <td>Failure Mode :</td>
+            <td colspan="2">{{ this.selectedDT }}</td>
+          </tr>
+        </table>
+        <v-btn color="primary" variant="text" @click="dialogcheck2 = false">
+          cancel
+        </v-btn>
+
+        <v-btn
+          color="green-darken-1"
+          variant="text"
+          @click="
+            submit2();
+            dialogcheck2 = false;
+          "
+        >
+          Agree
+        </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -283,7 +399,8 @@ export default {
         this.selectedOT !== "" &&
         this.selectedStation !== "" &&
         this.startAtDT !== "" &&
-        this.endAtDT !== ""
+        this.endAtDT !== "" &&
+        this.selectedDT !== ""
       ) {
         return false;
       }
@@ -297,9 +414,10 @@ export default {
         this.selectedOT !== "" &&
         this.selectedStation !== "" &&
         this.startAtDate !== "" &&
-        this.endAtDat !== "" &&
+        this.endAtDate !== "" &&
         this.startAtTime !== "" &&
-        this.endAtTime !== ""
+        this.endAtTime !== "" &&
+        this.selectedDT !== ""
       ) {
         return false;
       }
@@ -397,6 +515,9 @@ export default {
     endAt: "",
     startAtDT: "",
     endAtDT: "",
+    dialogcheck1: false,
+    dialogcheck2: false,
+    selectedStaInspecCheck: "",
   }),
   beforeUnmount() {
     clearInterval(this.interval);
@@ -433,10 +554,10 @@ export default {
       const b = await axiosInstance.post("/downtime", {
         startAt: this.startAtDT,
         endAt: this.endAtDT,
-        stationId: this.selectedStation,
-        availabilityId: this.selectedDT,
+        stationId: this.selectedStation.split(" ")[0],
+        availabilityId: this.selectedDT.split(" ")[0],
         employee: {
-          employeeId: this.selectName,
+          employeeId: this.selectName.split(" ")[0],
           shift: this.selectedDayNight,
           workingTimeType: this.selectedOT,
           group: this.selectedGroup,
@@ -484,10 +605,10 @@ export default {
             moment(this.endAtTime).format("HHmm"),
           "DDMMYYHHmm"
         ).toDate(),
-        stationId: this.selectedStation,
-        availabilityId: this.selectedDT,
+        stationId: this.selectedStation.split(" ")[0],
+        availabilityId: this.selectedDT.split(" ")[0],
         employee: {
-          employeeId: this.selectName,
+          employeeId: this.selectName.split(" ")[0],
           shift: this.selectedDayNight,
           workingTimeType: this.selectedOT,
           group: this.selectedGroup,
@@ -513,5 +634,35 @@ export default {
 <style scoped>
 .v-progress-circular {
   margin: 1rem;
+}
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 4px 20px;
+}
+
+th {
+  background-color: rgb(235, 235, 235);
+}
+
+td {
+  text-align: left;
+}
+
+tr:nth-child(even) td {
+  background-color: rgb(250, 250, 250);
+}
+
+tr:nth-child(odd) td {
+  background-color: rgb(240, 240, 240);
 }
 </style>

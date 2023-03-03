@@ -22,7 +22,7 @@
                 dark
                 @click="
                   toggle();
-                  update(item.availabilityId);
+                  update(item.availabilityId + ` ` + item.details);
                 "
               >
                 {{ item.details }}
@@ -80,7 +80,7 @@ export default {
     }
     const dt_f = await axiosInstance.get(`/availability-lose/${this.lineId}`);
     this.dt_f = dt_f;
-    console.log(typeof this.dt_f);
+    // console.log(typeof this.dt_f);
     // let scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
     //   type: "SCRAP",
     // });
