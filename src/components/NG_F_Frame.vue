@@ -192,7 +192,9 @@
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
                 <!-- <v-btn class="mr-4"> PRINT </v-btn> -->
-                <v-btn @click="dialogEnter = true"> Enter </v-btn>
+                <v-btn :disabled="check" @click="dialogEnter = true">
+                  Enter
+                </v-btn>
               </div>
 
               <v-dialog v-model="dialogEnter">
@@ -273,7 +275,7 @@
                     <v-btn
                       color="primary"
                       variant="text"
-                      @click="dialogEnter = false"
+                      onclick="window.print()"
                     >
                       Print
                     </v-btn>
@@ -331,6 +333,22 @@ export default {
   computed: {
     type() {
       return this.$route.params.type;
+    },
+    check() {
+      if (
+        this.selectedValueModel !== "" &&
+        this.dataPin.pinNumber !== null &&
+        this.dataPin.machine !== null &&
+        this.selectedGroup !== "" &&
+        this.selectName !== "" &&
+        this.selectedDayNight !== "" &&
+        this.selectedOT !== "" &&
+        this.selectedStaInspec !== "" &&
+        this.selectedScrap !== ""
+      ) {
+        return false;
+      }
+      return true;
     },
   },
 

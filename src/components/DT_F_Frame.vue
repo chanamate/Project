@@ -149,7 +149,9 @@
                       <SetdtCaused @updateValue="updateValue" />
 
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn @click="submit1"> Enter </v-btn>
+                        <v-btn :disabled="check1" @click="submit1">
+                          Enter
+                        </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -225,7 +227,9 @@
                       <SetdtCaused @updateValue="updateValue" />
 
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn @click="submit2"> Enter </v-btn>
+                        <v-btn :disabled="check2" @click="submit2">
+                          Enter
+                        </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -246,7 +250,6 @@ import SetStation from "../components/SetStation.vue";
 import SetdtCaused from "../components/SetdtCaused.vue";
 
 import Datepicker from "@vuepic/vue-datepicker";
-// import VueDatePicker from "@vuepic/vue-datepicker";
 
 import moment from "moment";
 import "@vuepic/vue-datepicker/dist/main.css";
@@ -271,6 +274,36 @@ export default {
   computed: {
     type() {
       return this.$route.params.type;
+    },
+    check1() {
+      if (
+        this.selectedGroup !== "" &&
+        this.selectName !== "" &&
+        this.selectedDayNight !== "" &&
+        this.selectedOT !== "" &&
+        this.selectedStation !== "" &&
+        this.startAtDT !== "" &&
+        this.endAtDT !== ""
+      ) {
+        return false;
+      }
+      return true;
+    },
+    check2() {
+      if (
+        this.selectedGroup !== "" &&
+        this.selectName !== "" &&
+        this.selectedDayNight !== "" &&
+        this.selectedOT !== "" &&
+        this.selectedStation !== "" &&
+        this.startAtDate !== "" &&
+        this.endAtDat !== "" &&
+        this.startAtTime !== "" &&
+        this.endAtTime !== ""
+      ) {
+        return false;
+      }
+      return true;
     },
   },
 

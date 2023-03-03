@@ -55,8 +55,60 @@
 
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
-                <v-btn @click="submit" :disabled="check"> Enter </v-btn>
+                <v-btn @click="dialogcheck = true" :disabled="check">
+                  Enter
+                </v-btn>
               </div>
+
+              <!-- dialog check -->
+              <v-dialog v-model="dialogcheck" persistent width="auto">
+                <v-card
+                  color="white"
+                  width="600"
+                  height="270"
+                  class="d-flex justify-center px-4"
+                >
+                  <div align="center" class="text-h4 my-4">
+                    Check for Completeness
+                    <v-divider thickness="2" class="mt-2"></v-divider>
+                  </div>
+                  <div align="center" class="text-h5 my-4">
+                    <table>
+                      <tr>
+                        <td>Model :</td>
+                        <td>{{ this.modelCheck }}&nbsp;&nbsp;&nbsp;</td>
+                        <td></td>
+                      </tr>
+                      <td>Pin Stamp Number :&nbsp;&nbsp;&nbsp;</td>
+                      <td>{{ this.dataPin.date }}</td>
+                      <td>{{ this.dataPin.time }}</td>
+                      <tr>
+                        <td></td>
+                        <td>{{ this.dataPin.pinNumber }}</td>
+                        <td>{{ this.dataPin.machine }}</td>
+                      </tr>
+                    </table>
+                    <v-btn
+                      color="primary"
+                      variant="text"
+                      @click="dialogcheck = false"
+                    >
+                      cancel
+                    </v-btn>
+
+                    <v-btn
+                      color="green-darken-1"
+                      variant="text"
+                      @click="
+                        submit();
+                        dialogcheck = false;
+                      "
+                    >
+                      Agree
+                    </v-btn>
+                  </div>
+                </v-card>
+              </v-dialog>
             </v-col>
           </v-row>
         </v-card>
@@ -114,7 +166,16 @@ export default {
       },
     ],
     dataPin: { pinNumber: null, machine: null },
+    dialogcheck: false,
+    modelCheck: "",
   }),
+
+  watch: {
+    dialogcheck(val) {
+      if (!val) return;
+      setTimeout(() => (this.dialogcheck = false), 500000);
+    },
+  },
 
   methods: {
     async submit() {
@@ -137,6 +198,17 @@ export default {
 
     updateValue(event) {
       this[event.key] = event.value;
+      switch (this.selectedValueModel) {
+        case 1:
+          this.modelCheck = "Model F01";
+          break;
+        case 2:
+          this.modelCheck = "Model F02";
+          break;
+        case 3:
+          this.modelCheck = "Model F03";
+          break;
+      }
     },
 
     gettype() {
