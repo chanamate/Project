@@ -173,7 +173,7 @@ export default {
   watch: {
     dialogcheck(val) {
       if (!val) return;
-      setTimeout(() => (this.dialogcheck = false), 500000);
+      setTimeout(() => (this.dialogcheck = false), 10000);
     },
   },
 
