@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <router-link to="/"> home </router-link>
+      <router-link to="/productionPlan"> productionPlan </router-link>
 
       <router-view />
     </v-main>

@@ -40,7 +40,7 @@
       </v-col>
 
       <v-col>
-        <v-card height="850" color="#AAAAAA" class="pa-4 mr-4">
+        <v-card color="#AAAAAA" class="px-2 pb-2 mr-4">
           <v-card elevation="5" color="#CFCFCF" class="mt-4">
             <v-tabs v-model="tab" fixed-tabs bg-color="primary">
               <v-tab value="one">Downtime</v-tab>
@@ -180,6 +180,7 @@
                             inline
                             text-input
                             auto-apply
+                            minutes-increment="5"
                             mode-height="84"
                           />
                         </div>
@@ -200,6 +201,7 @@
                             inline
                             text-input
                             auto-apply
+                            minutes-increment="5"
                             mode-height="84"
                           />
                         </div>

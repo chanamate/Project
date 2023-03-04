@@ -40,7 +40,7 @@
       </v-col>
 
       <v-col>
-        <v-card height="850" color="#AAAAAA" class="pa-4 mr-4">
+        <v-card color="#AAAAAA" class="pa-4 mr-4">
           <v-row>
             <v-col cols="6">
               <!-- Model -->
