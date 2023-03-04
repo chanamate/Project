@@ -149,7 +149,9 @@
                       <SetdtCaused @updateValue="updateValue" />
 
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn @click="dialogcheck1 = true"> Enter </v-btn>
+                        <v-btn :disabled="check1" @click="dialogcheck1 = true">
+                          Enter
+                        </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -223,9 +225,14 @@
 
                       <!-- Caused -->
                       <SetdtCaused @updateValue="updateValue" />
-                      <!-- :disabled="check2" -->
+
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn @click="dialogcheck2 = true"> Enter </v-btn>
+                        <v-btn
+                          :disabled="check2"
+                          @click="(dialogcheck2 = true), setdata()"
+                        >
+                          Enter
+                        </v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -312,11 +319,11 @@
         <table>
           <tr>
             <td>Start at :</td>
-            <td colspan="2">{{ this.startAtDate }}</td>
+            <td colspan="2">{{ this.startAt }}</td>
           </tr>
           <tr>
             <td>End at :</td>
-            <td colspan="2">{{ this.endAtDT }}</td>
+            <td colspan="2">{{ this.endAt }}</td>
           </tr>
           <tr>
             <td>Employee ID and Name :</td>
@@ -617,6 +624,20 @@ export default {
     },
     updateValue(event) {
       this[event.key] = event.value;
+    },
+    setdata() {
+      return (
+        (this.startAt = moment(
+          moment(this.startAtDate).format("DDMMYY") +
+            moment(this.startAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate()),
+        (this.endAt = moment(
+          moment(this.endAtDate).format("DDMMYY") +
+            moment(this.endAtTime).format("HHmm"),
+          "DDMMYYHHmm"
+        ).toDate())
+      );
     },
     countsec() {
       return moment.utc(this.value * 1000).format("HH:mm:ss");
