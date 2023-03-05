@@ -11,9 +11,14 @@
     <v-row>
       <v-col cols="3">
         <v-autocomplete
+          class="text-h6"
+          bg-color="white"
+          variant="solo"
           label="Select a production line"
           :items="this.line"
-        ></v-autocomplete>
+          v-model="selectedLine"
+        >
+        </v-autocomplete>
         <div class="d-flex justify-center">
           <Datepicker
             v-model="date"
@@ -31,22 +36,27 @@
             </template>
           </Datepicker>
         </div>
-        <v-btn @click="genarate()">genarate</v-btn>
+        <div class="d-flex justify-center">
+          <v-btn @click="genarate()" class="text-h6 mt-6">genarate </v-btn>
+        </div>
       </v-col>
 
       <!-- ---------------------------------------------------------------- -->
 
       <v-col cols="9">
+        <!-- loop -->
         <div v-for="(date, index) in dateRange" :key="index">
+          <!-- แสดงวันที่ -->
           <div class="text-h5 d-flex justify-center mb-3 mt-3">{{ date }}</div>
           <v-row>
             <v-col cols="6" class="px-2">
               <v-card width="max" color="#AAAAAA" elevation="0">
                 <v-row>
+                  <!-- เลือก ot เช้า -->
                   <v-item-group
                     mandatory
                     class="ma-3"
-                    :model-value="selectedOT"
+                    v-model="selectedOTDay[index]"
                   >
                     <v-row>
                       <div class="text-h6 d-flex align-self-center ml-6">
@@ -55,14 +65,15 @@
                       <v-col v-for="(item, index) in OT">
                         <v-item
                           v-slot="{ isSelected, toggle }"
-                          :value="item.name"
+                          :value="item.send"
                         >
                           <v-card
                             :color="isSelected ? 'primary' : ''"
                             class="d-flex justify-center text-h6 py-2"
                             width="80px"
                             dark
-                            @click="toggle()"
+                            v-model="selectedOTDay[index]"
+                            @click="toggle"
                           >
                             {{ item.name }}
                           </v-card>
@@ -70,10 +81,12 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
+
+                  <!-- เลือกกลุ่มเช้า -->
                   <v-item-group
                     mandatory
-                    class="ma-3 ml-6"
-                    :model-value="selectedgroup"
+                    class="ma-3 ml-3"
+                    v-model="selectedGroupDay[index]"
                   >
                     <v-row>
                       <div class="text-h6 d-flex align-self-center ml-6">
@@ -89,7 +102,8 @@
                             class="d-flex justify-center text-h6 py-2"
                             width="80px"
                             dark
-                            @click="toggle()"
+                            v-model="selectedGroupDay[index]"
+                            @click="toggle"
                           >
                             {{ item.name }}
                           </v-card>
@@ -98,6 +112,8 @@
                     </v-row>
                   </v-item-group>
                 </v-row>
+
+                <!-- Day Target -->
                 <div class="text-h6 d-flex align-self-center ml-3 mt-3">
                   <div class="text-h6 d-flex align-self-center mt-2 mr-2">
                     Target :
@@ -109,7 +125,7 @@
                     hide-details="auto"
                     bg-color="#FFFFFF"
                     class="mt-2"
-                    v-model="target"
+                    v-model="targetDay[index]"
                   />
                   <div class="text-h6 d-flex align-self-center mt-2 ml-2 mr-6">
                     Frame
@@ -121,10 +137,11 @@
             <v-col cols="6" class="px-2">
               <v-card width="max" color="#AAAAAA" elevation="0">
                 <v-row>
+                  <!-- เลือก ot ดึก -->
                   <v-item-group
                     mandatory
                     class="ma-3"
-                    :model-value="selectedOT"
+                    v-model="selectedOTNight[index]"
                   >
                     <v-row>
                       <div class="text-h6 d-flex align-self-center ml-6">
@@ -133,14 +150,15 @@
                       <v-col v-for="(item, index) in OT">
                         <v-item
                           v-slot="{ isSelected, toggle }"
-                          :value="item.name"
+                          :value="item.send"
                         >
                           <v-card
                             :color="isSelected ? 'primary' : ''"
                             class="d-flex justify-center text-h6 py-2"
                             width="80px"
                             dark
-                            @click="toggle()"
+                            v-model="selectedOTNight[index]"
+                            @click="toggle"
                           >
                             {{ item.name }}
                           </v-card>
@@ -148,10 +166,12 @@
                       </v-col>
                     </v-row>
                   </v-item-group>
+
+                  <!-- เลือกกลุ่มดึก -->
                   <v-item-group
                     mandatory
                     class="ma-3 ml-6"
-                    :model-value="selectedgroup"
+                    v-model="selectedGroupNight[index]"
                   >
                     <v-row>
                       <div class="text-h6 d-flex align-self-center ml-6">
@@ -167,6 +187,7 @@
                             class="d-flex justify-center text-h6 py-2"
                             width="80px"
                             dark
+                            v-model="selectedGroupNight[index]"
                             @click="toggle()"
                           >
                             {{ item.name }}
@@ -176,6 +197,8 @@
                     </v-row>
                   </v-item-group>
                 </v-row>
+
+                <!-- Night Target -->
                 <div class="text-h6 d-flex align-self-center ml-3 mt-3">
                   <div class="text-h6 d-flex align-self-center mt-2 mr-2">
                     Target :
@@ -187,7 +210,7 @@
                     hide-details="auto"
                     bg-color="#FFFFFF"
                     class="mt-2"
-                    v-model="target"
+                    v-model="targetNight[index]"
                   />
                   <div class="text-h6 d-flex align-self-center mt-2 ml-2 mr-6">
                     Frame
@@ -198,6 +221,12 @@
           </v-row>
           <v-divider thickness="2" class="mt-2"></v-divider>
         </div>
+
+        <div class="d-flex justify-end mt-4 mr-5">
+          <v-btn v-if="btn == 1" color="primary" class="text-h5" @click="submit"
+            >Enter</v-btn
+          >
+        </div>
       </v-col>
     </v-row>
   </v-card>
@@ -206,8 +235,8 @@
 <script>
 import Datepicker from "@vuepic/vue-datepicker";
 import axiosInstance from "../utils/axios.instance";
-import moment from "moment";
 import "@vuepic/vue-datepicker/dist/main.css";
+import moment from "moment";
 
 import { ref } from "vue";
 
@@ -241,11 +270,23 @@ export default {
         id: 2,
       },
     ],
-    selectedOT: "",
-    selectedgroup: "",
-    target: "",
+    selectedOTDay: [],
+    selectedOTNight: [],
+    selectedGroupDay: [],
+    selectedGroupNight: [],
+    targetDay: [],
+    targetNight: [],
+    selectedLine: "",
     date: ref(),
     dateRange: [],
+    btn: 0,
+    forsubmit: {
+      shitf: [],
+      workingTimeType: [],
+      group: [],
+      lineId: [],
+      date: [],
+    },
   }),
   async created() {
     const lineA = await axiosInstance.get(`/line`);
@@ -254,30 +295,114 @@ export default {
   },
   methods: {
     genarate() {
-      // console.log("date", this.date);
-      // console.log("date1", this.date[0]);
-      // console.log("date2", this.date[1]);
-      // this.date1 = moment(this.date[0]).format("DD MMMM YYYY");
-      // this.date2 = moment(this.date[1]).format("DD MMMM YYYY");
-      // console.log("date1", this.date1);
-      // console.log("date1", this.date2);
-
       const date1 = this.date[0];
       const date2 = this.date[1];
-      console.log("date1", date1);
-      console.log("date2", date2);
       const setupdate = [];
+      const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      };
       let current = date1;
       while (current <= date2) {
-        console.log(current);
-        setupdate.push(new Date(current));
+        setupdate.push(current.toLocaleDateString("en-GB", options));
         current.setDate(current.getDate() + 1);
       }
-      console.log("setupdate", setupdate);
       this.dateRange = setupdate;
-      // console.log("date1", moment(this.date1).format("DD MMMM YYYY"));
-      // console.log("date2", moment(this.date2).format("DD MMMM YYYY"));
+      this.btn = 1;
       return;
+    },
+    async submit() {
+      // console.log("selectedLine", this.selectedLine.split(" ")[0]);
+      // console.log("selectedOTDay", this.selectedOTDay);
+      // console.log("selectedOTNight", this.selectedOTNight);
+      // console.log("selectedGroupDay", this.selectedGroupDay);
+      // console.log("selectedGroupNight", this.selectedGroupNight);
+      // console.log("targetDay", this.targetDay);
+      // console.log("targetNight", this.targetNight);
+
+      for (let i = 0; i < this.dateRange.length; i++) {
+        console.log("i", i);
+        // console.log("date", moment(this.dateRange[i]).toDate());
+        // console.log("target", parseInt(this.targetDay[i]));
+        // console.log("shitf", "DAY");
+        // console.log("group", this.selectedGroupDay[i]);
+        // console.log("workingTimeType", this.selectedOTDay[i]);
+        // console.log("lineId", parseInt(this.selectedLine.split(" ")[0]));
+
+        // Day @@@@@@@
+        const dateDay = moment(this.dateRange[i]).toDate();
+        const targetDay = parseInt(this.targetDay[i]);
+        const groupDay = this.selectedGroupDay[i];
+        const workingTimeTypeDay = this.selectedOTDay[i];
+        const lineIdDay = parseInt(this.selectedLine.split(" ")[0]);
+
+        // Night @@@@@@@
+        const dateNight = moment(this.dateRange[i]).toDate();
+        const targetNight = parseInt(this.targetNight[i]);
+        const groupNight = this.selectedGroupNight[i];
+        const workingTimeTypeNight = this.selectedOTNight[i];
+        const lineIdNight = parseInt(this.selectedLine.split(" ")[0]);
+
+        const b = await axiosInstance.post("/production-plan", {
+          plans: [
+            {
+              date: dateDay,
+              target: targetDay,
+              shift: "DAY",
+              group: groupDay,
+              workingTimeType: workingTimeTypeDay,
+              lineId: lineIdDay,
+            },
+            {
+              date: dateNight,
+              target: targetNight,
+              shift: "NIGHT",
+              group: groupNight,
+              workingTimeType: workingTimeTypeNight,
+              lineId: lineIdNight,
+            },
+          ],
+        });
+        console.log("DAY completed", i);
+        console.log("NIGHT completed", i);
+        // const n = await axiosInstance.post("/production-plan", {
+        //   date: dateNight,
+        //   target: targetNight,
+        //   shift: "NIGHT",
+        //   group: groupNight,
+        //   workingTimeType: workingTimeTypeNight,
+        //   lineId: lineIdNight,
+        // });
+      }
+
+      // for (let i = 0; i < this.dateRange.length; i++) {
+      //   const date = moment(this.dateRange[i]).toDate();
+      //   const dayData = {
+      //     date: date,
+      //     target: this.targetDay[i],
+      //     shift: "DAY",
+      //     group: this.selectedGroupDay[i],
+      //     workingTimeType: this.selectedOTDay[i],
+      //     lineId: this.selectedLine.split(" ")[0],
+      //   };
+      //   const nightData = {
+      //     date: date,
+      //     target: this.targetNight[i],
+      //     shift: "NIGHT",
+      //     group: this.selectedGroupNight[i],
+      //     workingTimeType: this.selectedOTNight[i],
+      //     lineId: this.selectedLine.split(" ")[0],
+      //   };
+      //   const headers = {
+      //     "Content-Type": "application/json",
+      //   };
+
+      //   const b = await axiosInstance.post("/production-plan", dayData);
+      //   const n = await axiosInstance.post("/production-plan", nightData);
+      //   console.log("NIGHT completed", i);
+      // }
     },
   },
 };

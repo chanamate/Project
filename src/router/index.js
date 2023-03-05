@@ -4,6 +4,7 @@ import FG_F from "../views/View_FG_F.vue"
 import NG_F from "../views/View_NG_F.vue"
 import DT_F from "../views/View_DT_F.vue"
 import productionPlan from "../views/View_productionPlan.vue"
+import test from "../views/View_test.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +38,11 @@ const router = createRouter({
       path: '/productionPlan',
       name: 'productionPlan',
       component: productionPlan
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     },
 
     // {
