@@ -1,8 +1,9 @@
 <template>
   <v-app>
     <v-main>
-      <router-link to="/"> home </router-link>
-      <router-link to="/productionPlan"> productionPlan </router-link>
+      <router-link to="/"> __home__ </router-link>
+      <router-link to="/productionPlan"> --productionPlan-- </router-link>
+      <router-link to="/pagination"> __pagination__ </router-link>
 
       <router-view />
     </v-main>

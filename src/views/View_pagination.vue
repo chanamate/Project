@@ -1,18 +1,18 @@
 <template>
-  <test />
+  <pagination />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
 // Components
-import test from "../components/test.vue";
+import pagination from "../components/pagination.vue";
 
 export default defineComponent({
-  name: "test1",
+  name: "pagination1",
 
   components: {
-    test,
+    pagination,
   },
 });
 </script>

@@ -4,7 +4,7 @@ import FG_F from "../views/View_FG_F.vue"
 import NG_F from "../views/View_NG_F.vue"
 import DT_F from "../views/View_DT_F.vue"
 import productionPlan from "../views/View_productionPlan.vue"
-import test from "../views/View_test.vue"
+import pagination from "../views/View_pagination.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -40,9 +40,9 @@ const router = createRouter({
       component: productionPlan
     },
     {
-      path: '/test',
-      name: 'test',
-      component: test
+      path: '/pagination',
+      name: 'pagination',
+      component: pagination
     },
 
     // {
