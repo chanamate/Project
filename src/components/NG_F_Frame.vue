@@ -69,9 +69,15 @@
               <!-- Scrap Repair Rework -->
               <v-card elevation="5" color="#CFCFCF" class="mt-4">
                 <v-tabs v-model="tab" bg-color="primary">
-                  <v-tab value="one">Scrap</v-tab>
-                  <v-tab value="two">Repair</v-tab>
-                  <v-tab value="three">Rework</v-tab>
+                  <v-tab
+                    v-if="type == 'F' || type == 'S' || type == 'P'"
+                    value="one"
+                    >Scrap</v-tab
+                  >
+                  <v-tab v-if="type == 'F' || type == 'S'" value="two"
+                    >Repair</v-tab
+                  >
+                  <v-tab v-if="type == 'P'" value="three">Rework</v-tab>
                 </v-tabs>
 
                 <v-window v-model="tab">
@@ -197,7 +203,8 @@
                 </v-btn>
               </div>
 
-              <v-dialog v-model="dialogEnter">
+              <!-- dialog enter -->
+              <!-- <v-dialog v-model="dialogEnter">
                 <v-card height="600px" width="775px" class="px-3 center">
                   <v-col class="text-h4 d-flex justify-center">
                     <div>NCM TAG</div>
@@ -291,7 +298,7 @@
                     </v-btn>
                   </v-card-actions>
                 </v-card>
-              </v-dialog>
+              </v-dialog> -->
 
               <!-- dialog check -->
               <v-dialog v-model="dialogcheck" persistent width="auto">
@@ -352,10 +359,7 @@
                     <v-btn
                       color="green-darken-1"
                       variant="text"
-                      @click="
-                        submit();
-                        dialogcheck = false;
-                      "
+                      @click="submit()"
                     >
                       Agree
                     </v-btn>
@@ -368,6 +372,14 @@
       </v-col>
     </v-row>
   </v-card>
+  <v-snackbar
+    v-model="snackbar"
+    timeout="2000"
+    location="top"
+    :color="error == 'success' ? 'success' : 'error'"
+  >
+    {{ error }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -456,6 +468,7 @@ export default {
     menu: false,
     modal: false,
     menu2: false,
+    snackbar: false,
 
     selectedValueModel: "",
     selectName: "",
@@ -472,9 +485,13 @@ export default {
     getdatenow() {
       return moment().format("MMMM Do YYYY");
     },
+
     async submit() {
       console.log("modelId :", this.selectedValueModel);
-      console.log("serialNumber :", this.dataPin.pinNumber);
+      console.log(
+        "serialNumber :",
+        `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`
+      );
       console.log(
         "timestamp :",
         moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm:00").toDate()
@@ -490,26 +507,34 @@ export default {
       console.log("group :", this.selectedGroup);
 
       // console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
-
-      const b = await axiosInstance.post("/product", {
-        modelId: this.selectedValueModel,
-        serialNumber: this.dataPin.pinNumber,
-        timestamp: moment(
-          this.dataPin.date + this.dataPin.time,
-          "DDMMYYHH:mm:00"
-        ).toDate(),
-        defect: {
-          stationId: this.selectedStaInspec,
-          failureDetailId: this.selectedScrap.split(" ")[0],
-          position: "1",
-        },
-        employee: {
-          employeeId: this.selectName.split(" ")[0],
-          shift: this.selectedDayNight,
-          workingTimeType: this.selectedOT,
-          group: this.selectedGroup,
-        },
-      });
+      try {
+        const b = await axiosInstance.post("/product", {
+          modelId: this.selectedValueModel,
+          serialNumber: `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`,
+          timestamp: moment(
+            this.dataPin.date + this.dataPin.time,
+            "DDMMYYHH:mm"
+          ).toDate(),
+          defect: {
+            stationId: this.selectedStaInspec,
+            failureDetailId: this.selectedScrap.split(" ")[0],
+            position: "1",
+          },
+          employee: {
+            employeeId: this.selectName.split(" ")[0],
+            shift: this.selectedDayNight,
+            workingTimeType: this.selectedOT,
+            group: this.selectedGroup,
+          },
+        });
+        this.error = "success";
+        this.dialogcheck = false;
+      } catch (error) {
+        console.log("error :", error.response);
+        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+      } finally {
+        this.snackbar = true;
+      }
     },
     updateValue(event) {
       this[event.key] = event.value;

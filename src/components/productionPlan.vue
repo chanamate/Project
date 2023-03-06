@@ -223,13 +223,66 @@
         </div>
 
         <div class="d-flex justify-end mt-4 mr-5">
-          <v-btn v-if="btn == 1" color="primary" class="text-h5" @click="submit"
+          <v-btn
+            v-if="btn == 1"
+            color="primary"
+            class="text-h5"
+            @click="dialogcheck = true"
             >Enter</v-btn
           >
         </div>
       </v-col>
     </v-row>
   </v-card>
+
+  <!-- dialog check -->
+  <v-dialog v-model="dialogcheck" persistent width="auto">
+    <v-card
+      color="white"
+      width="1000"
+      height="500"
+      class="d-flex justify-center px-4"
+    >
+      <div align="center" class="text-h4 my-4">
+        Check for Completeness
+        <v-divider thickness="2" class="mt-2"></v-divider>
+      </div>
+      <div align="center" class="text-h5 my-4">
+        <table>
+          <tr>
+            <td></td>
+            <td colspan="3">Day</td>
+            <td colspan="3">Night</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>Working Time Type</td>
+            <td>Group</td>
+            <td>Target</td>
+            <td>Working Time Type</td>
+            <td>Group</td>
+            <td>Target</td>
+          </tr>
+          <tr v-for="(date, index) in dateRange" :key="index">
+            <td>{{ date }}</td>
+            <td>{{ selectedOTDay[index] }}</td>
+            <td>{{ selectedGroupDay[index] }}</td>
+            <td>{{ targetDay[index] }}</td>
+            <td>{{ selectedOTNight[index] }}</td>
+            <td>{{ selectedGroupNight[index] }}</td>
+            <td>{{ targetNight[index] }}</td>
+          </tr>
+        </table>
+        <v-btn color="primary" variant="text" @click="dialogcheck = false">
+          cancel
+        </v-btn>
+
+        <v-btn color="green-darken-1" variant="text" @click="submit()">
+          Agree
+        </v-btn>
+      </div>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -280,6 +333,7 @@ export default {
     date: ref(),
     dateRange: [],
     btn: 0,
+    dialogcheck: false,
     forsubmit: {
       shitf: [],
       workingTimeType: [],
@@ -408,8 +462,47 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .red-color {
   color: red;
+}
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(200, 200, 200);
+  letter-spacing: 1px;
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid rgb(190, 190, 190);
+  padding: 4px 20px;
+}
+
+th {
+  background-color: rgb(235, 235, 235);
+}
+
+td {
+  text-align: left;
+}
+
+tr:nth-child(even) td {
+  background-color: rgb(250, 250, 250);
+}
+
+tr:nth-child(odd) td {
+  background-color: rgb(240, 240, 240);
+}
+.center {
+  margin: 0 auto;
+}
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
 }
 </style>

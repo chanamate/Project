@@ -103,7 +103,7 @@ export default {
 
         let pindata = {
           date: moment(newdate).format("DDMMYY"),
-          time: moment(newtime).format("HH:mm:00"),
+          time: moment(newtime).format("HH:mm"),
           pinNumber: newPin,
           machine: newMachine,
         };

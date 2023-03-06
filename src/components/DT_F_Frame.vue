@@ -353,19 +353,20 @@
           cancel
         </v-btn>
 
-        <v-btn
-          color="green-darken-1"
-          variant="text"
-          @click="
-            submit2();
-            dialogcheck2 = false;
-          "
-        >
+        <v-btn color="green-darken-1" variant="text" @click="submit2()">
           Agree
         </v-btn>
       </div>
     </v-card>
   </v-dialog>
+  <v-snackbar
+    v-model="snackbar"
+    timeout="2000"
+    location="top"
+    :color="error == 'success' ? 'success' : 'error'"
+  >
+    {{ error }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -526,6 +527,7 @@ export default {
     endAtDT: "",
     dialogcheck1: false,
     dialogcheck2: false,
+    snackbar: false,
     selectedStaInspecCheck: "",
   }),
   beforeUnmount() {
@@ -560,18 +562,27 @@ export default {
       console.log("workingTimeType :", this.selectedOT);
       console.log("group :", this.selectedGroup);
 
-      const b = await axiosInstance.post("/downtime", {
-        startAt: this.startAtDT,
-        endAt: this.endAtDT,
-        stationId: this.selectedStation.split(" ")[0],
-        availabilityId: this.selectedDT.split(" ")[0],
-        employee: {
-          employeeId: this.selectName.split(" ")[0],
-          shift: this.selectedDayNight,
-          workingTimeType: this.selectedOT,
-          group: this.selectedGroup,
-        },
-      });
+      try {
+        const b = await axiosInstance.post("/downtime", {
+          startAt: this.startAtDT,
+          endAt: this.endAtDT,
+          stationId: this.selectedStation.split(" ")[0],
+          availabilityId: this.selectedDT.split(" ")[0],
+          employee: {
+            employeeId: this.selectName.split(" ")[0],
+            shift: this.selectedDayNight,
+            workingTimeType: this.selectedOT,
+            group: this.selectedGroup,
+          },
+        });
+        this.error = "success";
+        this.dialogcheck = false;
+      } catch (error) {
+        console.log("error :", error.response);
+        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+      } finally {
+        this.snackbar = true;
+      }
     },
     async submit2() {
       // console.log("startAtDate", moment(this.startAtDate).format("DDMMYY"));
@@ -603,26 +614,35 @@ export default {
       console.log("workingTimeType :", this.selectedOT);
       console.log("group :", this.selectedGroup);
 
-      const b = await axiosInstance.post("/downtime", {
-        startAt: moment(
-          moment(this.startAtDate).format("DDMMYY") +
-            moment(this.startAtTime).format("HHmm"),
-          "DDMMYYHHmm"
-        ).toDate(),
-        endAt: moment(
-          moment(this.endAtDate).format("DDMMYY") +
-            moment(this.endAtTime).format("HHmm"),
-          "DDMMYYHHmm"
-        ).toDate(),
-        stationId: this.selectedStation.split(" ")[0],
-        availabilityId: this.selectedDT.split(" ")[0],
-        employee: {
-          employeeId: this.selectName.split(" ")[0],
-          shift: this.selectedDayNight,
-          workingTimeType: this.selectedOT,
-          group: this.selectedGroup,
-        },
-      });
+      try {
+        const b = await axiosInstance.post("/downtime", {
+          startAt: moment(
+            moment(this.startAtDate).format("DDMMYY") +
+              moment(this.startAtTime).format("HHmm"),
+            "DDMMYYHHmm"
+          ).toDate(),
+          endAt: moment(
+            moment(this.endAtDate).format("DDMMYY") +
+              moment(this.endAtTime).format("HHmm"),
+            "DDMMYYHHmm"
+          ).toDate(),
+          stationId: this.selectedStation.split(" ")[0],
+          availabilityId: this.selectedDT.split(" ")[0],
+          employee: {
+            employeeId: this.selectName.split(" ")[0],
+            shift: this.selectedDayNight,
+            workingTimeType: this.selectedOT,
+            group: this.selectedGroup,
+          },
+        });
+        this.error = "success";
+        this.dialogcheck = false;
+      } catch (error) {
+        console.log("error :", error.response);
+        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+      } finally {
+        this.snackbar = true;
+      }
     },
     updateValue(event) {
       this[event.key] = event.value;

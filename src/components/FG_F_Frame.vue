@@ -98,10 +98,7 @@
                     <v-btn
                       color="green-darken-1"
                       variant="text"
-                      @click="
-                        submit();
-                        dialogcheck = false;
-                      "
+                      @click="submit()"
                     >
                       Agree
                     </v-btn>
@@ -114,6 +111,15 @@
       </v-col>
     </v-row>
   </v-card>
+
+  <v-snackbar
+    v-model="snackbar"
+    timeout="2000"
+    location="top"
+    :color="error == 'success' ? 'success' : 'error'"
+  >
+    {{ error }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -166,31 +172,45 @@ export default {
     ],
     dataPin: { pinNumber: null, machine: null },
     dialogcheck: false,
+    snackbar: false,
+    error: "",
     modelCheck: "",
   }),
 
   methods: {
     async submit() {
       console.log("modelId", this.selectedValueModel);
-      console.log("serialNumber", this.dataPin.pinNumber);
+      console.log(
+        "serialNumber",
+        `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`
+      );
       console.log(
         "timestamp",
-        moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm:00").toDate()
+        moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm").toDate()
       );
 
-      const b = await axiosInstance.post("/product", {
-        modelId: this.selectedValueModel,
-        serialNumber: this.dataPin.pinNumber,
-        timestamp: moment(
-          this.dataPin.date + this.dataPin.time,
-          "DDMMYYHH:mm:00"
-        ).toDate(),
-      });
+      try {
+        const b = await axiosInstance.post("/product", {
+          modelId: this.selectedValueModel,
+          serialNumber: `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`,
+          timestamp: moment(
+            this.dataPin.date + this.dataPin.time,
+            "DDMMYYHH:mm"
+          ).toDate(),
+        });
+        this.error = "success";
+        this.dialogcheck = false;
+      } catch (error) {
+        console.log("error :", error.response);
+        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+      } finally {
+        this.snackbar = true;
+      }
     },
 
     updateValue(event) {
       this[event.key] = event.value;
-      console.log("modelId", this.selectedValueModel);
+      // console.log("modelId", this.selectedValueModel);
 
       switch (this.selectedValueModel) {
         case 1:
