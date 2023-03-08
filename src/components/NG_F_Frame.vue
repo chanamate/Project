@@ -469,6 +469,7 @@ export default {
     modal: false,
     menu2: false,
     snackbar: false,
+    error: "",
 
     selectedValueModel: "",
     selectName: "",
@@ -478,6 +479,7 @@ export default {
     selectedStaInspecCheck: "",
     selectedScrap: "",
     selectedGroup: "",
+    serialNumberSent: "",
     dataPin: { pinNumber: null, machine: null },
   }),
 
@@ -498,26 +500,34 @@ export default {
       );
       console.log("defect_____________");
       console.log("stationId :", this.selectedStaInspec);
-      console.log("failureDetailId :", this.selectedScrap);
+      console.log("failureDetailId :", this.selectedScrap.split(" ")[0]);
       console.log("position :", "1");
       console.log("employee___________");
-      console.log("employeeId :", this.selectName);
+      console.log("employeeId :", this.selectName.split(" ")[0]);
       console.log("shift :", this.selectedDayNight);
       console.log("workingTimeType :", this.selectedOT);
       console.log("group :", this.selectedGroup);
 
       // console.log(moment().format("MMMM Do YYYY, h:mm:ss a"));
+      console.log("this.dataPin.pinNumber}", this.dataPin.pinNumber);
+
+      const numToStr = this.dataPin.pinNumber.toString();
+      if (numToStr == this.dataPin.pinNumber.toString()) {
+        this.serialNumberSent = `${this.dataPin.date}-${this.dataPin.time}-${numToStr}`;
+      } else {
+        this.serialNumberSent = "";
+      }
       try {
         const b = await axiosInstance.post("/product", {
           modelId: this.selectedValueModel,
-          serialNumber: `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`,
+          serialNumber: this.serialNumberSent,
           timestamp: moment(
             this.dataPin.date + this.dataPin.time,
             "DDMMYYHH:mm"
           ).toDate(),
           defect: {
             stationId: this.selectedStaInspec,
-            failureDetailId: this.selectedScrap.split(" ")[0],
+            failureDetailId: parseInt(this.selectedScrap.split(" ")[0]),
             position: "1",
           },
           employee: {

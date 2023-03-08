@@ -65,7 +65,7 @@
                 <v-card
                   color="white"
                   width="600"
-                  height="270"
+                  height="280"
                   class="d-flex justify-center px-4"
                 >
                   <div align="center" class="text-h4 my-4">
@@ -169,12 +169,18 @@ export default {
         id: "3",
         url: "/DT_F/",
       },
+      {
+        name: "Bottle Neck",
+        id: "4",
+        url: "/DT_F/",
+      },
     ],
     dataPin: { pinNumber: null, machine: null },
     dialogcheck: false,
     snackbar: false,
     error: "",
     modelCheck: "",
+    serialNumberSent: "",
   }),
 
   methods: {
@@ -189,10 +195,17 @@ export default {
         moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm").toDate()
       );
 
+      const numToStr = this.dataPin.pinNumber.toString();
+      if (numToStr == this.dataPin.pinNumber.toString()) {
+        this.serialNumberSent = `${this.dataPin.date}-${this.dataPin.time}-${numToStr}`;
+      } else {
+        this.serialNumberSent = "";
+      }
+      console.log("serialNumberSent", this.serialNumberSent);
       try {
         const b = await axiosInstance.post("/product", {
           modelId: this.selectedValueModel,
-          serialNumber: `${this.dataPin.date}-${this.dataPin.time}-${this.dataPin.pinNumber}`,
+          serialNumber: this.serialNumberSent,
           timestamp: moment(
             this.dataPin.date + this.dataPin.time,
             "DDMMYYHH:mm"

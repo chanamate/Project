@@ -5,6 +5,8 @@ import NG_F from "../views/View_NG_F.vue"
 import DT_F from "../views/View_DT_F.vue"
 import productionPlan from "../views/View_productionPlan.vue"
 import pagination from "../views/View_pagination.vue"
+import view_Login from '../views/view_Login.vue'
+import view_register from '../views/view_register.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,7 +46,16 @@ const router = createRouter({
       name: 'pagination',
       component: pagination
     },
-
+    {
+      path: '/Login',
+      name: 'Login',
+      component: view_Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: view_register
+    },
     // {
     //   path: '/NG_S',
     //   name: 'NG_S',
