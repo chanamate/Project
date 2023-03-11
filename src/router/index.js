@@ -4,7 +4,7 @@ import FG_F from "../views/View_FG_F.vue"
 import NG_F from "../views/View_NG_F.vue"
 import DT_F from "../views/View_DT_F.vue"
 import productionPlan from "../views/View_productionPlan.vue"
-import pagination from "../views/View_pagination.vue"
+import productDetails from "../views/View_productDetails.vue"
 import view_Login from '../views/view_Login.vue'
 import view_register from '../views/view_register.vue'
 
@@ -42,9 +42,9 @@ const router = createRouter({
       component: productionPlan
     },
     {
-      path: '/pagination',
-      name: 'pagination',
-      component: pagination
+      path: '/productDetails',
+      name: 'productDetails',
+      component: productDetails
     },
     {
       path: '/Login',

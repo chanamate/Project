@@ -1,18 +1,18 @@
 <template>
-  <pagination />
+  <productDetails />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
 // Components
-import pagination from "../components/pagination.vue";
+import productDetails from "../components/productDetails.vue";
 
 export default defineComponent({
-  name: "pagination1",
+  name: "productDetails1",
 
   components: {
-    pagination,
+    productDetails,
   },
 });
 </script>
