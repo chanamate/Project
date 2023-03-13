@@ -1,50 +1,58 @@
 <template>
-  <div id="container-register">
-    <div id="title">
-      <h1>Sign in</h1>
+  <v-col class="align-self-center">
+    <div class="d-flex justify-center my-16 text-h2 font-weight-bold">
+      Welcome to Input Data Page
     </div>
 
-    <v-form>
-      <v-col cols="8" class="mx-16">
-        <div class="text-white d-flex justify-start">Email address</div>
-        <v-text-field
-          clearable
-          variant="solo"
-          label="email"
-          type="email"
-          hide-details="auto"
-          bg-color="#dde2eb"
-          v-model="email"
-          autocomplete="off"
-          required
-          :rules="[required]"
-        ></v-text-field
-      ></v-col>
+    <div id="container-register">
+      <div id="title">
+        <h1>Log in</h1>
+      </div>
 
-      <v-col cols="8" class="mx-16">
-        <div class="text-white d-flex justify-start">Password</div>
-        <v-text-field
-          clearable
-          variant="solo"
-          label="password"
-          type="password"
-          hide-details="auto"
-          bg-color="#dde2eb"
-          v-model="password"
-          autocomplete="off"
-          :rules="[required]"
-        ></v-text-field>
+      <v-form>
+        <v-row cols="8" class="d-flex justify-center mx-5 mt-3">
+          <v-col>
+            <div class="text-white d-flex justify-start">Email address</div>
+            <v-text-field
+              clearable
+              variant="solo"
+              label="email"
+              type="email"
+              hide-details="auto"
+              bg-color="#dde2eb"
+              v-model="email"
+              autocomplete="off"
+              required
+              :rules="[required]"
+            ></v-text-field>
+
+            <div class="text-white d-flex justify-start mt-4">Password</div>
+            <v-text-field
+              clearable
+              variant="solo"
+              label="password"
+              type="password"
+              hide-details="auto"
+              bg-color="#dde2eb"
+              v-model="password"
+              autocomplete="off"
+              :rules="[required]"
+              class="mb-4"
+            ></v-text-field>
+          </v-col>
+        </v-row>
         <div class="text-red">
           {{ message }}
         </div>
-      </v-col>
-      <v-btn @click="submit()">Sign in</v-btn>
-    </v-form>
-    <div class="register">
-      Create an account
-      <a href="/register"><button id="register-link">Sign up here</button></a>
+
+        <v-btn @click="submit()">Log in</v-btn>
+      </v-form>
+      <div class="register">
+        Create an account
+        <a href="/register"><button id="register-link">Sign up here</button></a>
+      </div>
     </div>
-  </div>
+  </v-col>
 </template>
 
 <script>
@@ -71,6 +79,7 @@ export default {
       const messageCheck = "email or password invalid";
       console.log("token", login.token);
       console.log("message", login.message);
+      console.log("messageCheck", messageCheck);
       console.log("login", login);
 
       if (messageCheck == login.message) {
@@ -102,18 +111,18 @@ h1 {
 #container-register {
   background-color: #1d1f20;
   position: relative;
-  top: 20%;
+  top: 0%;
   margin: auto;
-  width: 390px;
-  height: 480px;
+  width: 550px;
+  height: 525px;
   border-radius: 0.35em;
-  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.664);
   text-align: center;
 }
 
 #title {
   position: relative;
-  background-color: #1a1c1d;
+  background-color: #1d1f20;
   width: 100%;
   padding: 20px 0px;
   border-radius: 0.35em;
@@ -210,8 +219,8 @@ input[type="submit"] {
 #register-link {
   margin-top: 5px;
   padding: 6px 25px;
-  background: #373e4a;
-  color: #c1c3c6;
+  background: #686e77;
+  color: #ffffff;
   font-weight: bold;
   border: 0 none;
   cursor: pointer;

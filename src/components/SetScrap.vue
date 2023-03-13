@@ -68,12 +68,12 @@ export default {
     let scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
       type: "SCRAP",
     });
+    this.scrap = scrap;
     // station = station.slice(4, 9); @@@@@@@@@@@@@@@@@@@@@@ใช้ตอน scrap @@@@@@@@@@@
     // station = station.filter((e) => {
     //   const re = new RegExp("inspection", "i");
     //   return re.test(e.stationName);
     // });
-    this.scrap = scrap;
     // console.log("scrap", scrap);
   },
 };

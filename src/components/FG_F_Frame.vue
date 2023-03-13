@@ -11,7 +11,7 @@
           Input data for Finished Goods : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Input data for Defect Type : Paint
+          Input data for Finished Goods : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -125,16 +125,12 @@
 <script>
 import moment from "moment";
 import axiosInstance from "../utils/axios.instance";
-
 import SetModel from "../components/SetModel.vue";
 import SetPinStampNumber from "../components/SetPinStampNumber.vue";
-
 // import { title } from "../assets/constant_F";
-
 export default {
   components: { SetModel, SetPinStampNumber },
   name: "FG_F_Frame",
-
   computed: {
     type() {
       return this.$route.params.type;
@@ -150,7 +146,6 @@ export default {
       return true;
     },
   },
-
   data: () => ({
     selectedValueModel: "",
     title: [
@@ -170,9 +165,14 @@ export default {
         url: "/DT_F/",
       },
       {
-        name: "Bottle Neck",
+        name: "First Station",
         id: "4",
-        url: "/DT_F/",
+        url: "/first_OP/",
+      },
+      {
+        name: "Bottle Neck",
+        id: "5",
+        url: "/bottleNeck/",
       },
     ],
     dataPin: { pinNumber: null, machine: null },
@@ -182,7 +182,6 @@ export default {
     modelCheck: "",
     serialNumberSent: "",
   }),
-
   methods: {
     async submit() {
       console.log("modelId", this.selectedValueModel);
@@ -194,7 +193,6 @@ export default {
         "timestamp",
         moment(this.dataPin.date + this.dataPin.time, "DDMMYYHH:mm").toDate()
       );
-
       const numToStr = this.dataPin.pinNumber.toString();
       if (numToStr == this.dataPin.pinNumber.toString()) {
         this.serialNumberSent = `${this.dataPin.date}-${this.dataPin.time}-${numToStr}`;
@@ -206,6 +204,7 @@ export default {
         const b = await axiosInstance.post("/product", {
           modelId: this.selectedValueModel,
           serialNumber: this.serialNumberSent,
+          machineNumber: this.dataPin.machine,
           timestamp: moment(
             this.dataPin.date + this.dataPin.time,
             "DDMMYYHH:mm"
@@ -220,11 +219,9 @@ export default {
         this.snackbar = true;
       }
     },
-
     updateValue(event) {
       this[event.key] = event.value;
       // console.log("modelId", this.selectedValueModel);
-
       switch (this.selectedValueModel) {
         case 1:
           this.modelCheck = "Model F01";
@@ -237,7 +234,6 @@ export default {
           break;
       }
     },
-
     gettype() {
       return this.type;
     },
@@ -263,25 +259,20 @@ table {
   font-size: 0.8rem;
   width: 100%;
 }
-
 td,
 th {
   border: 1px solid rgb(190, 190, 190);
   padding: 4px 20px;
 }
-
 th {
   background-color: rgb(235, 235, 235);
 }
-
 td {
   text-align: left;
 }
-
 tr:nth-child(even) td {
   background-color: rgb(250, 250, 250);
 }
-
 tr:nth-child(odd) td {
   background-color: rgb(240, 240, 240);
 }

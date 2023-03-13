@@ -353,7 +353,11 @@
           cancel
         </v-btn>
 
-        <v-btn color="green-darken-1" variant="text" @click="submit2()">
+        <v-btn
+          color="green-darken-1"
+          variant="text"
+          @click="submit2(), (dialogcheck2 = false)"
+        >
           Agree
         </v-btn>
       </div>
@@ -452,6 +456,16 @@ export default {
         id: "3",
         url: "/DT_F/",
       },
+      {
+        name: "First Station",
+        id: "4",
+        url: "/first_OP/",
+      },
+      {
+        name: "Bottle Neck",
+        id: "5",
+        url: "/bottleNeck/",
+      },
     ],
     station: [
       {
@@ -505,6 +519,8 @@ export default {
         id: 3,
       },
     ],
+    error: "",
+
     name: name,
     tab: null,
     interval: {},

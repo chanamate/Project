@@ -7,6 +7,8 @@ import productionPlan from "../views/View_productionPlan.vue"
 import productDetails from "../views/View_productDetails.vue"
 import view_Login from '../views/view_Login.vue'
 import view_register from '../views/view_register.vue'
+import first_OP from '../views/View_first_OP.vue'
+import bottleNeck from '../views/View_bottleNeck.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +37,16 @@ const router = createRouter({
       path: '/DT_F/:type',
       name: 'DT_F',
       component: DT_F
+    },
+    {
+      path: '/first_OP/:type',
+      name: 'first_OP',
+      component: first_OP
+    },
+    {
+      path: '/bottleNeck/:type',
+      name: 'bottleNeck',
+      component: bottleNeck
     },
     {
       path: '/productionPlan',

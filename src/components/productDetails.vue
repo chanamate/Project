@@ -118,6 +118,10 @@ export default {
         take: 200,
       },
     });
+    console.log(
+      "🚀 ~ file: productDetails.vue:127 ~ this.products=b.products.map ~ b.products:",
+      b.products
+    );
     this.products = b.products.map((item) => {
       return {
         ...item,

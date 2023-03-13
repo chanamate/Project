@@ -452,6 +452,16 @@ export default {
         id: "3",
         url: "/DT_F/",
       },
+      {
+        name: "First Station",
+        id: "4",
+        url: "/first_OP/",
+      },
+      {
+        name: "Bottle Neck",
+        id: "5",
+        url: "/bottleNeck/",
+      },
     ],
     lineId: null,
     scrap: "",
@@ -521,6 +531,7 @@ export default {
         const b = await axiosInstance.post("/product", {
           modelId: this.selectedValueModel,
           serialNumber: this.serialNumberSent,
+          machineNumber: this.dataPin.machine,
           timestamp: moment(
             this.dataPin.date + this.dataPin.time,
             "DDMMYYHH:mm"
@@ -528,7 +539,7 @@ export default {
           defect: {
             stationId: this.selectedStaInspec,
             failureDetailId: parseInt(this.selectedScrap.split(" ")[0]),
-            position: "1",
+            position: "null",
           },
           employee: {
             employeeId: this.selectName.split(" ")[0],
