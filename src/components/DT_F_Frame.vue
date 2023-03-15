@@ -250,7 +250,7 @@
     <v-card
       color="white"
       width="650"
-      height="450"
+      height="445"
       class="d-flex justify-center px-4"
     >
       <div align="center" class="text-h4 my-4">
@@ -456,14 +456,10 @@ export default {
         id: "3",
         url: "/DT_F/",
       },
-      {
-        name: "First Station",
-        id: "4",
-        url: "/first_OP/",
-      },
+
       {
         name: "Bottle Neck",
-        id: "5",
+        id: "4",
         url: "/bottleNeck/",
       },
     ],

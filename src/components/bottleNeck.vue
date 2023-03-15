@@ -3,15 +3,11 @@
     <v-row>
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
-        <v-card-title
-          align="center"
-          class="text-h4 my-4"
-          v-if="type == 'F' || type == 'S'"
-        >
-          Quantity Input for Bottle Neck : Fabrication {{ type }} Frame
+        <v-card-title align="center" class="text-h4 my-4">
+          Quantity Input for First Station : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Quantity Input for Bottle Neck : Paint
+          Quantity Input for First Station : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -20,7 +16,7 @@
     <v-row>
       <v-col cols="2">
         <!-- ตัวเลือกทางด้านซ้าย -->
-        <v-item-group mandatory model-value="5">
+        <v-item-group mandatory model-value="4">
           <v-card elevation="0" class="ml-4">
             <v-col v-for="(item, index) in title" :key="index">
               <v-item v-slot="{ isSelected, toggle }" :value="item.id">
@@ -41,7 +37,28 @@
 
       <v-col>
         <v-card height="840" color="#AAAAAA" class="pa-4 mr-4">
-          <v-row> </v-row>
+          <v-col cols="6">
+            <v-card>
+              <div class="ml-4 mt-4 text-h6">
+                Add quantity input of operation 1 :
+              </div>
+
+              <div class="pa-4 text-h4">
+                <v-icon class="mx-2" color="red" @click="removeAmount()">
+                  mdi-minus
+                </v-icon>
+                {{ amount }}
+                <v-icon class="mx-2" color="green" @click="addAmount()">
+                  mdi-plus
+                </v-icon>
+              </div>
+              + mean add more quantity input <br />
+              - mean reduce quantity input
+            </v-card>
+            <div cols="6" class="d-flex justify-end mt-4">
+              <v-btn @click=""> Enter </v-btn>
+            </div>
+          </v-col>
         </v-card>
       </v-col>
     </v-row>
@@ -60,7 +77,7 @@ export default {
     },
   },
   data: () => ({
-    selectedValueModel: "",
+    amount: 0,
     title: [
       {
         name: "Finished Goods",
@@ -78,13 +95,8 @@ export default {
         url: "/DT_F/",
       },
       {
-        name: "First Station",
-        id: "4",
-        url: "/first_OP/",
-      },
-      {
         name: "Bottle Neck",
-        id: "5",
+        id: "4",
         url: "/bottleNeck/",
       },
     ],

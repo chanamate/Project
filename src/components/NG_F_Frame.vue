@@ -453,13 +453,8 @@ export default {
         url: "/DT_F/",
       },
       {
-        name: "First Station",
-        id: "4",
-        url: "/first_OP/",
-      },
-      {
         name: "Bottle Neck",
-        id: "5",
+        id: "4",
         url: "/bottleNeck/",
       },
     ],
