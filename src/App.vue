@@ -5,6 +5,7 @@
       <router-link to="/"> __Home__ </router-link>
       <router-link to="/productionPlan"> --Production Plan-- </router-link>
       <router-link to="/productDetails"> __Product Details__ </router-link>
+      <router-link to="/test"> --test-- </router-link>
 
       <router-view />
     </v-main>

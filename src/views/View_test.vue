@@ -1,18 +1,18 @@
 <template>
-  <first_OP />
+  <test />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
 // Components
-import first_OP from "../components/first_OP.vue";
+import test from "../components/test.vue";
 
 export default defineComponent({
-  name: "first_OP2",
+  name: "test2",
 
   components: {
-    first_OP,
+    test,
   },
 });
 </script>

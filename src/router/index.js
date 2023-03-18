@@ -7,7 +7,7 @@ import productionPlan from "../views/View_productionPlan.vue"
 import productDetails from "../views/View_productDetails.vue"
 import view_Login from '../views/view_Login.vue'
 import view_register from '../views/view_register.vue'
-import first_OP from '../views/View_first_OP.vue'
+import test from '../views/View_test.vue'
 import bottleNeck from '../views/View_bottleNeck.vue'
 
 const router = createRouter({
@@ -39,11 +39,6 @@ const router = createRouter({
       component: DT_F
     },
     {
-      path: '/first_OP/:type',
-      name: 'first_OP',
-      component: first_OP
-    },
-    {
       path: '/bottleNeck/:type',
       name: 'bottleNeck',
       component: bottleNeck
@@ -67,6 +62,11 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: view_register
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     },
     // {
     //   path: '/NG_S',
