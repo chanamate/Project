@@ -3,11 +3,21 @@
     Product Details
   </v-card-title>
   <v-row>
-    <v-col cols="1" class="d-flex align-center ml-6"> Select date </v-col>
-    <v-col cols="2">
+    <v-col cols="3" class="ml-2">
+      <v-autocomplete
+        bg-color="white"
+        variant="solo"
+        label="Select a production line"
+        :items="this.line"
+        v-model="selectedLine"
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col cols="1" class="d-flex justify-end mt-4"> Select date : </v-col>
+    <v-col cols="2" class="mt-2">
       <Datepicker v-model="date" auto-apply range :enableTimePicker="false" />
     </v-col>
-    <v-col class="d-flex align-end">
+    <v-col cols="2" class="mt-2">
       <v-btn @click="find()">search</v-btn>
     </v-col>
   </v-row>
@@ -49,6 +59,8 @@ export default {
     Datepicker,
   },
   data: () => ({
+    line: [],
+    selectedLine: "",
     date: new Date(),
     itemsPerPage: 10,
     headers: [
@@ -104,6 +116,11 @@ export default {
     products: [],
     search: "",
   }),
+  async created() {
+    const lineA = await axiosInstance.get(`/line`);
+    this.line = lineA.map((n) => `${n.lineId} ${n.lineName}`);
+    // console.log("line", this.line);
+  },
   async mounted() {
     const endDate = new Date();
     const startDate = new Date(new Date().setDate(endDate.getDate() - 7));

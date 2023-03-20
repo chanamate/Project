@@ -1,6 +1,24 @@
 <template>
-  <v-btn @click="generatePdf">Click Here</v-btn>
-  <div ref="html2Pdf">
+  <v-row class="my-2">
+    <v-col cols="3" class="ml-2">
+      <v-autocomplete
+        bg-color="white"
+        variant="solo"
+        label="Select a production line"
+        :items="this.line"
+        v-model="selectedLine"
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col cols="1" class="d-flex justify-end mt-4"> Select date : </v-col>
+    <v-col cols="2" class="mt-2">
+      <Datepicker v-model="date" auto-apply :enableTimePicker="false" />
+    </v-col>
+    <v-col cols="2" class="mt-2">
+      <v-btn class="ml-6" @click="generatePdf">Generate Table</v-btn>
+    </v-col>
+  </v-row>
+  <div ref="html2Pdf" class="mx-2">
     <table>
       <tr>
         <th colspan="4">DAILY REPORT</th>
@@ -117,11 +135,16 @@
       </tr>
     </table>
   </div>
+  <div class="d-flex justify-end ma-6">
+    <v-btn @click="generatePdf"> Generate PDF and Print </v-btn>
+  </div>
 </template>
 
 <script>
 import moment from "moment";
 import axiosInstance from "../utils/axios.instance";
+import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 // import jsPDF from "jspdf";
 // import "jspdf-autotable";
 // import "jspdf-invoice-template";
@@ -132,6 +155,7 @@ export default {
   name: "test",
   components: {
     Vue3Html2pdf,
+    Datepicker,
   },
   async mounted() {
     const b = await axiosInstance.post("/dashboard/date", {
@@ -182,7 +206,6 @@ export default {
       html2pdf()
         .from(this.$refs.html2Pdf)
         .set({
-          filename: `hehehe.pdf`,
           margin: [0.5, 0.5, 0.5, 0.5],
           filename: "yourfile.pdf",
           enableLinks: false,
@@ -197,39 +220,11 @@ export default {
           window.open(pdf.output("bloburl"), "_blank").print();
         });
     },
-    // printFunction() {
-    //   // const doc = new jsPDF({
-    //   //   orientation: "portrait",
-    //   //   unit: "mm",
-    //   //   format: "a4",
-    //   // });
-    //   // doc.autoPrint();
-    //   // doc.output("dataurlnewwindow");
-
-    //   // window.print();
-
-    //   // var divContents = document.getElementById("DIV_ID").innerHTML;
-    //   // var prnt = window.open("", "", "height=790px, width=1000px");
-    //   // prnt.document.write(divContents);
-    //   // prnt.document.close();
-    //   // prnt.print();
-
-    //   var prtContent = document.getElementById("DIV_ID");
-    //   var WinPrint = window.open(
-    //     "",
-    //     "",
-    //     "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-    //   );
-    //   WinPrint.document.write(prtContent.innerHTML);
-    //   WinPrint.document.write(style);
-    //   WinPrint.document.close();
-    //   WinPrint.focus();
-    //   WinPrint.print();
-    //   WinPrint.close();
-    // },
   },
   data: () => ({
-    name: "hi",
+    line: [],
+    selectedLine: "",
+    date: new Date(),
     startAt: "",
     shift: "",
     group: "",
@@ -252,6 +247,11 @@ export default {
     target: "",
     oee: "",
   }),
+  async created() {
+    const lineA = await axiosInstance.get(`/line`);
+    this.line = lineA.map((n) => `${n.lineId} ${n.lineName}`);
+    // console.log("line", this.line);
+  },
 };
 </script>
 
