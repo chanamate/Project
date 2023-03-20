@@ -1,6 +1,6 @@
 <template>
-  <v-btn @click="printFunction()">Print</v-btn>
-  <div id="DIV_ID">
+  <v-btn @click="generatePdf">Click Here</v-btn>
+  <div ref="html2Pdf">
     <table>
       <tr>
         <th colspan="4">DAILY REPORT</th>
@@ -40,8 +40,6 @@
         <td>TOTAL :</td>
         <th>{{ this.sumdowntimeDefect }}</th>
       </tr>
-
-      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
       <tr>
         <td></td>
@@ -97,8 +95,6 @@
       </tr>
     </table>
 
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
     <table class="my-2">
       <tr>
         <td rowspan="2">TARGET</td>
@@ -107,8 +103,6 @@
         <td class="text-center">{{ this.actual }}</td>
       </tr>
     </table>
-
-    <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
     <table>
       <tr>
@@ -128,12 +122,17 @@
 <script>
 import moment from "moment";
 import axiosInstance from "../utils/axios.instance";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import "jspdf-invoice-template";
+// import jsPDF from "jspdf";
+// import "jspdf-autotable";
+// import "jspdf-invoice-template";
+import html2pdf from "html2pdf.js";
+import Vue3Html2pdf from "vue3-html2pdf";
 
 export default {
   name: "test",
+  components: {
+    Vue3Html2pdf,
+  },
   async mounted() {
     const b = await axiosInstance.post("/dashboard/date", {
       lineId: 1,
@@ -179,38 +178,58 @@ export default {
     // // console.log(Scrap);
   },
   methods: {
-    printFunction() {
-      // const doc = new jsPDF({
-      //   orientation: "portrait",
-      //   unit: "mm",
-      //   format: "a4",
-      // });
-      // doc.autoPrint();
-      // doc.output("dataurlnewwindow");
-
-      // window.print();
-
-      // var divContents = document.getElementById("DIV_ID").innerHTML;
-      // var prnt = window.open("", "", "height=790px, width=1000px");
-      // prnt.document.write(divContents);
-      // prnt.document.close();
-      // prnt.print();
-
-      var prtContent = document.getElementById("DIV_ID");
-      var WinPrint = window.open(
-        "",
-        "",
-        "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
-      );
-      WinPrint.document.write(prtContent.innerHTML);
-      WinPrint.document.write(style);
-      WinPrint.document.close();
-      WinPrint.focus();
-      WinPrint.print();
-      WinPrint.close();
+    generatePdf() {
+      html2pdf()
+        .from(this.$refs.html2Pdf)
+        .set({
+          filename: `hehehe.pdf`,
+          margin: [0.5, 0.5, 0.5, 0.5],
+          filename: "yourfile.pdf",
+          enableLinks: false,
+          image: { type: "jpeg", quality: 0.95 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "cm", format: "a4", orientation: "portrait" },
+          pagebreak: { mode: ["css", "legacy"] },
+        })
+        .toPdf()
+        .get("pdf")
+        .then(function (pdf) {
+          window.open(pdf.output("bloburl"), "_blank").print();
+        });
     },
+    // printFunction() {
+    //   // const doc = new jsPDF({
+    //   //   orientation: "portrait",
+    //   //   unit: "mm",
+    //   //   format: "a4",
+    //   // });
+    //   // doc.autoPrint();
+    //   // doc.output("dataurlnewwindow");
+
+    //   // window.print();
+
+    //   // var divContents = document.getElementById("DIV_ID").innerHTML;
+    //   // var prnt = window.open("", "", "height=790px, width=1000px");
+    //   // prnt.document.write(divContents);
+    //   // prnt.document.close();
+    //   // prnt.print();
+
+    //   var prtContent = document.getElementById("DIV_ID");
+    //   var WinPrint = window.open(
+    //     "",
+    //     "",
+    //     "left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0"
+    //   );
+    //   WinPrint.document.write(prtContent.innerHTML);
+    //   WinPrint.document.write(style);
+    //   WinPrint.document.close();
+    //   WinPrint.focus();
+    //   WinPrint.print();
+    //   WinPrint.close();
+    // },
   },
   data: () => ({
+    name: "hi",
     startAt: "",
     shift: "",
     group: "",
