@@ -45,9 +45,7 @@
       </v-form>
       <div class="register">
         Do you already have an account?
-        <a @click="router.push('/register')"
-          ><button id="register-link">Sign up here</button></a
-        >
+        <a href="/register"><button id="register-link">Sign up here</button></a>
       </div>
     </div>
   </v-col>
