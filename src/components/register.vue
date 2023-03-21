@@ -37,15 +37,15 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <div class="text-red">
+        <!-- <div class="text-red">
           {{ message }}
-        </div>
+        </div> -->
 
         <v-btn @click="submit()">Log in</v-btn>
       </v-form>
       <div class="register">
         Do you already have an account?
-        <a href="/register"><button id="register-link">Sign up here</button></a>
+        <a href="/register"><button id="register-link">Log in here</button></a>
       </div>
     </div>
   </v-col>

@@ -49,15 +49,12 @@
       </v-form>
       <div class="register">
         Create an account
-        <a @click="router.push('/register')">
+        <router-link to="/register">
           <button id="register-link">Sign up here</button>
-        </a>
+        </router-link>
       </div>
     </div>
   </v-col>
-  <router-link to="/register"
-    ><button id="register-link">test</button></router-link
-  >
 </template>
 
 <script>
