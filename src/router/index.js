@@ -11,7 +11,7 @@ import test from '../views/View_test.vue'
 import bottleNeck from '../views/View_bottleNeck.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: '/',
