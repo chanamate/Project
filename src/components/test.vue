@@ -138,6 +138,12 @@
   <div class="d-flex justify-end ma-6">
     <v-btn @click="generatePdf"> Generate PDF and Print </v-btn>
   </div>
+  <!-- <div>
+    <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+  </div> -->
+  <div>
+    <Bar v-if="loaded" :data="chartData" />
+  </div>
 </template>
 
 <script>
@@ -151,55 +157,108 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import html2pdf from "html2pdf.js";
 import Vue3Html2pdf from "vue3-html2pdf";
 
+import { Bar } from "vue-chartjs";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from "chart.js";
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+);
+
 export default {
   name: "test",
   components: {
     Vue3Html2pdf,
     Datepicker,
+    Bar,
   },
   async mounted() {
-    const b = await axiosInstance.post("/dashboard/date", {
-      lineId: 1,
-      targetDate: "2023-03-16T12:18:57.800Z",
-      shift: "DAY",
-    });
-    this.startAt = moment(b.startAt).format("DD/MM/YY");
-    this.shift = b.workingTime.time;
-    this.group = b.group;
-    console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
-    this.downtimeDefect = b.downtimeDefect;
-    this.scrapDefects = b.failureDefect.filter(
-      (defect) => defect.type === "SCRAP"
-    );
-    this.repairDefects = b.failureDefect.filter(
-      (defect) => defect.type === "REPAIR"
-    );
-    this.reworkDefects = b.failureDefect.filter(
-      (defect) => defect.type === "REWORK"
-    );
-    this.actual = b.actual;
-    this.target = b.target;
-    this.oee = b.oee + "%";
-    this.availability = b.availability + "%";
-    this.performance = b.performance + "%";
-    this.quality = b.quality + "%";
+    this.loaded = false;
 
-    for (let i = 0; i < b.failureTotal; i++) {
-      if (this.scrapDefects[i] && this.scrapDefects[i].sum) {
-        this.sumScrapDefects = this.sumScrapDefects + this.scrapDefects[i].sum;
-        this.countScrapDefects = this.countScrapDefects + 1;
+    try {
+      const b = await axiosInstance.post("/dashboard/date", {
+        lineId: 1,
+        targetDate: "2023-03-16T12:18:57.800Z",
+        shift: "DAY",
+      });
+      this.startAt = moment(b.startAt).format("DD/MM/YY");
+      this.shift = b.workingTime.time;
+      this.group = b.group;
+      console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
+      this.downtimeDefect = b.downtimeDefect;
+      this.scrapDefects = b.failureDefect.filter(
+        (defect) => defect.type === "SCRAP"
+      );
+      this.repairDefects = b.failureDefect.filter(
+        (defect) => defect.type === "REPAIR"
+      );
+      this.reworkDefects = b.failureDefect.filter(
+        (defect) => defect.type === "REWORK"
+      );
+      this.actual = b.actual;
+      this.target = b.target;
+      this.oee = b.oee + "%";
+      this.availability = b.availability + "%";
+      this.performance = b.performance + "%";
+      this.quality = b.quality + "%";
+
+      for (let i = 0; i < b.failureTotal; i++) {
+        if (this.scrapDefects[i] && this.scrapDefects[i].sum) {
+          this.sumScrapDefects =
+            this.sumScrapDefects + this.scrapDefects[i].sum;
+          this.countScrapDefects = this.countScrapDefects + 1;
+        }
       }
-    }
-    for (let i = 0; i < b.downtimeDefect.length; i++) {
-      this.sumdowntimeDefect =
-        this.sumdowntimeDefect + this.downtimeDefect[i].downtime;
-      this.countDowntimeDefect = this.countDowntimeDefect + 1;
+      for (let i = 0; i < b.downtimeDefect.length; i++) {
+        this.sumdowntimeDefect =
+          this.sumdowntimeDefect + this.downtimeDefect[i].downtime;
+        this.countDowntimeDefect = this.countDowntimeDefect + 1;
+      }
+      this.loaded = true;
+    } catch (e) {
+      console.error(e);
     }
     // if ((defect[i].type = "SCRAP")) {
     //   Scrap[i] = defect[i];
     //   console.log(Scrap[i]);
     // }
     // // console.log(Scrap);
+  },
+  computed: {
+    chartData() {
+      return {
+        labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
+        datasets: [
+          {
+            label: "SCRAP",
+            backgroundColor: "#FF0000",
+            data: [this.sumScrapDefects, 20, 30],
+          },
+          {
+            label: "REPAIR",
+            backgroundColor: "#FF7F00",
+            data: [this.sumScrapDefects, 20, 30],
+          },
+          {
+            label: "REWORK",
+            backgroundColor: "#FFFF00",
+            data: [this.sumScrapDefects, 20, 30],
+          },
+        ],
+      };
+    },
   },
   methods: {
     generatePdf() {
@@ -246,6 +305,22 @@ export default {
     actual: "",
     target: "",
     oee: "",
+
+    loaded: false,
+    // chartData: null,
+    // chartData: {
+    //   labels: ["January", "February", "March"],
+    //   datasets: [
+    //     {
+    //       label: "Data One",
+    //       backgroundColor: "#f87979",
+    //       data: [40, 20, 12],
+    //     },
+    //   ],
+    // },
+    chartOptions: {
+      responsive: true,
+    },
   }),
   async created() {
     const lineA = await axiosInstance.get(`/line`);
