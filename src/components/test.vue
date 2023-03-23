@@ -219,8 +219,27 @@ export default {
           this.sumScrapDefects =
             this.sumScrapDefects + this.scrapDefects[i].sum;
           this.countScrapDefects = this.countScrapDefects + 1;
+          if (this.scrapDefects[i].station == "Inspection 1") {
+            this.sumScrapIns1 = this.sumScrapIns1 + this.scrapDefects[i].sum;
+            console.log("this.sumScrapIns1", this.sumScrapIns1);
+          }
+          if (this.scrapDefects[i].station == "Inspection 2") {
+            this.sumScrapIns2 = this.sumScrapIns1 + this.scrapDefects[i].sum;
+            console.log("this.sumScrapIns1", this.sumScrapIns1);
+          }
+          if (this.scrapDefects[i].station == "Q-Gate Inspection 3") {
+            this.sumScrapIns3 = this.sumScrapIns1 + this.scrapDefects[i].sum;
+            console.log("this.sumScrapIns1", this.sumScrapIns1);
+          }
         }
       }
+
+      //   for (let i = 0; i < this.scrapDefects.length; i++) {
+
+      // }
+      // this.chartData2.data.datasets[0].data[0] = this.sumScrapDefects
+      // console.log("this.chartData2.data.datasets[0].data", this.chartData2.data.datasets[0].data)
+
       for (let i = 0; i < b.downtimeDefect.length; i++) {
         this.sumdowntimeDefect =
           this.sumdowntimeDefect + this.downtimeDefect[i].downtime;
@@ -244,7 +263,7 @@ export default {
           {
             label: "SCRAP",
             backgroundColor: "#FF0000",
-            data: [this.sumScrapDefects, 20, 30],
+            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
           },
           {
             label: "REPAIR",
@@ -293,6 +312,9 @@ export default {
     reworkDefects: [],
     sumdowntimeDefect: null,
     sumScrapDefects: null,
+    sumScrapIns1: null,
+    sumScrapIns2: null,
+    sumScrapIns3: null,
     sumRepairDefects: null,
     sumReworkDefects: null,
     countDowntimeDefect: 2,

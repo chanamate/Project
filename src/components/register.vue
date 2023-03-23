@@ -45,7 +45,7 @@
       </v-form>
       <div class="register">
         Do you already have an account?
-        <a href="/register"><button id="register-link">Log in here</button></a>
+        <a href="/login"><button id="register-link">Log in here</button></a>
       </div>
     </div>
   </v-col>
