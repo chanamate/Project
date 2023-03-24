@@ -87,7 +87,7 @@ export default {
       if (messageCheck == login.message) {
         this.message = login.message;
       } else {
-        window.location.replace("/");
+        window.location.replace("/home");
       }
     },
     required(v) {

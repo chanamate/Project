@@ -4,7 +4,7 @@
       <ul v-if="!isLoginPage">
         <!-- <li><router-link to="/">Home</router-link></li> -->
         <li class="dropdown">
-          <router-link to="/" class="dropbtn">Home</router-link>
+          <router-link to="/home" class="dropbtn">Home</router-link>
           <div class="dropdown-content">
             <router-link to="/FG_F/F">Fabrication F Frame</router-link>
             <router-link to="/FG_F/S">Fabrication S Frame</router-link>

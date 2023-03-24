@@ -14,13 +14,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '/',
-      name: 'FirstPage',
-      component: FirstPage
-    },
-    {
       path: '/:pathMatch(.*)*',
       name: '404',
+      component: view_Login
+    },
+    {
+      path: '/home',
+      name: 'FirstPage',
       component: FirstPage
     },
     {
