@@ -151,7 +151,10 @@
         </tr>
       </table>
       <v-col cols="6">
-        <Bar v-if="loaded" :data="chartData" />
+        <Bar v-if="loaded" :data="chartDataDF" />
+      </v-col>
+      <v-col cols="6">
+        <Bar v-if="loaded" :data="chartDataDT" />
       </v-col>
     </div>
     <div class="d-flex justify-end ma-6">
@@ -300,7 +303,11 @@ export default {
       }
       // this.lineId = parseInt(this.selectedLine.split(" ")[0]);
       // const s = await axiosInstance.get(`/station/line/${this.lineId}`);
-      // console.log(s);
+      const s = await axiosInstance.get(`/station/line/1`);
+      this.station = s;
+      console.log(this.station);
+      this.stationData = Array(this.station.length).fill(0);
+      console.log(this.stationData);
 
       // DOWNTIME
       for (let i = 0; i < b.downtimeDefect.length; i++) {
@@ -309,12 +316,10 @@ export default {
         this.countDowntimeDefect = this.countDowntimeDefect + 1;
         console.log(b.downtimeDefect[i]);
         for (let j = 0; j < this.station.length; j++) {
-          if (b.downtimeDefect[i].station == this.station[j]) {
-            console.log(this.station[j]);
-            console.log(b.downtimeDefect[i].downtime);
+          if (this.station[j].stationId == b.downtimeDefect[i].station) {
             this.stationData[j] =
               this.stationData[j] + b.downtimeDefect[i].downtime;
-            console.log(this.stationData[j]);
+            console.log(this.stationData);
           }
         }
       }
@@ -330,7 +335,7 @@ export default {
     // // console.log(Scrap);
   },
   computed: {
-    chartData() {
+    chartDataDF() {
       return {
         labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
         datasets: [
@@ -348,6 +353,18 @@ export default {
             label: "REWORK",
             backgroundColor: "#FFFF00",
             data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
+          },
+        ],
+      };
+    },
+    chartDataDT() {
+      return {
+        labels: this.station.map((n) => `${n.stationId}`),
+        datasets: [
+          {
+            label: "Downtime (min)",
+            backgroundColor: "#FF0000",
+            data: this.stationData,
           },
         ],
       };
@@ -386,7 +403,8 @@ export default {
       return `${day}/${month}/${year}`;
     },
     lineId: null,
-    genTable: false,
+    genTable: true,
+    // genTable: false,
     startAt: "",
     shift: "",
     group: "",
@@ -415,6 +433,7 @@ export default {
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
+
     availability: "",
     performance: "",
     quality: "",
