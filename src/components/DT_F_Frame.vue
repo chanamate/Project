@@ -21,7 +21,7 @@
       <v-col cols="2">
         <!-- ตัวเลือกทางด้านซ้าย -->
         <v-item-group mandatory model-value="3">
-          <v-card elevation="0" class="ml-4">
+          <v-card elevation="0" class="ml-4 mt-n6">
             <v-col v-for="(item, index) in title" :key="index">
               <v-item v-slot="{ isSelected, toggle }" :value="item.id">
                 <v-card
@@ -40,15 +40,15 @@
       </v-col>
 
       <v-col>
-        <v-card color="#AAAAAA" class="px-2 pb-2 mr-4">
-          <v-card elevation="5" color="#CFCFCF" class="mt-4">
+        <v-card height="820" color="#AAAAAA" class="px-2 pb-2 mr-4 mt-n3">
+          <v-card height="800" elevation="5" color="#CFCFCF" class="mt-2">
             <v-tabs v-model="tab" fixed-tabs bg-color="primary">
               <v-tab value="one">Downtime</v-tab>
               <v-tab value="two">Edit</v-tab>
             </v-tabs>
 
             <v-card-text>
-              <v-window v-model="tab" class="d-flex justify-center">
+              <v-window v-model="tab" class="d-flex justify-center mt-n3">
                 <!-- ตัวเลือก Downtime -->
                 <v-window-item value="one">
                   <v-row>

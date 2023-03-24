@@ -167,9 +167,9 @@
 import moment from "moment";
 import axiosInstance from "../utils/axios.instance";
 import Datepicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import { ref } from "vue";
 
-import "@vuepic/vue-datepicker/dist/main.css";
 // import jsPDF from "jspdf";
 // import "jspdf-autotable";
 // import "jspdf-invoice-template";

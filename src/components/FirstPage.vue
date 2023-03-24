@@ -23,7 +23,7 @@
               :color="item.color"
               class="d-flex justify-center align-center pa-6 text-h4 rounded-xl text-white"
               dark
-              height="750px"
+              height="700px"
               width="400px"
               @click="toggle"
               :to="item.url"

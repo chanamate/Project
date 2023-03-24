@@ -21,7 +21,7 @@
       <v-col cols="2">
         <!-- ตัวเลือกทางด้านซ้าย -->
         <v-item-group mandatory model-value="2">
-          <v-card elevation="0" class="ml-4">
+          <v-card elevation="0" class="ml-4 mt-n6">
             <v-col v-for="(item, index) in title" :key="index">
               <v-item v-slot="{ isSelected, toggle }" :value="item.id">
                 <v-card
@@ -40,7 +40,7 @@
       </v-col>
 
       <v-col>
-        <v-card color="#AAAAAA" class="pa-4 mr-4">
+        <v-card height="820" color="#AAAAAA" class="pa-4 mr-4 mt-n3">
           <v-row>
             <v-col cols="6">
               <!-- Model -->
