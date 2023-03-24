@@ -9,6 +9,7 @@
         :enableTimePicker="false"
         locale="th"
         utc
+        :format="format"
       />
       <Datepicker
         class="text-h6 w-50"
@@ -82,6 +83,7 @@ export default {
   emits: ["updateValue"],
   setup(props, { emit }) {
     const date = ref(new Date().toISOString());
+
     const time = ref({
       hours: new Date().getHours(),
       minutes: new Date().getMinutes(),
@@ -126,6 +128,9 @@ export default {
       case "S":
         this.listmachine = machine_S;
         break;
+      case "P":
+        this.lineId = 3;
+        break;
     }
   },
 
@@ -136,6 +141,13 @@ export default {
       counter: (value) => value.length <= 3 || "Max 3 characters",
       number: (value) =>
         (!isNaN(parseFloat(value)) && isFinite(value)) || "Number only",
+    },
+    format: (date) => {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      return `${day}/${month}/${year}`;
     },
   }),
 };

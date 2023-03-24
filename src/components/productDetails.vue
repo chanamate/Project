@@ -15,7 +15,13 @@
     </v-col>
     <v-col cols="1" class="d-flex justify-end mt-4"> Select date : </v-col>
     <v-col cols="2" class="mt-2">
-      <Datepicker v-model="date" auto-apply range :enableTimePicker="false" />
+      <Datepicker
+        v-model="date"
+        auto-apply
+        range
+        :enableTimePicker="false"
+        :format="formatRange"
+      />
     </v-col>
     <v-col cols="2" class="mt-2">
       <v-btn @click="find()">search</v-btn>
@@ -62,6 +68,14 @@ export default {
     line: [],
     selectedLine: "",
     date: new Date(),
+    formatRange: (range) => {
+      const start = range[0] ? range[0].toLocaleDateString("en-US") : "-";
+      const end = range[1] ? range[1].toLocaleDateString("en-US") : "-";
+
+      const [monthstart, daystart, yearstart] = start.split("/");
+      const [monthend, dayend, yearend] = end.split("/");
+      return `${daystart}/${monthstart}/${yearstart} - ${dayend}/${monthend}/${yearend}`;
+    },
     itemsPerPage: 10,
     headers: [
       {

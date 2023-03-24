@@ -77,6 +77,9 @@ export default {
       case "S":
         this.lineId = 2;
         break;
+      case "P":
+        this.lineId = 3;
+        break;
     }
     const dt_f = await axiosInstance.get(`/availability-lose/${this.lineId}`);
     this.dt_f = dt_f;

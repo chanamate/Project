@@ -25,7 +25,6 @@
             inline
             auto-apply
             range
-            auto-range="5"
             :disabled-week-days="[0]"
             :enableTimePicker="false"
           >

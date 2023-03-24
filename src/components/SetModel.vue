@@ -64,6 +64,9 @@ export default {
       case "S":
         this.lineId = 2;
         break;
+      case "P":
+        this.lineId = 3;
+        break;
     }
     const model = await axiosInstance.get(`/model/line/${this.lineId}`);
     this.model = model;

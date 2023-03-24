@@ -64,6 +64,9 @@ export default {
       case "S":
         this.lineId = 2;
         break;
+      case "P":
+        this.lineId = 3;
+        break;
     }
     let scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
       type: "SCRAP",

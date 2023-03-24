@@ -41,7 +41,7 @@
           {{ message }}
         </div> -->
 
-        <v-btn @click="submit()">Log in</v-btn>
+        <v-btn @click="submit()">register</v-btn>
       </v-form>
       <div class="register">
         Do you already have an account?

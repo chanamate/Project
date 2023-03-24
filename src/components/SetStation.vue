@@ -77,6 +77,9 @@ export default {
       case "S":
         this.lineId = 2;
         break;
+      case "P":
+        this.lineId = 3;
+        break;
     }
     let station = await axiosInstance.get(`/station/line/${this.lineId}`);
     station = station.slice(0, 9);
