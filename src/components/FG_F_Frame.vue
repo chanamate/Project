@@ -44,10 +44,7 @@
           <v-row>
             <v-col cols="6">
               <!-- Model -->
-              <SetModel
-                :selectedValueModel="selectedValueModel"
-                @updateValue="updateValue"
-              />
+              <SetModel @updateValue="updateValue" />
 
               <!-- Pin Stamp Number -->
               <SetPinStampNumber @updateValue="updateValue" />

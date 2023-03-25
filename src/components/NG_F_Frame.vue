@@ -40,38 +40,38 @@
       </v-col>
 
       <v-col>
-        <v-card height="820" color="#AAAAAA" class="pa-4 mr-4 mt-n3">
+        <v-card min-height="820" color="#AAAAAA" class="pa-4 mr-4 mt-n3">
           <v-row>
             <v-col cols="6">
               <!-- Model -->
-              <SetModel
-                type="F"
-                :selectedValueModel="selectedValueModel"
-                @updateValue="updateValue"
-              />
+              <SetModel @updateValue="updateValue" />
 
               <!-- Pin Stamp Number -->
-              <SetPinStampNumber type="F" @updateValue="updateValue" />
+              <SetPinStampNumber @updateValue="updateValue" />
 
               <!-- Employee Name and ID  -->
               <SetEmployeeName @updateValue="updateValue" />
 
               <!-- Shift -->
-              <SetShitf @updateValue="updateValue" />
+              <SetShitf v-if="type !== 'P'" @updateValue="updateValue" />
             </v-col>
 
             <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
             <v-col cols="6">
+              <!-- Shift -->
+              <SetShitf v-if="type == 'P'" @updateValue="updateValue" />
               <!-- StationInspection -->
-              <SetStationInspec @updateValue="updateValue" />
+              <SetStationInspec
+                v-if="type !== 'P'"
+                class="mb-3"
+                @updateValue="updateValue"
+              />
 
               <!-- Scrap Repair Rework -->
-              <v-card elevation="5" color="#CFCFCF" class="mt-4">
+              <v-card elevation="5" color="#CFCFCF">
                 <v-tabs v-model="tab" bg-color="primary">
-                  <v-tab
-                    v-if="type == 'F' || type == 'S' || type == 'P'"
-                    value="one"
+                  <v-tab v-if="type == 'F' || type == 'S'" value="one"
                     >Scrap</v-tab
                   >
                   <v-tab v-if="type == 'F' || type == 'S'" value="two"

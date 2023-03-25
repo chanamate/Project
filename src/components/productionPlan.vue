@@ -282,6 +282,14 @@
       </div>
     </v-card>
   </v-dialog>
+  <v-snackbar
+    v-model="snackbar"
+    timeout="2000"
+    location="top"
+    :color="error == 'success' ? 'success' : 'error'"
+  >
+    {{ error }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -340,6 +348,8 @@ export default {
       lineId: [],
       date: [],
     },
+    snackbar: false,
+    error: "",
   }),
   async created() {
     const lineA = await axiosInstance.get(`/line`);
@@ -397,29 +407,37 @@ export default {
         const groupNight = this.selectedGroupNight[i];
         const workingTimeTypeNight = this.selectedOTNight[i];
         const lineIdNight = parseInt(this.selectedLine.split(" ")[0]);
-
-        const b = await axiosInstance.post("/production-plan", {
-          plans: [
-            {
-              date: dateDay,
-              target: targetDay,
-              shift: "DAY",
-              group: groupDay,
-              workingTimeType: workingTimeTypeDay,
-              lineId: lineIdDay,
-            },
-            {
-              date: dateNight,
-              target: targetNight,
-              shift: "NIGHT",
-              group: groupNight,
-              workingTimeType: workingTimeTypeNight,
-              lineId: lineIdNight,
-            },
-          ],
-        });
-        console.log("DAY completed", i);
-        console.log("NIGHT completed", i);
+        try {
+          const b = await axiosInstance.post("/production-plan", {
+            plans: [
+              {
+                date: dateDay,
+                target: targetDay,
+                shift: "DAY",
+                group: groupDay,
+                workingTimeType: workingTimeTypeDay,
+                lineId: lineIdDay,
+              },
+              {
+                date: dateNight,
+                target: targetNight,
+                shift: "NIGHT",
+                group: groupNight,
+                workingTimeType: workingTimeTypeNight,
+                lineId: lineIdNight,
+              },
+            ],
+          });
+          console.log("DAY completed", i);
+          console.log("NIGHT completed", i);
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
         // const n = await axiosInstance.post("/production-plan", {
         //   date: dateNight,
         //   target: targetNight,

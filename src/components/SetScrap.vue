@@ -1,5 +1,5 @@
 <template>
-  <v-card color="#CFCFCF" height="471px" class="py-3 overflow-y-auto">
+  <v-card color="#CFCFCF" max-height="460px" class="py-3 overflow-y-auto">
     <v-col cols="12" class="pa-0">
       <v-item-group mandatory :model-value="selectedScrap">
         <v-col class="pb-1 pt-1" v-for="(item, index) in scrap" :key="index">
@@ -36,7 +36,7 @@ export default {
   },
 
   data: () => ({
-    scrap: "",
+    scrap: [],
     lineId: null,
   }),
 

@@ -5,11 +5,11 @@
         <!-- <li><router-link to="/">Home</router-link></li> -->
         <li class="dropdown">
           <router-link to="/home" class="dropbtn">Home</router-link>
-          <div class="dropdown-content">
+          <!-- <div class="dropdown-content">
             <router-link to="/FG_F/F">Fabrication F Frame</router-link>
             <router-link to="/FG_F/S">Fabrication S Frame</router-link>
             <router-link to="/FG_F/P">Paint</router-link>
-          </div>
+          </div> -->
         </li>
         <li>
           <router-link to="/productionPlan">Production Plan</router-link>
@@ -30,12 +30,28 @@
 <script>
 export default {
   name: "App",
-  computed: {
-    isLoginPage() {
-      return this.$route.path === "/login";
+  // computed: {
+  //   isLoginPage() {
+  //     return this.$route.path === "/";
+  //   },
+  //   isLoginPageLogin() {
+  //     return this.$route.path === "/login";
+  //   },
+  //   isLoginPageRegister() {
+  //     return this.$route.path === "/register";
+  //   },
+  // },
+  watch: {
+    $route(to, from) {
+      this.isLoginPage =
+        this.$route.path === "/login" ||
+        this.$route.path === "/" ||
+        this.$route.path === "/register";
     },
   },
-  data: () => ({}),
+  data: () => ({
+    isLoginPage: false,
+  }),
 };
 </script>
 

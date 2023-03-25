@@ -3,11 +3,11 @@
     <v-row>
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
-        <v-card-title align="center" class="text-h4 my-4">
-          Quantity Input for First Station : Fabrication {{ type }} Frame
+        <v-card-title align="center" class="text-h4 my-4" v-if="type !== 'P'">
+          Quantity Input for Bottle Neck : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Quantity Input for First Station : Paint
+          Quantity Input for Bottle Neck : Paint
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -52,8 +52,8 @@
                   mdi-plus
                 </v-icon>
               </div>
-              + mean add more quantity input <br />
-              - mean reduce quantity input
+              + increasing the amount of data <br />
+              - decreasing the amount of data
             </v-card>
             <div cols="6" class="d-flex justify-end mt-4">
               <v-btn @click=""> Enter </v-btn>
@@ -102,6 +102,15 @@ export default {
     ],
   }),
   methods: {
+    addAmount() {
+      this.amount = this.amount + 1;
+    },
+    removeAmount() {
+      this.amount = this.amount - 1;
+      if (this.amount < 0) {
+        this.amount = 0;
+      }
+    },
     gettype() {
       return this.type;
     },

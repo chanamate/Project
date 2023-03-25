@@ -2,7 +2,7 @@
   <v-item-group mandatory :model-value="selectedValueModel">
     <v-card elevation="3" color="#CFCFCF">
       <div class="ml-4 mt-4 text-h6">Model :</div>
-      <v-col class="pb-4 pt-1" v-for="(item, index) in model" :key="index">
+      <v-col class="pb-3 pt-1" v-for="(item, index) in model" :key="index">
         <v-item v-slot="{ isSelected, toggle }" :value="item.modelName">
           <v-card
             :color="isSelected ? 'primary' : ''"

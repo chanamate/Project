@@ -69,6 +69,7 @@ export default {
         email: this.email,
         password: this.password,
       });
+      window.location.reload();
     },
     required(v) {
       return !!v || "Field is required";
@@ -105,6 +106,7 @@ h1 {
 #title {
   position: relative;
   background-color: #1a1c1d;
+  margin-top: 35%;
   width: 100%;
   padding: 20px 0px;
   border-radius: 0.35em;
@@ -123,7 +125,7 @@ h1 {
   border-radius: 4px;
   background-color: #dde2eb;
   padding: 8px 0px;
-  margin-top: 15px;
+  margin-top: 15%;
 }
 
 input[type="checkbox"] {
