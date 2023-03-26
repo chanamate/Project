@@ -1,4 +1,26 @@
 <template>
+  <ul>
+    <!-- <li><router-link to="/">Home</router-link></li> -->
+    <li class="dropdown">
+      <router-link to="/home" class="dropbtn">Home</router-link>
+      <!-- <div class="dropdown-content">
+            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/P">Paint</router-link>
+          </div> -->
+    </li>
+    <li>
+      <router-link to="/productionPlan">Production Plan</router-link>
+    </li>
+    <li>
+      <router-link to="/productDetails">Product Details</router-link>
+    </li>
+    <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li style="float: right">
+      <router-link to="/login">log out</router-link>
+    </li>
+  </ul>
+
   <v-row>
     <!-- หัวข้อบนสุด -->
     <v-col cols="12">
@@ -396,6 +418,11 @@ export default {
 
         // Day @@@@@@@
         const dateDay = moment(this.dateRange[i]).toDate();
+
+        // const dateDay = moment(
+        //   moment(this.dateRange[i]).format("MMM Do YY") + "09:00",
+        //   "MMM Do YYHH:mm"
+        // ).toDate();
         const targetDay = parseInt(this.targetDay[i]);
         const groupDay = this.selectedGroupDay[i];
         const workingTimeTypeDay = this.selectedOTDay[i];

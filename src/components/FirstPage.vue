@@ -1,4 +1,26 @@
 <template>
+  <ul>
+    <!-- <li><router-link to="/">Home</router-link></li> -->
+    <li class="dropdown">
+      <router-link to="/home" class="dropbtn">Home</router-link>
+      <!-- <div class="dropdown-content">
+            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/P">Paint</router-link>
+          </div> -->
+    </li>
+    <li>
+      <router-link to="/productionPlan">Production Plan</router-link>
+    </li>
+    <li>
+      <router-link to="/productDetails">Product Details</router-link>
+    </li>
+    <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li style="float: right">
+      <router-link to="/login">log out</router-link>
+    </li>
+  </ul>
+
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <link
     rel="stylesheet"

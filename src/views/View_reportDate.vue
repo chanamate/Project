@@ -1,18 +1,18 @@
 <template>
-  <test />
+  <reportDate />
 </template>
 
 <script>
 import { defineComponent } from "vue";
 
 // Components
-import test from "../components/test.vue";
+import reportDate from "../components/reportDate.vue";
 
 export default defineComponent({
-  name: "test2",
+  name: "reportDate2",
 
   components: {
-    test,
+    reportDate,
   },
 });
 </script>

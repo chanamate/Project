@@ -1,4 +1,26 @@
 <template>
+  <ul>
+    <!-- <li><router-link to="/">Home</router-link></li> -->
+    <li class="dropdown">
+      <router-link to="/home" class="dropbtn">Home</router-link>
+      <!-- <div class="dropdown-content">
+            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/P">Paint</router-link>
+          </div> -->
+    </li>
+    <li>
+      <router-link to="/productionPlan">Production Plan</router-link>
+    </li>
+    <li>
+      <router-link to="/productDetails">Product Details</router-link>
+    </li>
+    <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li style="float: right">
+      <router-link to="/login">log out</router-link>
+    </li>
+  </ul>
+
   <v-card elevation="0">
     <v-row>
       <!-- หัวข้อบนสุด -->
@@ -11,7 +33,7 @@
           Input data for Failure Mode : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Input data for Defect Type : Paint
+          Input data for Defect Type : Powder Coat Painting
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>

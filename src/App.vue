@@ -1,15 +1,14 @@
 <template>
   <v-app>
     <v-main>
-      <ul v-if="!isLoginPage">
-        <!-- <li><router-link to="/">Home</router-link></li> -->
+      <!-- <ul v-if="!isLoginPage">
         <li class="dropdown">
           <router-link to="/home" class="dropbtn">Home</router-link>
-          <!-- <div class="dropdown-content">
+           <div class="dropdown-content">
             <router-link to="/FG_F/F">Fabrication F Frame</router-link>
             <router-link to="/FG_F/S">Fabrication S Frame</router-link>
             <router-link to="/FG_F/P">Paint</router-link>
-          </div> -->
+          </div> 
         </li>
         <li>
           <router-link to="/productionPlan">Production Plan</router-link>
@@ -17,11 +16,11 @@
         <li>
           <router-link to="/productDetails">Product Details</router-link>
         </li>
-        <li><router-link to="/test">test</router-link></li>
+        <li><router-link to="/reportDate">Report Date</router-link></li>
         <li style="float: right">
           <router-link to="/login">log out</router-link>
         </li>
-      </ul>
+      </ul> -->
       <router-view />
     </v-main>
   </v-app>
@@ -46,6 +45,7 @@ export default {
       this.isLoginPage =
         this.$route.path === "/login" ||
         this.$route.path === "/" ||
+        this.$route.path === "/:pathMatch(.*)*" ||
         this.$route.path === "/register";
     },
   },

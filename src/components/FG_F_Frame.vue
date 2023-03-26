@@ -1,4 +1,26 @@
 <template>
+  <ul>
+    <!-- <li><router-link to="/">Home</router-link></li> -->
+    <li class="dropdown">
+      <router-link to="/home" class="dropbtn">Home</router-link>
+      <!-- <div class="dropdown-content">
+            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/P">Paint</router-link>
+          </div> -->
+    </li>
+    <li>
+      <router-link to="/productionPlan">Production Plan</router-link>
+    </li>
+    <li>
+      <router-link to="/productDetails">Product Details</router-link>
+    </li>
+    <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li style="float: right">
+      <router-link to="/login">log out</router-link>
+    </li>
+  </ul>
+
   <v-card elevation="0">
     <v-row>
       <!-- หัวข้อบนสุด -->
@@ -11,7 +33,7 @@
           Input data for Finished Goods : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Input data for Finished Goods : Paint
+          Input data for Finished Goods : Powder Coat Painting
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -275,6 +297,18 @@ export default {
           break;
         case 3:
           this.modelCheck = "Model F03";
+          break;
+        case 4:
+          this.modelCheck = "Model S01";
+          break;
+        case 5:
+          this.modelCheck = "Model S02";
+          break;
+        case 6:
+          this.modelCheck = "Model S03";
+          break;
+        case 7:
+          this.modelCheck = "Model S04";
           break;
       }
     },

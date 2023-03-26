@@ -7,7 +7,7 @@ import productionPlan from "../views/View_productionPlan.vue"
 import productDetails from "../views/View_productDetails.vue"
 import view_Login from '../views/view_Login.vue'
 import view_register from '../views/view_register.vue'
-import test from '../views/View_test.vue'
+import reportDate from '../views/View_reportDate.vue'
 import bottleNeck from '../views/View_bottleNeck.vue'
 
 const router = createRouter({
@@ -64,9 +64,9 @@ const router = createRouter({
       component: view_register
     },
     {
-      path: '/test',
-      name: 'test',
-      component: test
+      path: '/reportDate',
+      name: 'reportDate',
+      component: reportDate
     },
     // {
     //   path: '/NG_S',

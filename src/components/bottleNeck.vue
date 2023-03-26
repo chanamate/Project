@@ -1,4 +1,26 @@
 <template>
+  <ul>
+    <!-- <li><router-link to="/">Home</router-link></li> -->
+    <li class="dropdown">
+      <router-link to="/home" class="dropbtn">Home</router-link>
+      <!-- <div class="dropdown-content">
+            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/P">Paint</router-link>
+          </div> -->
+    </li>
+    <li>
+      <router-link to="/productionPlan">Production Plan</router-link>
+    </li>
+    <li>
+      <router-link to="/productDetails">Product Details</router-link>
+    </li>
+    <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li style="float: right">
+      <router-link to="/login">log out</router-link>
+    </li>
+  </ul>
+
   <v-card elevation="0">
     <v-row>
       <!-- หัวข้อบนสุด -->
@@ -7,7 +29,7 @@
           Quantity Input for Bottle Neck : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Quantity Input for Bottle Neck : Paint
+          Quantity Input for Bottle Neck : Powder Coat Painting
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -37,28 +59,43 @@
 
       <v-col>
         <v-card height="820" color="#AAAAAA" class="pa-4 mr-4 mt-n3">
-          <v-col cols="6">
-            <v-card>
-              <div class="ml-4 mt-4 text-h6">
-                Add quantity input of operation 1 :
+          <v-row>
+            <v-col cols="4">
+              <v-card>
+                <div class="ml-4 mt-4 text-h5">
+                  Add quantity input of Bottle Neck :
+                </div>
+                <div class="d-flex justify-center pa-4 text-h4">
+                  <v-icon class="mx-2 pb-3" color="red" @click="removeAmount()">
+                    mdi-minus
+                  </v-icon>
+                  {{ amount }}
+                  <v-icon class="mx-2 pb-3" color="green" @click="addAmount()">
+                    mdi-plus
+                  </v-icon>
+                </div>
+                <div class="ml-5 text-h6 font-weight-regular">
+                  + increasing the amount of data <br />
+                  - decreasing the amount of data
+                </div>
+              </v-card>
+              <div cols="6" class="d-flex justify-end mt-4">
+                <v-btn @click="submit()"> Enter </v-btn>
               </div>
+            </v-col>
 
-              <div class="pa-4 text-h4">
-                <v-icon class="mx-2" color="red" @click="removeAmount()">
-                  mdi-minus
-                </v-icon>
-                {{ amount }}
-                <v-icon class="mx-2" color="green" @click="addAmount()">
-                  mdi-plus
-                </v-icon>
-              </div>
-              + increasing the amount of data <br />
-              - decreasing the amount of data
-            </v-card>
-            <div cols="6" class="d-flex justify-end mt-4">
-              <v-btn @click=""> Enter </v-btn>
-            </div>
-          </v-col>
+            <v-col cols="3">
+              <v-card class="text-h5">
+                <div class="d-flex justify-center">
+                  The current system has <br />
+                </div>
+                <div class="d-flex justify-center text-h3">
+                  {{ this.amountNow.amount }}<br />
+                </div>
+                <div class="d-flex justify-center">frame of data.</div>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -76,8 +113,17 @@ export default {
       return this.$route.params.type;
     },
   },
+  async mounted() {
+    const m = await axiosInstance.post("/product/get/input-amount", {
+      date: new Date(),
+      position: "BOTTLE_NECK",
+    });
+    this.amountNow = m;
+    console.log("🚀 ~ m:", this.amountNow);
+  },
   data: () => ({
-    amount: 0,
+    amount: 1,
+    amountNow: 0,
     title: [
       {
         name: "Finished Goods",
@@ -100,6 +146,7 @@ export default {
         url: "/bottleNeck/",
       },
     ],
+    stationId: "",
   }),
   methods: {
     addAmount() {
@@ -113,6 +160,23 @@ export default {
     },
     gettype() {
       return this.type;
+    },
+    async submit() {
+      switch (this.type) {
+        case "F":
+          this.stationId = "OPF06";
+          break;
+        case "S":
+          this.stationId = "OPS04";
+          break;
+      }
+      const b = await axiosInstance.post("/product/input-amount", {
+        stationId: this.stationId,
+        date: new Date(),
+        increment: this.amount,
+        position: "BOTTLE_NECK",
+      });
+      window.location.reload();
     },
   },
 };
