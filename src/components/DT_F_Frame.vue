@@ -202,9 +202,9 @@
                             inline
                             text-input
                             auto-apply
-                            minutes-increment="5"
                             mode-height="84"
                           />
+                          <!-- minutes-increment="5" -->
                         </div>
                         <!-- @@@@@@@@@@@@ -->
                         <div>
@@ -223,9 +223,9 @@
                             inline
                             text-input
                             auto-apply
-                            minutes-increment="5"
                             mode-height="84"
                           />
+                          <!-- minutes-increment="5" -->
                         </div>
                       </div>
                       <!-- Employee Name and ID -->

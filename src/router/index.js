@@ -7,8 +7,9 @@ import productionPlan from "../views/View_productionPlan.vue"
 import productDetails from "../views/View_productDetails.vue"
 import view_Login from '../views/view_Login.vue'
 import view_register from '../views/view_register.vue'
-import reportDate from '../views/View_reportDate.vue'
 import bottleNeck from '../views/View_bottleNeck.vue'
+import reportDate from '../views/View_reportDate.vue'
+import reportMonth from '../views/View_reportMonth.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -67,6 +68,11 @@ const router = createRouter({
       path: '/reportDate',
       name: 'reportDate',
       component: reportDate
+    },
+    {
+      path: '/reportMonth',
+      name: 'reportMonth',
+      component: reportMonth
     },
     // {
     //   path: '/NG_S',

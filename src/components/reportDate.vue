@@ -16,6 +16,7 @@
       <router-link to="/productDetails">Product Details</router-link>
     </li>
     <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li><router-link to="/reportMonth">Report Month</router-link></li>
     <li style="float: right">
       <router-link to="/login">log out</router-link>
     </li>
@@ -75,10 +76,10 @@
         <tr>
           <th colspan="3">LINE : FABRICATION OF F FRAME</th>
           <th>SHIFT:{{ shift }}</th>
-          <th>GROUP : {{ this.group }}</th>
+          <th>GROUP : <br />{{ this.group }}</th>
         </tr>
         <tr>
-          <td></td>
+          <td class="text-center">Type</td>
           <td class="text-center">ID</td>
           <td>FAILURE</td>
           <td>OPERATION</td>
@@ -522,7 +523,9 @@ export default {
         }
         // this.lineId = parseInt(this.selectedLine.split(" ")[0]);
         // const s = await axiosInstance.get(`/station/line/${this.lineId}`);
-        const s = await axiosInstance.get(`/station/line/1`);
+        const s = await axiosInstance.get(
+          `/station/line/${parseInt(this.selectedLine.split(" ")[0])}`
+        );
         this.station = s;
         console.log(this.station);
         this.stationData = Array(this.station.length).fill(0);
