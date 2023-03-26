@@ -1,7 +1,7 @@
 <template>
   <v-card
     color="#CFCFCF"
-    :max-height="(this.lineId = 3 ? '655px' : '520px')"
+    :max-height="(this.lineId = 3 ? '390px' : '520px')"
     class="py-3 overflow-y-auto"
   >
     <v-col cols="12" class="pa-0">

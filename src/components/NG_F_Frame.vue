@@ -77,6 +77,12 @@
                 @updateValue="updateValue"
               />
 
+              <SetDefectType
+                v-if="type == 'P'"
+                class="mb-3"
+                @updateValue="updateValue"
+              />
+
               <!-- Scrap Repair -->
               <v-card
                 v-if="type == 'F' || type == 'S'"
@@ -119,7 +125,7 @@
               <div cols="6" class="d-flex justify-end mt-4">
                 <!-- <v-btn class="mr-4"> PRINT </v-btn> -->
                 <v-btn
-                  v-if="type !== 'P'"
+                  v-if="type != 'P'"
                   :disabled="check"
                   @click="dialogcheck = true"
                 >
@@ -127,10 +133,10 @@
                 </v-btn>
                 <v-btn
                   v-if="type == 'P'"
-                  :disabled="check"
+                  :disabled="checkP"
                   @click="dialogcheck = true"
                 >
-                  EnterP
+                  Enter
                 </v-btn>
               </div>
 
@@ -245,7 +251,7 @@
                   </div>
                   <div align="center" class="text-h5 my-4">
                     <table>
-                      <tr>
+                      <tr v-if="type != 'P'">
                         <td>Model :</td>
                         <td colspan="2">{{ this.modelCheck }}</td>
                       </tr>
@@ -270,13 +276,18 @@
                         <td>{{ this.selectedDayNight }}</td>
                         <td>{{ this.selectedOT }}</td>
                       </tr>
-                      <tr>
+                      <tr v-if="type != 'P'">
                         <td>Station Inspection :</td>
                         <td colspan="2">{{ this.selectedStaInspecCheck }}</td>
                       </tr>
                       <tr>
                         <td>Defect Type :</td>
-                        <td colspan="2">{{ this.selectedScrap }}</td>
+                        <td>
+                          {{ this.selectedDefectType }}
+                        </td>
+                        <td>
+                          {{ this.selectedSRR }}
+                        </td>
                       </tr>
                     </table>
                     <v-btn
@@ -329,6 +340,7 @@ import SetStation from "../components/SetStation.vue";
 import SetScrap from "../components/SetScrap.vue";
 import SetRepair from "../components/SetRepair.vue";
 import SetRework from "../components/SetRework.vue";
+import SetDefectType from "../components/SetDefectType.vue";
 import { btn_img1, cause, scrap_f } from "../assets/constant_F";
 
 const date = ref();
@@ -346,6 +358,7 @@ export default {
     SetScrap,
     SetRepair,
     SetRework,
+    SetDefectType,
     SetStation,
   },
 
@@ -353,6 +366,7 @@ export default {
     type() {
       return this.$route.params.type;
     },
+
     check() {
       if (
         this.selectedValueModel !== "" &&
@@ -364,6 +378,22 @@ export default {
         this.selectedOT !== "" &&
         this.selectedStaInspec !== "" &&
         (this.selectedScrap !== "" || this.selectedRepair !== "")
+      ) {
+        return false;
+      }
+      return true;
+    },
+    checkP() {
+      if (
+        this.dataPin.pinNumber !== null &&
+        this.dataPin.machine !== null &&
+        this.selectedGroup !== "" &&
+        this.selectName !== "" &&
+        this.selectedDayNight !== "" &&
+        this.selectedOT !== "" &&
+        this.selectedStation !== "" &&
+        this.selectedSRR !== "" &&
+        this.selectedDefectType !== ""
       ) {
         return false;
       }
@@ -427,6 +457,8 @@ export default {
     selectedReworkC: "",
     selectedSRR: "",
     selectedGroup: "",
+    selectedDefectType: "",
+    selectedStation: "",
     serialNumberSent: "",
     dataPin: { pinNumber: null, machine: null },
   }),
@@ -466,35 +498,65 @@ export default {
         this.serialNumberSent = "";
       }
 
-      try {
-        const b = await axiosInstance.post("/product", {
-          modelId: this.selectedValueModel,
-          serialNumber: this.serialNumberSent,
-          machineNumber: this.dataPin.machine,
-          timestamp: moment(
-            this.dataPin.date + this.dataPin.time,
-            "DDMMYYHH:mm"
-          ).toDate(),
-          defect: {
-            stationId: this.selectedStaInspec,
-            failureDetailId: this.selectedSRR,
-            position: "null",
-          },
-          employee: {
-            employeeId: this.selectName.split(" ")[0],
-            shift: this.selectedDayNight,
-            workingTimeType: this.selectedOT,
-            group: this.selectedGroup,
-          },
-        });
+      if (this.type == "F" || this.type == "S") {
+        try {
+          const b = await axiosInstance.post("/product", {
+            modelId: this.selectedValueModel,
+            serialNumber: this.serialNumberSent,
+            machineNumber: this.dataPin.machine,
+            timestamp: moment(
+              this.dataPin.date + this.dataPin.time,
+              "DDMMYYHH:mm"
+            ).toDate(),
+            defect: {
+              stationId: this.selectedStaInspec,
+              failureDetailId: this.selectedSRR,
+              position: "null",
+            },
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
 
-        this.error = "success";
-        this.dialogcheck = false;
-      } catch (error) {
-        console.log("error :", error.response);
-        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
-      } finally {
-        this.snackbar = true;
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
+      }
+      if (this.type == "P") {
+        try {
+          const b = await axiosInstance.post("/product/paint", {
+            serialNumber: this.serialNumberSent,
+            paintAt: new Date(),
+            lineId: 3,
+            defect: {
+              stationId: this.selectedStation.split(" ")[0],
+              failureDetailId: this.selectedSRR,
+              defectTypeId: this.selectedDefectType.split(" ")[0],
+            },
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
+
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
       }
     },
     updateValue(event) {
