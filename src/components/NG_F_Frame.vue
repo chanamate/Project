@@ -44,7 +44,11 @@
           <v-row>
             <v-col cols="6">
               <!-- Model -->
-              <SetModel @updateValue="updateValue" />
+              <SetModel
+                v-if="type !== 'P'"
+                class="mb-3"
+                @updateValue="updateValue"
+              />
 
               <!-- Pin Stamp Number -->
               <SetPinStampNumber @updateValue="updateValue" />
@@ -53,14 +57,19 @@
               <SetEmployeeName @updateValue="updateValue" />
 
               <!-- Shift -->
-              <SetShitf v-if="type !== 'P'" @updateValue="updateValue" />
+              <SetShitf class="mt-3" @updateValue="updateValue" />
+
+              <!-- Station -->
+              <SetStation
+                v-if="type == 'P'"
+                class="mt-3"
+                @updateValue="updateValue"
+              />
             </v-col>
 
             <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
             <v-col cols="6">
-              <!-- Shift -->
-              <SetShitf v-if="type == 'P'" @updateValue="updateValue" />
               <!-- StationInspection -->
               <SetStationInspec
                 v-if="type !== 'P'"
@@ -68,129 +77,40 @@
                 @updateValue="updateValue"
               />
 
-              <!-- Scrap Repair Rework -->
-              <v-card elevation="5" color="#CFCFCF">
+              <!-- Scrap Repair -->
+              <v-card
+                v-if="type == 'F' || type == 'S'"
+                elevation="5"
+                color="#CFCFCF"
+              >
                 <v-tabs v-model="tab" bg-color="primary">
-                  <v-tab v-if="type == 'F' || type == 'S'" value="one"
-                    >Scrap</v-tab
-                  >
-                  <v-tab v-if="type == 'F' || type == 'S'" value="two"
-                    >Repair</v-tab
-                  >
-                  <v-tab v-if="type == 'P'" value="three">Rework</v-tab>
+                  <v-tab value="one">Scrap</v-tab>
+                  <v-tab value="two">Repair</v-tab>
                 </v-tabs>
 
                 <v-window v-model="tab">
                   <!-- Scrap -->
                   <v-window-item value="one">
-                    <!-- StationInspection -->
                     <SetScrap @updateValue="updateValue" />
                   </v-window-item>
 
                   <!-- Repair -->
                   <v-window-item value="two">
-                    <v-carousel height="471px">
-                      <v-card height="471px">
-                        <v-card elevation="3" opacity="100">
-                          -----ข้อมูลที่เลือก-----
-                        </v-card>
-
-                        <!-- pic_1 -->
-                        <v-carousel-item
-                          src="../src/assets/pic_1.png"
-                          @click="dialog = true"
-                        >
-                          <!-- pic_1 dialog -->
-                          <v-dialog v-model="dialog">
-                            <v-card class="center">
-                              <div width="550" height="360">
-                                <v-img
-                                  src="../src/assets/pic_1.png"
-                                  width="550"
-                                  height="360"
-                                >
-                                  <v-btn
-                                    v-for="(el, index) in btn_img1"
-                                    :key="index"
-                                    class="absolute"
-                                    :style="{
-                                      top: `${el.Y}px`,
-                                      left: `${el.X}px`,
-                                    }"
-                                    color="red"
-                                    size="x-small"
-                                    rounded="pill"
-                                    @click="(dialog = false), (dialog2 = true)"
-                                  >
-                                    {{ el.name }}
-                                  </v-btn>
-                                </v-img>
-                              </div>
-
-                              <v-card-actions>
-                                <v-btn
-                                  color="primary"
-                                  block
-                                  @click="dialog = false"
-                                  >Close Dialog</v-btn
-                                >
-                              </v-card-actions>
-                            </v-card>
-                          </v-dialog>
-                        </v-carousel-item>
-
-                        <!-- pic_2 -->
-                        <v-carousel-item
-                          src="../src/assets/pic_2.png"
-                          max-height="500"
-                        >
-                        </v-carousel-item>
-
-                        <!-- pic_3 -->
-                        <v-carousel-item
-                          src="../src/assets/pic_3.png"
-                          max-height="500"
-                        >
-                        </v-carousel-item>
-
-                        <!-- dialog2 -->
-                        <v-dialog v-model="dialog2">
-                          <v-card width="800px" class="center">
-                            <v-item-group mandatory>
-                              <v-card elevation="3" color="#CFCFCF" class="">
-                                <div class="ml-4 mt-4 text-h5">Cause :</div>
-                                <v-col
-                                  v-for="(item, index) in cause"
-                                  :key="index"
-                                >
-                                  <v-item v-slot="{ isSelected, toggle }">
-                                    <v-card
-                                      :color="isSelected ? 'primary' : ''"
-                                      class="d-flex justify-center text-h6 pb-1 pt-1"
-                                      dark
-                                      @click="dialog2 = false"
-                                    >
-                                      {{ item.name }}
-                                    </v-card>
-                                  </v-item>
-                                </v-col>
-                              </v-card>
-                            </v-item-group>
-                          </v-card>
-                        </v-dialog>
-                      </v-card>
-                    </v-carousel>
+                    <SetRepair @updateValue="updateValue" />
                   </v-window-item>
+                </v-window>
+              </v-card>
 
+              <!-- Rework -->
+              <v-card v-if="type == 'P'" elevation="5" color="#CFCFCF">
+                <v-tabs v-model="tab" bg-color="primary">
+                  <v-tab value="one">Rework</v-tab>
+                </v-tabs>
+
+                <v-window v-model="tab">
                   <!-- Rework -->
-                  <v-window-item value="three">
-                    <v-card
-                      color="#CFCFCF"
-                      height="471px"
-                      class="py-3 overflow-y-auto"
-                    >
-                      Three
-                    </v-card>
+                  <v-window-item value="one">
+                    <SetRework @updateValue="updateValue" />
                   </v-window-item>
                 </v-window>
               </v-card>
@@ -198,8 +118,19 @@
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
                 <!-- <v-btn class="mr-4"> PRINT </v-btn> -->
-                <v-btn :disabled="check" @click="dialogcheck = true">
+                <v-btn
+                  v-if="type !== 'P'"
+                  :disabled="check"
+                  @click="dialogcheck = true"
+                >
                   Enter
+                </v-btn>
+                <v-btn
+                  v-if="type == 'P'"
+                  :disabled="check"
+                  @click="dialogcheck = true"
+                >
+                  EnterP
                 </v-btn>
               </div>
 
@@ -394,7 +325,10 @@ import SetPinStampNumber from "../components/SetPinStampNumber.vue";
 import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
 import SetStationInspec from "../components/SetStationInspec.vue";
+import SetStation from "../components/SetStation.vue";
 import SetScrap from "../components/SetScrap.vue";
+import SetRepair from "../components/SetRepair.vue";
+import SetRework from "../components/SetRework.vue";
 import { btn_img1, cause, scrap_f } from "../assets/constant_F";
 
 const date = ref();
@@ -410,6 +344,9 @@ export default {
     SetShitf,
     SetStationInspec,
     SetScrap,
+    SetRepair,
+    SetRework,
+    SetStation,
   },
 
   computed: {
@@ -426,7 +363,7 @@ export default {
         this.selectedDayNight !== "" &&
         this.selectedOT !== "" &&
         this.selectedStaInspec !== "" &&
-        this.selectedScrap !== ""
+        (this.selectedScrap !== "" || this.selectedRepair !== "")
       ) {
         return false;
       }
@@ -483,6 +420,12 @@ export default {
     selectedStaInspec: "",
     selectedStaInspecCheck: "",
     selectedScrap: "",
+    selectedRepair: "",
+    selectedRework: "",
+    selectedScrapC: "",
+    selectedRepairC: "",
+    selectedReworkC: "",
+    selectedSRR: "",
     selectedGroup: "",
     serialNumberSent: "",
     dataPin: { pinNumber: null, machine: null },
@@ -522,6 +465,7 @@ export default {
       } else {
         this.serialNumberSent = "";
       }
+
       try {
         const b = await axiosInstance.post("/product", {
           modelId: this.selectedValueModel,
@@ -533,7 +477,7 @@ export default {
           ).toDate(),
           defect: {
             stationId: this.selectedStaInspec,
-            failureDetailId: parseInt(this.selectedScrap.split(" ")[0]),
+            failureDetailId: this.selectedSRR,
             position: "null",
           },
           employee: {
@@ -543,6 +487,7 @@ export default {
             group: this.selectedGroup,
           },
         });
+
         this.error = "success";
         this.dialogcheck = false;
       } catch (error) {
@@ -555,6 +500,19 @@ export default {
     updateValue(event) {
       this[event.key] = event.value;
 
+      if (this.selectedScrapC != this.selectedScrap) {
+        this.selectedScrapC = this.selectedScrap;
+        this.selectedSRR = parseInt(this.selectedScrap.split(" ")[0]);
+      }
+      if (this.selectedRepairC != this.selectedRepair) {
+        this.selectedRepairC = this.selectedRepair;
+        this.selectedSRR = parseInt(this.selectedRepair.split(" ")[0]);
+      }
+      if (this.selectedReworkC != this.selectedRework) {
+        this.selectedReworkC = this.selectedRework;
+        this.selectedSRR = this.selectedRework.split(" ")[0];
+      }
+
       switch (this.selectedValueModel) {
         case 1:
           this.modelCheck = "Model F01";
@@ -565,16 +523,34 @@ export default {
         case 3:
           this.modelCheck = "Model F03";
           break;
+        case 4:
+          this.modelCheck = "Model S01";
+          break;
+        case 5:
+          this.modelCheck = "Model S02";
+          break;
+        case 6:
+          this.modelCheck = "Model S03";
+          break;
+        case 7:
+          this.modelCheck = "Model S04";
+          break;
       }
       switch (this.selectedStaInspec) {
-        case "OP05":
-          this.selectedStaInspecCheck = "OP05 Inspection 1";
+        case "OPF05":
+          this.selectedStaInspecCheck = "OPF05 Inspection 1";
           break;
-        case "OP08":
-          this.selectedStaInspecCheck = "OP08 Inspection 2";
+        case "OPF08":
+          this.selectedStaInspecCheck = "OPF08 Inspection 2";
           break;
-        case "OP10":
-          this.selectedStaInspecCheck = "OP10 Q-Gate Inspection 3";
+        case "OPF10":
+          this.selectedStaInspecCheck = "OPF10 Q-Gate Inspection 3";
+          break;
+        case "OPS04":
+          this.selectedStaInspecCheck = "OPS04 Inspection S";
+          break;
+        case "OPS05":
+          this.selectedStaInspecCheck = "OPS05 Q-Gate Inspection 3";
           break;
       }
     },

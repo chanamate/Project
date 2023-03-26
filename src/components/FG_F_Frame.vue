@@ -44,7 +44,11 @@
           <v-row>
             <v-col cols="6">
               <!-- Model -->
-              <SetModel @updateValue="updateValue" />
+              <SetModel
+                v-if="type !== 'P'"
+                class="mb-3"
+                @updateValue="updateValue"
+              />
 
               <!-- Pin Stamp Number -->
               <SetPinStampNumber @updateValue="updateValue" />
@@ -52,7 +56,18 @@
 
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
-                <v-btn @click="dialogcheck = true" :disabled="check">
+                <v-btn
+                  v-if="type !== 'P'"
+                  @click="dialogcheck = true"
+                  :disabled="checkFS"
+                >
+                  Enter
+                </v-btn>
+                <v-btn
+                  v-if="type == 'P'"
+                  @click="dialogcheck = true"
+                  :disabled="checkP"
+                >
                   Enter
                 </v-btn>
               </div>
@@ -71,7 +86,7 @@
                   </div>
                   <div align="center" class="text-h5 my-4">
                     <table>
-                      <tr>
+                      <tr v-if="type !== 'P'">
                         <td>Model :</td>
                         <td colspan="2">{{ this.modelCheck }}</td>
                       </tr>
@@ -93,9 +108,18 @@
                     </v-btn>
 
                     <v-btn
+                      v-if="type !== 'P'"
                       color="green-darken-1"
                       variant="text"
-                      @click="submit()"
+                      @click="submitFS()"
+                    >
+                      Agree
+                    </v-btn>
+                    <v-btn
+                      v-if="type == 'P'"
+                      color="green-darken-1"
+                      variant="text"
+                      @click="submitP()"
                     >
                       Agree
                     </v-btn>
@@ -132,12 +156,18 @@ export default {
     type() {
       return this.$route.params.type;
     },
-    check() {
+    checkFS() {
       if (
         this.selectedValueModel !== "" &&
         this.dataPin.pinNumber !== null &&
         this.dataPin.machine !== null
       ) {
+        return false;
+      }
+      return true;
+    },
+    checkP() {
+      if (this.dataPin.pinNumber !== null && this.dataPin.machine !== null) {
         return false;
       }
       return true;
@@ -175,7 +205,7 @@ export default {
     serialNumberSent: "",
   }),
   methods: {
-    async submit() {
+    async submitFS() {
       console.log("modelId", this.selectedValueModel);
       console.log(
         "serialNumber",
@@ -207,6 +237,28 @@ export default {
       } catch (error) {
         console.log("error :", error.response);
         this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+      } finally {
+        this.snackbar = true;
+      }
+    },
+    async submitP() {
+      const numToStr = this.dataPin.pinNumber.toString();
+      if (numToStr == this.dataPin.pinNumber.toString()) {
+        this.serialNumberSent = `${this.dataPin.date}-${this.dataPin.time}-${numToStr}`;
+      } else {
+        this.serialNumberSent = "";
+      }
+      try {
+        const b = await axiosInstance.post("/product/paint", {
+          serialNumber: this.serialNumberSent,
+          paintAt: new Date(),
+          lineId: 3,
+        });
+        this.error = "success";
+        this.dialogcheck = false;
+      } catch (error) {
+        console.log("error :", error.response);
+        this.error = `${error.response.data.statusCode} ${error.response.data.message}`;
       } finally {
         this.snackbar = true;
       }

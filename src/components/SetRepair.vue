@@ -1,8 +1,8 @@
 <template>
-  <v-card color="#CFCFCF" max-height="467px" class="py-3 overflow-y-auto">
+  <v-card color="#CFCFCF" max-height="520px" class="py-3 overflow-y-auto">
     <v-col cols="12" class="pa-0">
-      <v-item-group mandatory :model-value="selectedScrap">
-        <v-col class="pb-1 pt-1" v-for="(item, index) in scrap" :key="index">
+      <v-item-group mandatory :model-value="selectedRepair">
+        <v-col class="pb-1 pt-1" v-for="(item, index) in repair" :key="index">
           <v-item v-slot="{ isSelected, toggle }" :value="item.details">
             <v-card
               :color="isSelected ? 'primary' : ''"
@@ -26,8 +26,8 @@
 import axiosInstance from "../utils/axios.instance";
 
 export default {
-  name: "selectedScrap",
-  props: ["selectedScrap"],
+  name: "selectedRepair",
+  props: ["selectedRepair"],
 
   computed: {
     type() {
@@ -36,7 +36,7 @@ export default {
   },
 
   data: () => ({
-    scrap: [],
+    repair: [],
     lineId: null,
   }),
 
@@ -51,7 +51,7 @@ export default {
     // ADD THIS SHIT
     update(e) {
       this.$emit("updateValue", {
-        key: "selectedScrap", // VALUE NAME ที่ จะอัพเดท ใน parent()
+        key: "selectedRepair", // VALUE NAME ที่ จะอัพเดท ใน parent()
         value: e, // ค่าที่จะ UPDATE
       });
     },
@@ -68,16 +68,16 @@ export default {
         this.lineId = 3;
         break;
     }
-    let scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
-      type: "SCRAP",
+    let repair = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
+      type: "REPAIR",
     });
-    this.scrap = scrap;
+    this.repair = repair;
     // station = station.slice(4, 9); @@@@@@@@@@@@@@@@@@@@@@ใช้ตอน scrap @@@@@@@@@@@
     // station = station.filter((e) => {
     //   const re = new RegExp("inspection", "i");
     //   return re.test(e.stationName);
     // });
-    // console.log("scrap", scrap);
+    // console.log("repair", repair);
   },
 };
 </script>

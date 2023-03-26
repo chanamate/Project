@@ -2,7 +2,7 @@
   <v-col class="align-self-center">
     <div id="container-register">
       <div id="title">
-        <h1>register</h1>
+        <h1>Register</h1>
       </div>
 
       <v-form>

@@ -136,12 +136,12 @@
 
                     <v-col>
                       <!-- Shift -->
-                      <SetShitf @updateValue="updateValue" />
+                      <SetShitf class="mt-2" @updateValue="updateValue" />
 
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
                       <!-- Station -->
-                      <SetStation @updateValue="updateValue" />
+                      <SetStation class="mt-2" @updateValue="updateValue" />
 
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
@@ -216,12 +216,12 @@
 
                     <v-col>
                       <!-- Shift -->
-                      <SetShitf @updateValue="updateValue" />
+                      <SetShitf class="mt-2" @updateValue="updateValue" />
 
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
                       <!-- Station -->
-                      <SetStation @updateValue="updateValue" />
+                      <SetStation class="mt-2" @updateValue="updateValue" />
 
                       <v-divider class="mt-3 mr-3" thickness="3" />
 

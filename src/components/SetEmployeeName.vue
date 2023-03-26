@@ -3,7 +3,7 @@
     elevation="8"
     color="#CFCFCF"
     class="pa-4 mt-4"
-    height="140px"
+    max-height="140px"
     width="100%"
   >
     <v-row class="ml-0 mt-0"
@@ -12,6 +12,7 @@
         v-model="selectedGroup"
         inline
         @update:modelValue="update2"
+        class="mt-n1"
       >
         <v-radio label="Group A" value="A"></v-radio>
         <v-radio label="Group B" value="B"></v-radio>

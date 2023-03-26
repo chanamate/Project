@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" color="#CFCFCF" class="pa-4 mt-4" height="195px">
+  <v-card elevation="3" color="#CFCFCF" class="pa-4" height="195px">
     <div class="text-h6 mb-1">Pin Stamp Number :</div>
     <v-row class="mt-3 ml-0 w-100">
       <Datepicker

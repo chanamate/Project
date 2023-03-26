@@ -50,7 +50,7 @@
       <div class="register">
         Create an account
         <router-link to="/register">
-          <button id="register-link">Sign up here</button>
+          <button id="register-link">Register here</button>
         </router-link>
       </div>
     </div>

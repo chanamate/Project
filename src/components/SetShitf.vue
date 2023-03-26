@@ -2,7 +2,7 @@
   <v-card
     elevation="8"
     color="#CFCFCF"
-    class="pt-3 overflow-y-auto mt-2"
+    class="pt-3 overflow-y-auto"
     height="160px"
   >
     <v-item-group mandatory class="mx-3" :model-value="selectedDayNight">
