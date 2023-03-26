@@ -85,8 +85,10 @@
           <td colspan="2">FAILURE</td>
           <td class="text-center">TIME (MINS)</td>
         </tr>
+
         <tr></tr>
-        <!-- <tr>
+
+        <tr>
           <td
             :rowspan="this.countDowntimeDefect"
             width="80px"
@@ -94,25 +96,23 @@
           >
             DOWNTIME
           </td>
-        </tr> -->
-        <tr>
-          <td :rowspan="3" width="80px" class="text-center">DOWNTIME</td>
         </tr>
-        <!-- <tr v-for="(item, index) in this.downtimeDefect" :key="index">
-          <td>{{ item.id }}</td>
-          <td colspan="2">{{ item.details }}</td>
-          <td class="text-center">{{ item.downtime }}</td>
-        </tr> -->
-        <tr>
-          <td>item.id</td>
-          <td colspan="2">item.details</td>
-          <td class="text-center">item.downtime</td>
+        <tr v-for="(item, index) in this.dtCause" :key="index">
+          <td>
+            {{ item.availabilityId }}
+          </td>
+          <td colspan="2">
+            {{ item.details }}
+          </td>
+          <td class="text-center">
+            {{ item.sum }}
+          </td>
         </tr>
 
         <tr>
           <td colspan="2"></td>
           <td>TOTAL :</td>
-          <th>{{ this.sumdowntimeDefect }}</th>
+          <th>{{ this.downtimeTotal }}</th>
         </tr>
 
         <tr>
@@ -250,7 +250,7 @@ export default {
   async mounted() {
     this.loaded = false;
     try {
-      let b = await axiosInstance.post("/dashboard/month", {
+      const b = await axiosInstance.post("/dashboard/month", {
         lineId: 1,
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
@@ -269,18 +269,33 @@ export default {
       this.performance = b.performance + "%";
       this.quality = b.quality + "%";
 
+      // DOWNTIME
       const dtCause = await axiosInstance.get(`/availability-lose/1`);
-
       console.log("🚀 ~ dtCause:", dtCause);
+      const dtCauseData = Array(dtCause.length).fill(0);
+      console.log("🚀 ~ dtCauseData:", dtCauseData);
+
+      this.downtimeTotal = b.downtimeTotal;
+      for (let i = 0; i < b.downtimeDefect.length; i++) {
+        this.countDowntimeDefect = this.countDowntimeDefect + 1;
+        console.log(b.downtimeDefect[i]);
+        for (let j = 0; j < dtCause.length; j++) {
+          if (dtCause[j].availabilityId == b.downtimeDefect[i].id) {
+            dtCauseData[j] = dtCauseData[j] + b.downtimeDefect[i].downtime;
+            console.log(dtCauseData);
+          }
+        }
+      }
+      const newA = dtCause.map((elem, index) => ({
+        ...elem,
+        ...{ sum: dtCauseData[index] },
+      }));
+      this.dtCause = newA;
+
       this.loaded = true;
     } catch (e) {
       console.error(e);
     }
-    // if ((defect[i].type = "SCRAP")) {
-    //   Scrap[i] = defect[i];
-    //   console.log(Scrap[i]);
-    // }
-    // // console.log(Scrap);
   },
 
   computed: {
@@ -500,7 +515,10 @@ export default {
     genTable: true,
     // genTable: false,
     shift: "",
-    sumdowntimeDefect: null,
+
+    dtCause: null,
+    dtCauseData: null,
+    downtimeTotal: null,
 
     sumScrapDefects: null,
     sumScrapIns1: null,
@@ -518,7 +536,7 @@ export default {
     sumReworkIns3: null,
 
     // นับ row ในตาราง
-    countDowntimeDefect: 2,
+    countDowntimeDefect: 1,
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
