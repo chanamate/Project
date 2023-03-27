@@ -56,7 +56,7 @@
     </v-col>
   </v-row>
 
-  <v-row v-if="!this.reload">
+  <v-row v-if="this.reload">
     <div class="d-flex justify-end ma-6">
       <v-btn @click="reloadWindow()"> Reset </v-btn>
     </div>
@@ -73,10 +73,10 @@
         </tr>
         <tr>
           <th colspan="3">LINE : FABRICATION OF F FRAME</th>
-          <th>SHIFT:{{ shift }}</th>
+          <th>SHIFT:{{ this.shiftSelect }}</th>
           <th>
             MONTH : <br />
-            เดือน
+            {{ this.startAt }}
           </th>
         </tr>
         <tr>
@@ -114,12 +114,28 @@
           <td>TOTAL :</td>
           <th>{{ this.downtimeTotal }}</th>
         </tr>
+      </table>
 
+      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+      <div class="html2pdf__page-break"></div>
+      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+      <table class="my-2">
+        <tr>
+          <th colspan="5">MONTHLY REPORT</th>
+        </tr>
+        <tr>
+          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
+          <th>SHIFT:{{ this.shiftSelect }}</th>
+          <th>
+            MONTH : <br />
+            {{ this.startAt }}
+          </th>
+        </tr>
         <tr>
           <td></td>
           <td class="text-center">TYPE</td>
-          <td>FAILURE DETAILS</td>
-          <td>OPERATION</td>
+          <td colspan="2">FAILURE DETAILS</td>
           <td>Total Parts</td>
         </tr>
 
@@ -128,49 +144,46 @@
         </tr>
 
         <!-- scrapDefects -->
-        <!-- <tr>
+        <tr>
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
         </tr>
-        <tr v-for="(item, index) in this.scrapDefects" :key="index">
-          <td>{{ item.details }}</td>
-          <td>{{ item.station }}</td>
+        <tr v-for="(item, index) in this.scrapCause" :key="index">
+          <td colspan="2">{{ item.details }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countScrapDefects !== 1">
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumScrapDefects }}</th>
-        </tr> -->
+        </tr>
 
         <!-- repairDefects -->
-        <!-- <tr>
+        <tr>
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
         </tr>
-        <tr v-for="(item, index) in this.repairDefects" :key="index">
-          <td>{{ item.details }}</td>
-          <td>{{ item.station }}</td>
+        <tr v-for="(item, index) in this.repairCause" :key="index">
+          <td colspan="2">{{ item.details }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countRepairDefects !== 1">
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumRepairDefects }}</th>
-        </tr> -->
+        </tr>
 
         <!-- reworkDefects -->
-        <!-- <tr>
+        <tr>
           <td :rowspan="this.countReworkDefects" class="text-center">Rework</td>
         </tr>
-        <tr v-for="(item, index) in this.reworkDefects" :key="index">
-          <td>{{ item.details }}</td>
-          <td>{{ item.station }}</td>
+        <tr v-for="(item, index) in this.reworkCause" :key="index">
+          <td colspan="2">{{ item.details }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countReworkDefects !== 1">
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumReworkDefects }}</th>
-        </tr> -->
+        </tr>
       </table>
 
       <table class="my-2">
@@ -196,6 +209,7 @@
       </table>
 
       <div class="html2pdf__page-break"></div>
+
       <v-col cols="5">
         <Bar v-if="loaded" :data="chartDataDT" />
       </v-col>
@@ -268,9 +282,11 @@ export default {
       this.availability = b.availability + "%";
       this.performance = b.performance + "%";
       this.quality = b.quality + "%";
+      this.startAt = moment(b.startAt).format("MMMM");
+      this.shiftSelect = b.workingTime.time;
 
-      // DOWNTIME
-      const dtCause = await axiosInstance.get(`/availability-lose/1`);
+      // DOWNTIME-------------------------------------------------------------------------------
+      const dtCause = await axiosInstance.get(`/availability-lose/${1}`);
       // console.log("🚀 ~ dtCause:", dtCause);
       const dtCauseData = Array(dtCause.length).fill(0);
       // console.log("🚀 ~ dtCauseData:", dtCauseData);
@@ -292,15 +308,80 @@ export default {
       }));
       this.dtCause = newA;
 
-      //Scrap
-      const scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
+      //Scrap-------------------------------------------------------------------------------
+      const scrapCause = await axiosInstance.post(`/failure-detail/${1}`, {
         type: "SCRAP",
       });
-      const scrapData = Array(scrap.length).fill(0);
+      // console.log("🚀", scrapCause);
+      const scrapData = Array(scrapCause.length).fill(0);
       this.scrapTotal = b.failureDefect.filter(
         (defect) => defect.type === "SCRAP"
       );
-      this.countDowntimeDefect = dtCause.length + 2;
+      this.countScrapDefects = scrapCause.length + 1;
+      for (let i = 0; i < this.scrapTotal.length; i++) {
+        this.sumScrapDefects = this.sumScrapDefects + this.scrapTotal[i].sum;
+        for (let j = 0; j < scrapCause.length; j++) {
+          if (scrapCause[j].details == this.scrapTotal[i].details) {
+            scrapData[j] = scrapData[j] + this.scrapTotal[i].sum;
+            // console.log(scrapData);
+          }
+        }
+      }
+      const newB = scrapCause.map((elem, index) => ({
+        ...elem,
+        ...{ sum: scrapData[index] },
+      }));
+      this.scrapCause = newB;
+
+      //Repair-------------------------------------------------------------------------------
+      const repairCause = await axiosInstance.post(`/failure-detail/${1}`, {
+        type: "REPAIR",
+      });
+      // console.log("🚀", repairCause);
+      const repairData = Array(repairCause.length).fill(0);
+      this.repairTotal = b.failureDefect.filter(
+        (defect) => defect.type === "REPAIR"
+      );
+      this.countRepairDefects = repairCause.length + 1;
+      for (let i = 0; i < this.repairTotal.length; i++) {
+        this.sumRepairDefects = this.sumRepairDefects + this.repairTotal[i].sum;
+        for (let j = 0; j < repairCause.length; j++) {
+          if (repairCause[j].details == this.repairTotal[i].details) {
+            repairData[j] = repairData[j] + this.repairTotal[i].sum;
+            // console.log(repairData);
+          }
+        }
+      }
+      const newC = repairCause.map((elem, index) => ({
+        ...elem,
+        ...{ sum: repairData[index] },
+      }));
+      this.repairCause = newC;
+
+      //Repair-------------------------------------------------------------------------------
+      const reworkCause = await axiosInstance.post(`/failure-detail/${1}`, {
+        type: "REWORK",
+      });
+      // console.log("🚀", reworkCause);
+      const reworkData = Array(reworkCause.length).fill(0);
+      this.reworkTotal = b.failureDefect.filter(
+        (defect) => defect.type === "REWORK"
+      );
+      this.countReworkDefects = reworkCause.length + 1;
+      for (let i = 0; i < this.reworkTotal.length; i++) {
+        this.sumReworkDefects = this.sumReworkDefects + this.reworkTotal[i].sum;
+        for (let j = 0; j < reworkCause.length; j++) {
+          if (reworkCause[j].details == this.reworkTotal[i].details) {
+            reworkData[j] = reworkData[j] + this.reworkTotal[i].sum;
+            // console.log(reworkData);
+          }
+        }
+      }
+      const newD = reworkCause.map((elem, index) => ({
+        ...elem,
+        ...{ sum: reworkData[index] },
+      }));
+      this.reworkCause = newD;
 
       this.loaded = true;
     } catch (e) {
@@ -346,145 +427,6 @@ export default {
   },
 
   methods: {
-    // async genTableF() {
-    //   this.reload = false;
-    //   this.loaded = false;
-    //   try {
-    //     let b = await axiosInstance.post("/dashboard/date", {
-    //       lineId: parseInt(this.selectedLine.split(" ")[0]),
-    //       targetDate: moment(
-    //         moment(this.date).format("MMMM Do YYYY") + "09:00",
-    //         "MMMM Do YYYYHH:mm"
-    //       ).toDate(),
-    //       shift: this.shiftInput,
-    //     });
-
-    //     console.log("🚀 ~ file: test.vue:384 ~ genTableF ~ b:", b);
-
-    //     // const b = await axiosInstance.post("/dashboard/date", {
-    //     //   lineId: this.selectedLine,
-    //     //   targetDate: this.date,
-    //     //   shift: this.shift,
-    //     // });
-
-    //     this.startAt = moment(b.startAt).format("DD/MM/YY");
-    //     this.shift = b.workingTime.time;
-    //     this.group = b.group;
-    //     console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
-    //     this.downtimeDefect = b.downtimeDefect;
-
-    //     this.actual = b.actual;
-    //     this.target = b.target;
-    //     this.oee = b.oee + "%";
-    //     this.availability = b.availability + "%";
-    //     this.performance = b.performance + "%";
-    //     this.quality = b.quality + "%";
-
-    //     // SCRAP
-    //     this.scrapDefects = b.failureDefect.filter(
-    //       (defect) => defect.type === "SCRAP"
-    //     );
-    //     for (let i = 0; i < b.failureTotal; i++) {
-    //       if (this.scrapDefects[i] && this.scrapDefects[i].sum) {
-    //         this.sumScrapDefects =
-    //           this.sumScrapDefects + this.scrapDefects[i].sum;
-    //         this.countScrapDefects = this.countScrapDefects + 1;
-    //         if (this.scrapDefects[i].station == "Inspection 1") {
-    //           this.sumScrapIns1 = this.sumScrapIns1 + this.scrapDefects[i].sum;
-    //           // console.log("this.sumScrapIns1", this.sumScrapIns1);
-    //         }
-    //         if (this.scrapDefects[i].station == "Inspection 2") {
-    //           this.sumScrapIns2 = this.sumScrapIns2 + this.scrapDefects[i].sum;
-    //           // console.log("this.sumScrapIns1", this.sumScrapIns2);
-    //         }
-    //         if (this.scrapDefects[i].station == "Q-Gate Inspection 3") {
-    //           this.sumScrapIns3 = this.sumScrapIns3 + this.scrapDefects[i].sum;
-    //           // console.log("this.sumScrapIns1", this.sumScrapIns3);
-    //         }
-    //       }
-    //     }
-
-    //     // REPAIR
-    //     this.repairDefects = b.failureDefect.filter(
-    //       (defect) => defect.type === "REPAIR"
-    //     );
-    //     for (let i = 0; i < b.failureTotal; i++) {
-    //       if (this.repairDefects[i] && this.repairDefects[i].sum) {
-    //         this.sumRepairDefects =
-    //           this.sumRepairDefects + this.repairDefects[i].sum;
-    //         this.countRepairDefects = this.countRepairDefects + 1;
-    //         if (this.repairDefects[i].station == "Inspection 1") {
-    //           this.sumRepairIns1 =
-    //             this.sumRepairIns1 + this.repairDefects[i].sum;
-    //           // console.log("this.sumRepairIns1", this.sumRepairIns1);
-    //         }
-    //         if (this.repairDefects[i].station == "Inspection 2") {
-    //           this.sumRepairIns2 =
-    //             this.sumRepairIns2 + this.repairDefects[i].sum;
-    //           // console.log("this.sumRepairIns1", this.sumRepairIns2);
-    //         }
-    //         if (this.repairDefects[i].station == "Q-Gate Inspection 3") {
-    //           this.sumRepairIns3 =
-    //             this.sumRepairIns3 + this.repairDefects[i].sum;
-    //           // console.log("this.sumRepairIns1", this.sumRepairIns3);
-    //         }
-    //       }
-    //     }
-
-    //     // REWORK
-    //     this.reworkDefects = b.failureDefect.filter(
-    //       (defect) => defect.type === "REWORK"
-    //     );
-    //     for (let i = 0; i < b.failureTotal; i++) {
-    //       if (this.reworkDefects[i] && this.reworkDefects[i].sum) {
-    //         this.sumReworkDefects =
-    //           this.sumReworkDefects + this.reworkDefects[i].sum;
-    //         this.countReworkDefects = this.countReworkDefects + 1;
-    //         if (this.reworkDefects[i].station == "Inspection 1") {
-    //           this.sumReworkIns1 =
-    //             this.sumReworkIns1 + this.reworkDefects[i].sum;
-    //           // console.log("this.sumReworkIns1", this.sumReworkIns1);
-    //         }
-    //         if (this.reworkDefects[i].station == "Inspection 2") {
-    //           this.sumReworkIns2 =
-    //             this.sumReworkIns2 + this.reworkDefects[i].sum;
-    //           // console.log("this.sumReworkIns1", this.sumReworkIns2);
-    //         }
-    //         if (this.reworkDefects[i].station == "Q-Gate Inspection 3") {
-    //           this.sumReworkIns3 =
-    //             this.sumReworkIns3 + this.reworkDefects[i].sum;
-    //           // console.log("this.sumReworkIns1", this.sumReworkIns3);
-    //         }
-    //       }
-    //     }
-    //     // this.lineId = parseInt(this.selectedLine.split(" ")[0]);
-    //     // const s = await axiosInstance.get(`/station/line/${this.lineId}`);
-    //     const s = await axiosInstance.get(`/station/line/1`);
-    //     this.station = s;
-    //     console.log(this.station);
-    //     this.stationData = Array(this.station.length).fill(0);
-    //     console.log(this.stationData);
-
-    //     // DOWNTIME
-    //     for (let i = 0; i < b.downtimeDefect.length; i++) {
-    //       this.sumdowntimeDefect =
-    //         this.sumdowntimeDefect + this.downtimeDefect[i].downtime;
-    //       this.countDowntimeDefect = this.countDowntimeDefect + 1;
-    //       console.log(b.downtimeDefect[i]);
-    //       for (let j = 0; j < this.station.length; j++) {
-    //         if (this.station[j].stationId == b.downtimeDefect[i].station) {
-    //           this.stationData[j] =
-    //             this.stationData[j] + b.downtimeDefect[i].downtime;
-    //           console.log(this.stationData);
-    //         }
-    //       }
-    //     }
-
-    //     this.loaded = true;
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // },
     reloadWindow() {
       window.location.reload();
     },
@@ -513,6 +455,8 @@ export default {
     line: [],
     selectedLine: "",
     shiftInput: "",
+    shiftSelect: "",
+    startAt: "",
     date: new Date(),
     format: (date) => {
       const day = date.getDate();
@@ -527,9 +471,14 @@ export default {
     shift: "",
 
     dtCause: null,
+    scrapCause: null,
+    repairCause: null,
+    reworkCause: null,
     dtCauseData: null,
     downtimeTotal: null,
     scrapTotal: null,
+    repairTotal: null,
+    reworkTotal: null,
 
     sumScrapDefects: null,
     sumScrapIns1: null,

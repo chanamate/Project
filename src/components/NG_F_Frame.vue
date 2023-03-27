@@ -132,7 +132,7 @@
               <!-- Rework -->
               <v-card v-if="type == 'P'" elevation="5" color="#CFCFCF">
                 <v-tabs v-model="tab" bg-color="primary">
-                  <v-tab value="one">Rework</v-tab>
+                  <v-tab value="one">Defect Type</v-tab>
                 </v-tabs>
 
                 <v-window v-model="tab">
