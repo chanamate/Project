@@ -29,7 +29,7 @@
           Quantity Input for Bottle Neck : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Quantity Input for Bottle Neck : Powder Coat Painting
+          Powder Coat Painting Don't have Bottle Neck
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -57,7 +57,7 @@
         </v-item-group>
       </v-col>
 
-      <v-col>
+      <v-col v-if="type !== 'P'">
         <v-card height="820" color="#AAAAAA" class="pa-4 mr-4 mt-n3">
           <v-row>
             <v-col cols="4">

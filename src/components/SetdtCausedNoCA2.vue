@@ -7,11 +7,20 @@
   >
     <div class="text-h6 ml-3">
       Select the problem that caused the downtime :
+      <v-switch
+        color="red"
+        v-model="CA2"
+        hide-details
+        true-value="Conveyor's automatic stop"
+        false-value="Employee stop"
+        :label="`${CA2}`"
+      ></v-switch>
     </div>
     <v-card
       color="#CFCFCF"
-      class="py-3 overflow-y-auto mt-2 mb-3"
+      class="py-3 overflow-y-auto mt-n3 mb-3"
       elevation="0"
+      v-if="CA2 == 'Employee stop'"
     >
       <v-col cols="12" class="pa-0">
         <v-item-group mandatory :model-value="selectedDT">
@@ -23,10 +32,41 @@
                 dark
                 @click="
                   toggle();
-                  update(item.availabilityId + ` ` + item.details);
+                  update(item.digit + ` ` + item.details);
                 "
               >
-                {{ item.details }}
+                {{ item.digit + " " + item.details }}
+              </v-card>
+            </v-item>
+          </v-col>
+        </v-item-group>
+      </v-col>
+    </v-card>
+
+    <v-card
+      color="#CFCFCF"
+      class="py-3 overflow-y-auto mt-n3 mb-3"
+      elevation="0"
+      v-if="CA2 !== 'Employee stop'"
+    >
+      <v-col cols="12" class="pa-0">
+        <v-item-group mandatory :model-value="selectedDT">
+          <v-col
+            class="pb-1 pt-1"
+            v-for="(item, index) in dt_fCA2"
+            :key="index"
+          >
+            <v-item v-slot="{ isSelected, toggle }" :value="item.details">
+              <v-card
+                :color="isSelected ? 'primary' : ''"
+                class="d-flex justify-center text-h6"
+                dark
+                @click="
+                  toggle();
+                  update(item.digit + ` ` + item.details);
+                "
+              >
+                {{ item.digit + " " + item.details }}
               </v-card>
             </v-item>
           </v-col>
@@ -53,6 +93,7 @@ export default {
     scrap: "",
     dt_f: "",
     lineId: null,
+    CA2: "Employee stop",
   }),
 
   async mounted() {
@@ -86,12 +127,13 @@ export default {
         this.lineId = 3;
         const PP = await axiosInstance.get(`/availability-lose/extended/3`);
         this.dt_f = PP.slice(0, 11);
+        this.dt_fCA2 = PP.slice(12, 22);
         break;
     }
-    console.log(
-      "🚀 ~ file: SetdtCaused.vue:89 ~ created ~ this.dt_f:",
-      this.dt_f
-    );
+    // console.log(
+    //   "🚀 ~ file: SetdtCaused.vue:89 ~ created ~ this.dt_f:",
+    //   this.dt_f
+    // );
     // const dt_f = await axiosInstance.get(`/availability-lose/${this.lineId}`);
     // this.dt_f = dt_f;
 
@@ -99,6 +141,7 @@ export default {
     // let scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
     //   type: "SCRAP",
     // });
+
     // station = station.slice(4, 9); @@@@@@@@@@@@@@@@@@@@@@ใช้ตอน scrap @@@@@@@@@@@
     // station = station.filter((e) => {
     //   const re = new RegExp("inspection", "i");

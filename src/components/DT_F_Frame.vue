@@ -168,7 +168,14 @@
                       <v-divider class="mt-3 mr-3" thickness="3" />
 
                       <!-- Caused -->
-                      <SetdtCaused @updateValue="updateValue" />
+                      <SetdtCaused
+                        v-if="type == 'F' || type == 'S'"
+                        @updateValue="updateValue"
+                      />
+                      <SetdtCausedNoCA2
+                        v-if="type == 'P'"
+                        @updateValue="updateValue"
+                      />
 
                       <div cols="6" class="d-flex justify-end mt-4">
                         <v-btn :disabled="check1" @click="dialogcheck1 = true">
@@ -400,6 +407,7 @@ import SetEmployeeName from "../components/SetEmployeeName.vue";
 import SetShitf from "../components/SetShitf.vue";
 import SetStation from "../components/SetStation.vue";
 import SetdtCaused from "../components/SetdtCaused.vue";
+import SetdtCausedNoCA2 from "../components/SetdtCausedNoCA2.vue";
 
 import Datepicker from "@vuepic/vue-datepicker";
 
@@ -420,6 +428,7 @@ export default {
     SetShitf,
     SetStation,
     SetdtCaused,
+    SetdtCausedNoCA2,
     Datepicker,
   },
 
@@ -595,27 +604,52 @@ export default {
       console.log("shift :", this.selectedDayNight);
       console.log("workingTimeType :", this.selectedOT);
       console.log("group :", this.selectedGroup);
-
-      try {
-        const b = await axiosInstance.post("/downtime", {
-          startAt: this.startAtDT,
-          endAt: this.endAtDT,
-          stationId: this.selectedStation.split(" ")[0],
-          availabilityId: this.selectedDT.split(" ")[0],
-          employee: {
-            employeeId: this.selectName.split(" ")[0],
-            shift: this.selectedDayNight,
-            workingTimeType: this.selectedOT,
-            group: this.selectedGroup,
-          },
-        });
-        this.error = "success";
-        this.dialogcheck = false;
-      } catch (error) {
-        console.log("error :", error.response);
-        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
-      } finally {
-        this.snackbar = true;
+      if (this.type == "F" || this.type == "S") {
+        try {
+          const b = await axiosInstance.post("/downtime", {
+            startAt: this.startAtDT,
+            endAt: this.endAtDT,
+            stationId: this.selectedStation.split(" ")[0],
+            availabilityId: this.selectedDT.split(" ")[0],
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
+      }
+      if (this.type == "P") {
+        try {
+          const b = await axiosInstance.post("/downtime", {
+            startAt: this.startAtDT,
+            endAt: this.endAtDT,
+            stationId: this.selectedStation.split(" ")[0],
+            availabilityId: this.selectedDT.split(" ")[0],
+            extendedAvailabilityId: this.selectedDT.split(" ")[0],
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
       }
     },
     async submit2() {

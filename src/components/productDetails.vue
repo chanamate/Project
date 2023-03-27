@@ -168,7 +168,7 @@ export default {
       endAt: endDate,
       pagination: {
         page: 1,
-        take: 200,
+        take: 500,
       },
     });
     console.log(

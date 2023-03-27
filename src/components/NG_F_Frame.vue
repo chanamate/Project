@@ -634,7 +634,7 @@ export default {
           this.selectedStaInspecCheck = "OPS04 Inspection S";
           break;
         case "OPS05":
-          this.selectedStaInspecCheck = "OPS05 Q-Gate Inspection 3";
+          this.selectedStaInspecCheck = "OPS05 Q-Gate Inspection 2";
           break;
       }
     },
