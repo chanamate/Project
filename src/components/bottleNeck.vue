@@ -113,17 +113,11 @@ export default {
       return this.$route.params.type;
     },
   },
-  async mounted() {
-    const m = await axiosInstance.post("/product/get/input-amount", {
-      date: new Date(),
-      position: "BOTTLE_NECK",
-    });
-    this.amountNow = m;
-    console.log("🚀 ~ m:", this.amountNow);
-  },
+
   data: () => ({
     amount: 1,
     amountNow: 0,
+    lineId: null,
     title: [
       {
         name: "Finished Goods",
@@ -148,6 +142,27 @@ export default {
     ],
     stationId: "",
   }),
+  async mounted() {
+    switch (this.type) {
+      case "F":
+        this.lineId = 1;
+        this.stationId = "OPF06";
+        break;
+      case "S":
+        this.lineId = 2;
+        this.stationId = "OPS04";
+        break;
+    }
+    const m = await axiosInstance.post(
+      `/product/get/input-amount/${this.lineId}`,
+      {
+        date: new Date(),
+        position: "BOTTLE_NECK",
+      }
+    );
+    console.log("🚀 ~ file: bottleNeck.vue:148 ~ mounted ~ m:", m);
+    this.amountNow = m;
+  },
   methods: {
     addAmount() {
       this.amount = this.amount + 1;
@@ -162,20 +177,13 @@ export default {
       return this.type;
     },
     async submit() {
-      switch (this.type) {
-        case "F":
-          this.stationId = "OPF06";
-          break;
-        case "S":
-          this.stationId = "OPS04";
-          break;
-      }
       const b = await axiosInstance.post("/product/input-amount", {
         stationId: this.stationId,
         date: new Date(),
         increment: this.amount,
         position: "BOTTLE_NECK",
       });
+
       window.location.reload();
     },
   },

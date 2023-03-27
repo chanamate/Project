@@ -271,18 +271,18 @@ export default {
 
       // DOWNTIME
       const dtCause = await axiosInstance.get(`/availability-lose/1`);
-      console.log("🚀 ~ dtCause:", dtCause);
+      // console.log("🚀 ~ dtCause:", dtCause);
       const dtCauseData = Array(dtCause.length).fill(0);
-      console.log("🚀 ~ dtCauseData:", dtCauseData);
+      // console.log("🚀 ~ dtCauseData:", dtCauseData);
 
       this.downtimeTotal = b.downtimeTotal;
+      this.countDowntimeDefect = dtCause.length + 2;
       for (let i = 0; i < b.downtimeDefect.length; i++) {
-        this.countDowntimeDefect = this.countDowntimeDefect + 1;
-        console.log(b.downtimeDefect[i]);
+        // console.log(b.downtimeDefect[i]);
         for (let j = 0; j < dtCause.length; j++) {
           if (dtCause[j].availabilityId == b.downtimeDefect[i].id) {
             dtCauseData[j] = dtCauseData[j] + b.downtimeDefect[i].downtime;
-            console.log(dtCauseData);
+            // console.log(dtCauseData);
           }
         }
       }
@@ -291,6 +291,16 @@ export default {
         ...{ sum: dtCauseData[index] },
       }));
       this.dtCause = newA;
+
+      //Scrap
+      const scrap = await axiosInstance.post(`/failure-detail/${this.lineId}`, {
+        type: "SCRAP",
+      });
+      const scrapData = Array(scrap.length).fill(0);
+      this.scrapTotal = b.failureDefect.filter(
+        (defect) => defect.type === "SCRAP"
+      );
+      this.countDowntimeDefect = dtCause.length + 2;
 
       this.loaded = true;
     } catch (e) {
@@ -519,6 +529,7 @@ export default {
     dtCause: null,
     dtCauseData: null,
     downtimeTotal: null,
+    scrapTotal: null,
 
     sumScrapDefects: null,
     sumScrapIns1: null,
@@ -536,7 +547,7 @@ export default {
     sumReworkIns3: null,
 
     // นับ row ในตาราง
-    countDowntimeDefect: 1,
+    countDowntimeDefect: 0,
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
@@ -551,17 +562,6 @@ export default {
     stationData: [],
 
     loaded: false,
-    // chartData: null,
-    // chartData: {
-    //   labels: ["January", "February", "March"],
-    //   datasets: [
-    //     {
-    //       label: "Data One",
-    //       backgroundColor: "#f87979",
-    //       data: [40, 20, 12],
-    //     },
-    //   ],
-    // },
     chartOptions: {
       responsive: true,
     },

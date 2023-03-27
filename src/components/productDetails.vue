@@ -185,10 +185,23 @@ export default {
   },
   methods: {
     async find() {
+      console.log(
+        "🚀",
+        moment(
+          moment(this.date[0]).format("MMMM Do YYYY") + "09:00",
+          "MMMM Do YYYYHH:mm"
+        ).toDate()
+      );
       const b = await axiosInstance.post("/product/all/filter", {
         lineId: parseInt(this.selectedLine.split(" ")[0]),
-        startAt: this.date[0],
-        endAt: this.date[1],
+        startAt: moment(
+          moment(this.date[0]).format("MMMM Do YYYY") + "09:00",
+          "MMMM Do YYYYHH:mm"
+        ).toDate(),
+        endAt: moment(
+          moment(this.date[1]).format("MMMM Do YYYY") + "09:00",
+          "MMMM Do YYYYHH:mm"
+        ).toDate(),
         pagination: {
           page: 1,
           take: 200,
