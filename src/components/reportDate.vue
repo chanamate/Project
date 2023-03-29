@@ -151,7 +151,7 @@
         </tr>
 
         <!-- reworkDefects -->
-        <tr>
+        <!-- <tr>
           <td :rowspan="this.countReworkDefects" class="text-center">Rework</td>
         </tr>
         <tr v-for="(item, index) in this.reworkDefects" :key="index">
@@ -163,7 +163,7 @@
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumReworkDefects }}</th>
-        </tr>
+        </tr> -->
       </table>
 
       <table class="my-2">

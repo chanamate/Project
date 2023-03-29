@@ -16,6 +16,8 @@
       <router-link to="/productDetails">Product Details</router-link>
     </li>
     <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li><router-link to="/reportMonth">Report Month</router-link></li>
+
     <li style="float: right">
       <router-link to="/login">log out</router-link>
     </li>
@@ -34,12 +36,7 @@
     </v-col>
     <v-col cols="1" class="d-flex justify-end mt-4"> Select date : </v-col>
     <v-col cols="2" class="mt-2">
-      <Datepicker
-        v-model="date"
-        auto-apply
-        :enableTimePicker="false"
-        :format="format"
-      />
+      <Datepicker v-model="month" month-picker auto-apply />
     </v-col>
     <v-col cols="2" class="ml-2">
       <v-autocomplete
@@ -56,7 +53,7 @@
     </v-col>
   </v-row>
 
-  <v-row v-if="this.reload">
+  <v-row v-if="!this.reload">
     <div class="d-flex justify-end ma-6">
       <v-btn @click="reloadWindow()"> Reset </v-btn>
     </div>
@@ -98,13 +95,13 @@
           </td>
         </tr>
         <tr v-for="(item, index) in this.dtCause" :key="index">
-          <td>
+          <td v-if="item.sum !== 0">
             {{ item.availabilityId }}
           </td>
-          <td colspan="2">
+          <td colspan="2" v-if="item.sum !== 0">
             {{ item.details }}
           </td>
-          <td class="text-center">
+          <td class="text-center" v-if="item.sum !== 0">
             {{ item.sum }}
           </td>
         </tr>
@@ -148,8 +145,8 @@
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
         </tr>
         <tr v-for="(item, index) in this.scrapCause" :key="index">
-          <td colspan="2">{{ item.details }}</td>
-          <td class="text-center">{{ item.sum }}</td>
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countScrapDefects !== 1">
           <td colspan="2"></td>
@@ -162,8 +159,8 @@
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
         </tr>
         <tr v-for="(item, index) in this.repairCause" :key="index">
-          <td colspan="2">{{ item.details }}</td>
-          <td class="text-center">{{ item.sum }}</td>
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countRepairDefects !== 1">
           <td colspan="2"></td>
@@ -172,18 +169,18 @@
         </tr>
 
         <!-- reworkDefects -->
-        <tr>
+        <!-- <tr>
           <td :rowspan="this.countReworkDefects" class="text-center">Rework</td>
         </tr>
         <tr v-for="(item, index) in this.reworkCause" :key="index">
-          <td colspan="2">{{ item.details }}</td>
-          <td class="text-center">{{ item.sum }}</td>
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
         </tr>
         <tr v-if="this.countReworkDefects !== 1">
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumReworkDefects }}</th>
-        </tr>
+        </tr> -->
       </table>
 
       <table class="my-2">
@@ -214,8 +211,11 @@
         <Bar v-if="loaded" :data="chartDataDT" />
       </v-col>
       <v-col cols="5">
-        <Bar v-if="loaded" :data="chartDataDF" />
-        <Bar v-if="loaded" :data="chartDataDFPaint" />
+        <Bar v-if="loaded" :data="chartDataDFScrap" />
+        <Bar v-if="loaded" :data="chartDataDFRepair" />
+      </v-col>
+      <v-col cols="5">
+        <!-- <Bar v-if="loaded" :data="chartDataDFPaint" /> -->
       </v-col>
     </div>
   </div>
@@ -262,154 +262,198 @@ export default {
     Bar,
   },
 
-  async mounted() {
-    this.loaded = false;
-    try {
-      const b = await axiosInstance.post("/dashboard/month", {
-        lineId: 1,
-        month: new Date().getMonth(),
-        year: new Date().getFullYear(),
-        shift: "DAY",
-      });
-      console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
-      // const b = await axiosInstance.post("/dashboard/date", {
-      //   lineId: this.selectedLine,
-      //   targetDate: this.date,
-      //   shift: this.shift,
-      // });
-      this.actual = b.actual;
-      this.target = b.target;
-      this.oee = b.oee + "%";
-      this.availability = b.availability + "%";
-      this.performance = b.performance + "%";
-      this.quality = b.quality + "%";
-      this.startAt = moment(b.startAt).format("MMMM");
-      this.shiftSelect = b.workingTime.time;
+  // async mounted() {
+  //   this.loaded = false;
+  //   try {
+  //     const b = await axiosInstance.post("/dashboard/month", {
+  //       lineId: 1,
+  //       month: new Date().getMonth(),
+  //       year: new Date().getFullYear(),
+  //       shift: "DAY",
+  //     });
+  //     console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
+  //     // const b = await axiosInstance.post("/dashboard/date", {
+  //     //   lineId: this.selectedLine,
+  //     //   targetDate: this.date,
+  //     //   shift: this.shift,
+  //     // });
+  //     this.actual = b.actual;
+  //     this.target = b.target;
+  //     this.oee = b.oee + "%";
+  //     this.availability = b.availability + "%";
+  //     this.performance = b.performance + "%";
+  //     this.quality = b.quality + "%";
+  //     this.startAt = moment(b.startAt).format("MMMM");
+  //     this.shiftSelect = b.workingTime.time;
 
-      // DOWNTIME-------------------------------------------------------------------------------
-      const dtCause = await axiosInstance.get(`/availability-lose/${1}`);
-      // console.log("🚀 ~ dtCause:", dtCause);
-      const dtCauseData = Array(dtCause.length).fill(0);
-      // console.log("🚀 ~ dtCauseData:", dtCauseData);
+  //     // const s = await axiosInstance.get(
+  //     //   `/station/line/${parseInt(this.selectedLine.split(" ")[0])}`
+  //     // );
+  //     // if (parseInt(this.selectedLine.split(" ")[0]) == 3) {
+  //     //   this.station = s.filter(
+  //     //     (item) => !item.stationName.includes("Inspection")
+  //     //   );
+  //     // }
+  //     // if (
+  //     //   parseInt(this.selectedLine.split(" ")[0]) == 1 ||
+  //     //   parseInt(this.selectedLine.split(" ")[0]) == 2
+  //     // ) {
+  //     //   this.station = s;
+  //     // }
+  //     // DOWNTIME-------------------------------------------------------------------------------
+  //     const dtCause = await axiosInstance.get(
+  //       `/availability-lose/${parseInt(this.selectedLine.split(" ")[0])}`
+  //     );
+  //     // console.log("🚀 ~ dtCause:", dtCause);
+  //     const dtCauseData = Array(dtCause.length).fill(0);
+  //     // console.log("🚀 ~ dtCauseData:", dtCauseData);
 
-      this.downtimeTotal = b.downtimeTotal;
-      this.countDowntimeDefect = dtCause.length + 2;
-      for (let i = 0; i < b.downtimeDefect.length; i++) {
-        // console.log(b.downtimeDefect[i]);
-        for (let j = 0; j < dtCause.length; j++) {
-          if (dtCause[j].availabilityId == b.downtimeDefect[i].id) {
-            dtCauseData[j] = dtCauseData[j] + b.downtimeDefect[i].downtime;
-            // console.log(dtCauseData);
-          }
-        }
-      }
-      const newA = dtCause.map((elem, index) => ({
-        ...elem,
-        ...{ sum: dtCauseData[index] },
-      }));
-      this.dtCause = newA;
-      console.log("🚀 ~  this.dtCause:", this.dtCause);
+  //     this.downtimeTotal = b.downtimeTotal;
+  //     this.countDowntimeDefect = dtCause.length + 2;
+  //     for (let i = 0; i < b.downtimeDefect.length; i++) {
+  //       // console.log(b.downtimeDefect[i]);
+  //       for (let j = 0; j < dtCause.length; j++) {
+  //         if (dtCause[j].availabilityId == b.downtimeDefect[i].id) {
+  //           dtCauseData[j] = dtCauseData[j] + b.downtimeDefect[i].downtime;
+  //           // console.log(dtCauseData);
+  //         }
+  //       }
+  //     }
+  //     const newA = dtCause.map((elem, index) => ({
+  //       ...elem,
+  //       ...{ sum: dtCauseData[index] },
+  //     }));
+  //     this.dtCause = newA;
+  //     console.log("🚀 ~  this.dtCause:", this.dtCause);
 
-      //Scrap-------------------------------------------------------------------------------
-      const scrapCause = await axiosInstance.post(`/failure-detail/${1}`, {
-        type: "SCRAP",
-      });
-      // console.log("🚀", scrapCause);
-      const scrapData = Array(scrapCause.length).fill(0);
-      this.scrapTotal = b.failureDefect.filter(
-        (defect) => defect.type === "SCRAP"
-      );
-      this.countScrapDefects = scrapCause.length + 1;
-      for (let i = 0; i < this.scrapTotal.length; i++) {
-        this.sumScrapDefects = this.sumScrapDefects + this.scrapTotal[i].sum;
-        for (let j = 0; j < scrapCause.length; j++) {
-          if (scrapCause[j].details == this.scrapTotal[i].details) {
-            scrapData[j] = scrapData[j] + this.scrapTotal[i].sum;
-            // console.log(scrapData);
-          }
-        }
-      }
-      const newB = scrapCause.map((elem, index) => ({
-        ...elem,
-        ...{ sum: scrapData[index] },
-      }));
-      this.scrapCause = newB;
+  //     //Scrap-------------------------------------------------------------------------------
+  //     const scrapCause = await axiosInstance.post(
+  //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+  //       {
+  //         type: "SCRAP",
+  //       }
+  //     );
+  //     // console.log("🚀", scrapCause);
+  //     const scrapData = Array(scrapCause.length).fill(0);
+  //     this.scrapTotal = b.failureDefect.filter(
+  //       (defect) => defect.type === "SCRAP"
+  //     );
+  //     this.countScrapDefects = scrapCause.length + 1;
+  //     for (let i = 0; i < this.scrapTotal.length; i++) {
+  //       this.sumScrapDefects = this.sumScrapDefects + this.scrapTotal[i].sum;
+  //       for (let j = 0; j < scrapCause.length; j++) {
+  //         if (scrapCause[j].details == this.scrapTotal[i].details) {
+  //           scrapData[j] = scrapData[j] + this.scrapTotal[i].sum;
+  //           // console.log(scrapData);
+  //         }
+  //       }
+  //     }
+  //     const newB = scrapCause.map((elem, index) => ({
+  //       ...elem,
+  //       ...{ sum: scrapData[index] },
+  //     }));
+  //     this.scrapCause = newB;
+  //     this.scrapCauseNotZ = this.scrapCause.filter((n) => n.sum !== 0);
 
-      //Repair-------------------------------------------------------------------------------
-      const repairCause = await axiosInstance.post(`/failure-detail/${1}`, {
-        type: "REPAIR",
-      });
-      // console.log("🚀", repairCause);
-      const repairData = Array(repairCause.length).fill(0);
-      this.repairTotal = b.failureDefect.filter(
-        (defect) => defect.type === "REPAIR"
-      );
-      this.countRepairDefects = repairCause.length + 1;
-      for (let i = 0; i < this.repairTotal.length; i++) {
-        this.sumRepairDefects = this.sumRepairDefects + this.repairTotal[i].sum;
-        for (let j = 0; j < repairCause.length; j++) {
-          if (repairCause[j].details == this.repairTotal[i].details) {
-            repairData[j] = repairData[j] + this.repairTotal[i].sum;
-            // console.log(repairData);
-          }
-        }
-      }
-      const newC = repairCause.map((elem, index) => ({
-        ...elem,
-        ...{ sum: repairData[index] },
-      }));
-      this.repairCause = newC;
+  //     //Repair-------------------------------------------------------------------------------
+  //     const repairCause = await axiosInstance.post(
+  //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+  //       {
+  //         type: "REPAIR",
+  //       }
+  //     );
+  //     // console.log("🚀", repairCause);
+  //     const repairData = Array(repairCause.length).fill(0);
+  //     this.repairTotal = b.failureDefect.filter(
+  //       (defect) => defect.type === "REPAIR"
+  //     );
+  //     this.countRepairDefects = repairCause.length + 1;
+  //     for (let i = 0; i < this.repairTotal.length; i++) {
+  //       this.sumRepairDefects = this.sumRepairDefects + this.repairTotal[i].sum;
+  //       for (let j = 0; j < repairCause.length; j++) {
+  //         if (repairCause[j].details == this.repairTotal[i].details) {
+  //           repairData[j] = repairData[j] + this.repairTotal[i].sum;
+  //           // console.log(repairData);
+  //         }
+  //       }
+  //     }
+  //     const newC = repairCause.map((elem, index) => ({
+  //       ...elem,
+  //       ...{ sum: repairData[index] },
+  //     }));
+  //     this.repairCause = newC;
+  //     this.repairCauseNotZ = this.repairCause.filter((n) => n.sum !== 0);
 
-      //Rework-------------------------------------------------------------------------------
-      const reworkCause = await axiosInstance.post(`/failure-detail/${1}`, {
-        type: "REWORK",
-      });
-      // console.log("🚀", reworkCause);
-      const reworkData = Array(reworkCause.length).fill(0);
-      this.reworkTotal = b.failureDefect.filter(
-        (defect) => defect.type === "REWORK"
-      );
-      this.countReworkDefects = reworkCause.length + 1;
-      for (let i = 0; i < this.reworkTotal.length; i++) {
-        this.sumReworkDefects = this.sumReworkDefects + this.reworkTotal[i].sum;
-        for (let j = 0; j < reworkCause.length; j++) {
-          if (reworkCause[j].details == this.reworkTotal[i].details) {
-            reworkData[j] = reworkData[j] + this.reworkTotal[i].sum;
-            // console.log(reworkData);
-          }
-        }
-      }
-      const newD = reworkCause.map((elem, index) => ({
-        ...elem,
-        ...{ sum: reworkData[index] },
-      }));
-      this.reworkCause = newD;
+  //     //Rework-------------------------------------------------------------------------------
+  //     const reworkCause = await axiosInstance.post(
+  //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+  //       {
+  //         type: "REWORK",
+  //       }
+  //     );
+  //     // console.log("🚀", reworkCause);
+  //     const reworkData = Array(reworkCause.length).fill(0);
+  //     this.reworkTotal = b.failureDefect.filter(
+  //       (defect) => defect.type === "REWORK"
+  //     );
+  //     this.countReworkDefects = reworkCause.length + 1;
+  //     for (let i = 0; i < this.reworkTotal.length; i++) {
+  //       this.sumReworkDefects = this.sumReworkDefects + this.reworkTotal[i].sum;
+  //       for (let j = 0; j < reworkCause.length; j++) {
+  //         if (reworkCause[j].details == this.reworkTotal[i].details) {
+  //           reworkData[j] = reworkData[j] + this.reworkTotal[i].sum;
+  //           // console.log(reworkData);
+  //         }
+  //       }
+  //     }
+  //     const newD = reworkCause.map((elem, index) => ({
+  //       ...elem,
+  //       ...{ sum: reworkData[index] },
+  //     }));
+  //     this.reworkCause = newD;
+  //     this.reworkCauseNotZ = this.reworkCause.filter((n) => n.sum !== 0);
 
-      this.loaded = true;
-    } catch (e) {
-      console.error(e);
-    }
-  },
+  //     // ----------------------------------------------------------------------------------
+
+  //     this.loaded = true;
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // },
 
   computed: {
-    chartDataDF() {
+    chartDataDT() {
       return {
-        labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
+        labels: this.dtCause.map((n) => `${n.details}`),
+        datasets: [
+          {
+            label: "Downtime (min)",
+            backgroundColor: "#00148E",
+            data: this.dtCause.map((n) => `${n.sum}`),
+          },
+        ],
+      };
+    },
+    chartDataDFScrap() {
+      return {
+        labels: this.scrapCauseNotZ.map((n) => `${n.details}`),
         datasets: [
           {
             label: "SCRAP",
             backgroundColor: "#FF0000",
-            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
+            data: this.scrapCauseNotZ.map((n) => `${n.sum}`),
           },
+        ],
+      };
+    },
+    chartDataDFRepair() {
+      return {
+        labels: this.repairCauseNotZ.map((n) => `${n.details}`),
+        datasets: [
           {
-            label: "REPAIR",
-            backgroundColor: "#FF7F00",
-            data: [this.sumRepairIns1, this.sumRepairIns2, this.sumRepairIns3],
-          },
-          {
-            label: "REWORK",
-            backgroundColor: "#FFFF00",
-            data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
+            label: "SCRAP",
+            backgroundColor: "#FF0000",
+            data: this.repairCauseNotZ.map((n) => `${n.sum}`),
           },
         ],
       };
@@ -441,21 +485,170 @@ export default {
         ],
       };
     },
-    chartDataDT() {
-      return {
-        labels: this.station.map((n) => `${n.stationId}`),
-        datasets: [
-          {
-            label: "Downtime (min)",
-            backgroundColor: "#00148E",
-            data: this.stationData,
-          },
-        ],
-      };
-    },
   },
 
   methods: {
+    async genTableF() {
+      this.reload = false;
+      this.loaded = false;
+      try {
+        const b = await axiosInstance.post("/dashboard/month", {
+          lineId: 1,
+          month: new Date().getMonth(),
+          year: new Date().getFullYear(),
+          shift: this.shiftInput,
+        });
+        console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
+        // const b = await axiosInstance.post("/dashboard/date", {
+        //   lineId: this.selectedLine,
+        //   targetDate: this.date,
+        //   shift: this.shift,
+        // });
+        this.actual = b.actual;
+        this.target = b.target;
+        this.oee = b.oee + "%";
+        this.availability = b.availability + "%";
+        this.performance = b.performance + "%";
+        this.quality = b.quality + "%";
+        this.startAt = moment(b.startAt).format("MMMM");
+        this.shiftSelect = b.workingTime.time;
+
+        // const s = await axiosInstance.get(
+        //   `/station/line/${parseInt(this.selectedLine.split(" ")[0])}`
+        // );
+        // if (parseInt(this.selectedLine.split(" ")[0]) == 3) {
+        //   this.station = s.filter(
+        //     (item) => !item.stationName.includes("Inspection")
+        //   );
+        // }
+        // if (
+        //   parseInt(this.selectedLine.split(" ")[0]) == 1 ||
+        //   parseInt(this.selectedLine.split(" ")[0]) == 2
+        // ) {
+        //   this.station = s;
+        // }
+        // DOWNTIME-------------------------------------------------------------------------------
+        const dtCause = await axiosInstance.get(
+          `/availability-lose/${parseInt(this.selectedLine.split(" ")[0])}`
+        );
+        // console.log("🚀 ~ dtCause:", dtCause);
+        const dtCauseData = Array(dtCause.length).fill(0);
+        // console.log("🚀 ~ dtCauseData:", dtCauseData);
+
+        this.downtimeTotal = b.downtimeTotal;
+        this.countDowntimeDefect = dtCause.length + 2;
+        for (let i = 0; i < b.downtimeDefect.length; i++) {
+          // console.log(b.downtimeDefect[i]);
+          for (let j = 0; j < dtCause.length; j++) {
+            if (dtCause[j].availabilityId == b.downtimeDefect[i].id) {
+              dtCauseData[j] = dtCauseData[j] + b.downtimeDefect[i].downtime;
+              // console.log(dtCauseData);
+            }
+          }
+        }
+        const newA = dtCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: dtCauseData[index] },
+        }));
+        this.dtCause = newA;
+        console.log("🚀 ~  this.dtCause:", this.dtCause);
+
+        //Scrap-------------------------------------------------------------------------------
+        const scrapCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "SCRAP",
+          }
+        );
+        // console.log("🚀", scrapCause);
+        const scrapData = Array(scrapCause.length).fill(0);
+        this.scrapTotal = b.failureDefect.filter(
+          (defect) => defect.type === "SCRAP"
+        );
+        this.countScrapDefects = scrapCause.length + 1;
+        for (let i = 0; i < this.scrapTotal.length; i++) {
+          this.sumScrapDefects = this.sumScrapDefects + this.scrapTotal[i].sum;
+          for (let j = 0; j < scrapCause.length; j++) {
+            if (scrapCause[j].details == this.scrapTotal[i].details) {
+              scrapData[j] = scrapData[j] + this.scrapTotal[i].sum;
+              // console.log(scrapData);
+            }
+          }
+        }
+        const newB = scrapCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: scrapData[index] },
+        }));
+        this.scrapCause = newB;
+        this.scrapCauseNotZ = this.scrapCause.filter((n) => n.sum !== 0);
+
+        //Repair-------------------------------------------------------------------------------
+        const repairCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "REPAIR",
+          }
+        );
+        // console.log("🚀", repairCause);
+        const repairData = Array(repairCause.length).fill(0);
+        this.repairTotal = b.failureDefect.filter(
+          (defect) => defect.type === "REPAIR"
+        );
+        this.countRepairDefects = repairCause.length + 1;
+        for (let i = 0; i < this.repairTotal.length; i++) {
+          this.sumRepairDefects =
+            this.sumRepairDefects + this.repairTotal[i].sum;
+          for (let j = 0; j < repairCause.length; j++) {
+            if (repairCause[j].details == this.repairTotal[i].details) {
+              repairData[j] = repairData[j] + this.repairTotal[i].sum;
+              // console.log(repairData);
+            }
+          }
+        }
+        const newC = repairCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: repairData[index] },
+        }));
+        this.repairCause = newC;
+        this.repairCauseNotZ = this.repairCause.filter((n) => n.sum !== 0);
+
+        //Rework-------------------------------------------------------------------------------
+        const reworkCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "REWORK",
+          }
+        );
+        // console.log("🚀", reworkCause);
+        const reworkData = Array(reworkCause.length).fill(0);
+        this.reworkTotal = b.failureDefect.filter(
+          (defect) => defect.type === "REWORK"
+        );
+        this.countReworkDefects = reworkCause.length + 1;
+        for (let i = 0; i < this.reworkTotal.length; i++) {
+          this.sumReworkDefects =
+            this.sumReworkDefects + this.reworkTotal[i].sum;
+          for (let j = 0; j < reworkCause.length; j++) {
+            if (reworkCause[j].details == this.reworkTotal[i].details) {
+              reworkData[j] = reworkData[j] + this.reworkTotal[i].sum;
+              // console.log(reworkData);
+            }
+          }
+        }
+        const newD = reworkCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: reworkData[index] },
+        }));
+        this.reworkCause = newD;
+        this.reworkCauseNotZ = this.reworkCause.filter((n) => n.sum !== 0);
+
+        // ----------------------------------------------------------------------------------
+
+        this.loaded = true;
+      } catch (e) {
+        console.error(e);
+      }
+    },
     reloadWindow() {
       window.location.reload();
     },
@@ -486,14 +679,8 @@ export default {
     shiftInput: "",
     shiftSelect: "",
     startAt: "",
-    date: new Date(),
-    format: (date) => {
-      const day = date.getDate();
-      const month = date.getMonth() + 1;
-      const year = date.getFullYear();
+    month: new Date(),
 
-      return `${day}/${month}/${year}`;
-    },
     lineId: null,
     genTable: true,
     // genTable: false,
@@ -529,6 +716,10 @@ export default {
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
+
+    scrapCauseNotZ: [],
+    repairCauseNotZ: [],
+    reworkCauseNotZ: [],
 
     availability: "",
     performance: "",

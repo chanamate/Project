@@ -16,6 +16,8 @@
       <router-link to="/productDetails">Product Details</router-link>
     </li>
     <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li><router-link to="/reportMonth">Report Month</router-link></li>
+
     <li style="float: right">
       <router-link to="/login">log out</router-link>
     </li>

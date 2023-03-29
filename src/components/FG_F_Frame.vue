@@ -16,6 +16,7 @@
       <router-link to="/productDetails">Product Details</router-link>
     </li>
     <li><router-link to="/reportDate">Report Date</router-link></li>
+    <li><router-link to="/reportMonth">Report Month</router-link></li>
     <li style="float: right">
       <router-link to="/login">log out</router-link>
     </li>
@@ -42,7 +43,7 @@
     <v-row>
       <v-col cols="2">
         <!-- ตัวเลือกทางด้านซ้าย -->
-        <v-item-group mandatory model-value="1">
+        <v-item-group mandatory model-value="1" v-if="type !== 'P'">
           <v-card elevation="0" class="ml-4 mt-n6">
             <v-col v-for="(item, index) in title" :key="index">
               <v-item v-slot="{ isSelected, toggle }" :value="item.id">
@@ -52,6 +53,25 @@
                   dark
                   @click="toggle"
                   :to="item.url + gettype()"
+                >
+                  {{ item.name }}
+                </v-card>
+              </v-item>
+            </v-col>
+          </v-card>
+        </v-item-group>
+
+        <v-item-group mandatory model-value="1" v-if="type == 'P'">
+          <v-card elevation="0" class="ml-4 mt-n6">
+            <v-col v-for="(item, index) in title" :key="index">
+              <v-item v-slot="{ isSelected, toggle }" :value="item.id">
+                <v-card
+                  :color="isSelected ? 'primary' : '#D9D9D9'"
+                  class="d-flex justify-center pa-6 text-h6"
+                  dark
+                  @click="toggle"
+                  :to="item.url + gettype()"
+                  v-if="item.name !== 'Bottle Neck'"
                 >
                   {{ item.name }}
                 </v-card>
