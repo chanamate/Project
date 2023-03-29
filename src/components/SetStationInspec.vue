@@ -13,7 +13,7 @@
               update(item.stationId); // ADD THIS SHIT
             "
           >
-            {{ item.stationName }}
+            {{ item.stationId + " " + item.stationName }}
           </v-card>
         </v-item>
       </v-col>

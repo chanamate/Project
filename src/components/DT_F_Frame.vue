@@ -33,7 +33,7 @@
           Input data for Failure Mode : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
-          Input data for Defect Type : Powder Coat Painting
+          Input data for Failure Mode : Powder Coat Painting
         </v-card-title>
         <v-divider thickness="2" class="mt-2"></v-divider>
       </v-col>
@@ -74,9 +74,9 @@
                 <!-- ตัวเลือก Downtime -->
                 <v-window-item value="one">
                   <v-row>
-                    <v-col cols="6" class="d-flex align-start flex-column mb-6">
+                    <v-col cols="6" class="d-flex flex-column mb-6">
                       <v-row>
-                        <v-timeline side="end" align="start">
+                        <v-timeline side="end" align="start" class="mb-3">
                           <v-timeline-item dot-color="green" size="small">
                             <strong class="mr-4">Downtime</strong>
                             <!--strong>New Icon</strong-->
@@ -148,8 +148,12 @@
                       </v-row>
 
                       <!-- Employee Name and ID -->
-
                       <SetEmployeeName @updateValue="updateValue" />
+                      <SetShitf
+                        v-if="type == 'P'"
+                        class="mt-2"
+                        @updateValue="updateValue"
+                      />
                     </v-col>
 
                     <v-divider vertical thickness="3"></v-divider>
@@ -158,14 +162,18 @@
 
                     <v-col>
                       <!-- Shift -->
-                      <SetShitf class="mt-2" @updateValue="updateValue" />
-
-                      <v-divider class="mt-3 mr-3" thickness="3" />
+                      <SetShitf
+                        v-if="type !== 'P'"
+                        class="mt-2"
+                        @updateValue="updateValue"
+                      />
 
                       <!-- Station -->
                       <SetStation class="mt-2" @updateValue="updateValue" />
-
-                      <v-divider class="mt-3 mr-3" thickness="3" />
+                      <SetdtCaused
+                        v-if="type == 'P'"
+                        @updateValue="updateValue"
+                      />
 
                       <!-- Caused -->
                       <SetdtCaused
@@ -191,7 +199,7 @@
                 <!-- ตัวเลือก Edit -->
                 <v-window-item value="two">
                   <v-row>
-                    <v-col cols="7" class="d-flex flex-column">
+                    <v-col cols="6" class="d-flex flex-column">
                       <div class="d-flex justify-center flex-row">
                         <div class="">
                           <div class="text-h6 mb-1">start at:</div>
@@ -237,6 +245,11 @@
                       </div>
                       <!-- Employee Name and ID -->
                       <SetEmployeeName @updateValue="updateValue" />
+                      <SetShitf
+                        v-if="type == 'P'"
+                        class="mt-2"
+                        @updateValue="updateValue"
+                      />
                     </v-col>
 
                     <v-divider vertical thickness="3"></v-divider>
@@ -245,23 +258,37 @@
 
                     <v-col>
                       <!-- Shift -->
-                      <SetShitf class="mt-2" @updateValue="updateValue" />
+                      <SetShitf
+                        v-if="type !== 'P'"
+                        class="mt-2"
+                        @updateValue="updateValue"
+                      />
 
-                      <v-divider class="mt-3 mr-3" thickness="3" />
+                      <v-divider
+                        v-if="type !== 'P'"
+                        class="mt-3 mr-3"
+                        thickness="3"
+                      />
 
                       <!-- Station -->
                       <SetStation class="mt-2" @updateValue="updateValue" />
-
-                      <v-divider class="mt-3 mr-3" thickness="3" />
+                      <SetdtCaused
+                        v-if="type == 'P'"
+                        @updateValue="updateValue"
+                      />
 
                       <!-- Caused -->
-                      <SetdtCaused @updateValue="updateValue" />
+                      <SetdtCaused
+                        v-if="type == 'F' || type == 'S'"
+                        @updateValue="updateValue"
+                      />
+                      <SetdtCausedNoCA2
+                        v-if="type == 'P'"
+                        @updateValue="updateValue"
+                      />
 
                       <div cols="6" class="d-flex justify-end mt-4">
-                        <v-btn
-                          :disabled="check2"
-                          @click="(dialogcheck2 = true), setdata()"
-                        >
+                        <v-btn :disabled="check2" @click="dialogcheck2 = true, setdata()">
                           Enter
                         </v-btn>
                       </div>
@@ -279,7 +306,7 @@
     <v-card
       color="white"
       width="650"
-      height="445"
+      :height:="type !== 'P' ? '445px' : '550px'"
       class="d-flex justify-center px-4"
     >
       <div align="center" class="text-h4 my-4">
@@ -317,6 +344,10 @@
             <td>Failure Mode :</td>
             <td colspan="2">{{ this.selectedDT }}</td>
           </tr>
+          <tr v-if="type == 'P'">
+            <td>Caused :</td>
+            <td colspan="2">{{ this.selectedDTCA2 }}</td>
+          </tr>
         </table>
         <v-btn color="primary" variant="text" @click="dialogcheck1 = false">
           cancel
@@ -338,12 +369,12 @@
   <v-dialog v-model="dialogcheck2" persistent width="auto">
     <v-card
       color="white"
-      width="600"
-      height="550"
+      width="600px"
+      height:="type !== 'P' ? '555px' : '600px'"
       class="d-flex justify-center px-4"
     >
       <div align="center" class="text-h4 my-4">
-        Check for Completeness
+        Check for Completeness 2
         <v-divider thickness="2" class="mt-2"></v-divider>
       </div>
       <div align="center" class="text-h5 my-4">
@@ -377,7 +408,11 @@
             <td>Failure Mode :</td>
             <td colspan="2">{{ this.selectedDT }}</td>
           </tr>
-        </table>
+          <tr v-if="type == 'P'">
+            <td>Caused :</td>
+            <td colspan="2">{{ this.selectedDTCA2 }}</td>
+          </tr>
+        </table >
         <v-btn color="primary" variant="text" @click="dialogcheck2 = false">
           cancel
         </v-btn>
@@ -438,6 +473,8 @@ export default {
     },
     check1() {
       if (
+        // selectedDTCA2
+        this.selectedDTCA2 !== "" ||
         this.selectedGroup !== "" &&
         this.selectName !== "" &&
         this.selectedDayNight !== "" &&
@@ -453,6 +490,7 @@ export default {
     },
     check2() {
       if (
+        this.selectedDTCA2 !== "" ||
         this.selectedGroup !== "" &&
         this.selectName !== "" &&
         this.selectedDayNight !== "" &&
@@ -561,6 +599,7 @@ export default {
     selectName: "",
     selectedDayNight: "",
     selectedDT: "",
+    selectedDTCA2: "",
     selectedOT: "",
     selectedStation: "",
     selectedGroup: "",
@@ -595,16 +634,16 @@ export default {
   },
   methods: {
     async submit1() {
-      console.log("startAt :", this.startAtDT);
-      console.log("endAt :", this.endAtDT);
-      console.log("stationId :", this.selectedStation);
-      console.log("availabilityId :", this.selectedDT);
-      console.log("employee____________");
-      console.log("employeeId :", this.selectName);
-      console.log("shift :", this.selectedDayNight);
-      console.log("workingTimeType :", this.selectedOT);
-      console.log("group :", this.selectedGroup);
       if (this.type == "F" || this.type == "S") {
+        console.log("startAt :", this.startAtDT);
+        console.log("endAt :", this.endAtDT);
+        console.log("stationId :", this.selectedStation);
+        console.log("availabilityId :", this.selectedDT);
+        console.log("employee____________");
+        console.log("employeeId :", this.selectName);
+        console.log("shift :", this.selectedDayNight);
+        console.log("workingTimeType :", this.selectedOT);
+        console.log("group :", this.selectedGroup);
         try {
           const b = await axiosInstance.post("/downtime", {
             startAt: this.startAtDT,
@@ -628,13 +667,26 @@ export default {
         }
       }
       if (this.type == "P") {
+        console.log("startAt :", this.startAtDT);
+        console.log("endAt :", this.endAtDT);
+        console.log("stationId :", this.selectedStation.split(" ")[0]);
+        console.log("availabilityId :", this.selectedDT.split(" ")[0]);
+        console.log("employeeId :", this.selectName.split(" ")[0]);
+        console.log("shift :", this.selectedDayNight);
+        console.log("workingTimeType :", this.selectedOT);
+        console.log("group :", this.selectedGroup);
+        console.log(
+          "extendedAvailabilityId :",
+          this.selectedDTCA2.split(" ")[0]
+        );
+
         try {
-          const b = await axiosInstance.post("/downtime", {
+          const b = await axiosInstance.post("/downtime/paint", {
             startAt: this.startAtDT,
             endAt: this.endAtDT,
             stationId: this.selectedStation.split(" ")[0],
             availabilityId: this.selectedDT.split(" ")[0],
-            extendedAvailabilityId: this.selectedDT.split(" ")[0],
+            extendedAvailabilityId: parseInt(this.selectedDTCA2.split(" ")[0]),
             employee: {
               employeeId: this.selectName.split(" ")[0],
               shift: this.selectedDayNight,
@@ -681,35 +733,68 @@ export default {
       console.log("shift :", this.selectedDayNight);
       console.log("workingTimeType :", this.selectedOT);
       console.log("group :", this.selectedGroup);
-
-      try {
-        const b = await axiosInstance.post("/downtime", {
-          startAt: moment(
-            moment(this.startAtDate).format("DDMMYY") +
-              moment(this.startAtTime).format("HHmm"),
-            "DDMMYYHHmm"
-          ).toDate(),
-          endAt: moment(
-            moment(this.endAtDate).format("DDMMYY") +
-              moment(this.endAtTime).format("HHmm"),
-            "DDMMYYHHmm"
-          ).toDate(),
-          stationId: this.selectedStation.split(" ")[0],
-          availabilityId: this.selectedDT.split(" ")[0],
-          employee: {
-            employeeId: this.selectName.split(" ")[0],
-            shift: this.selectedDayNight,
-            workingTimeType: this.selectedOT,
-            group: this.selectedGroup,
-          },
-        });
-        this.error = "success";
-        this.dialogcheck = false;
-      } catch (error) {
-        console.log("error :", error.response);
-        this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
-      } finally {
-        this.snackbar = true;
+      if (this.type == "F" || this.type == "S") {
+        try {
+          const b = await axiosInstance.post("/downtime", {
+            startAt: moment(
+              moment(this.startAtDate).format("DDMMYY") +
+                moment(this.startAtTime).format("HHmm"),
+              "DDMMYYHHmm"
+            ).toDate(),
+            endAt: moment(
+              moment(this.endAtDate).format("DDMMYY") +
+                moment(this.endAtTime).format("HHmm"),
+              "DDMMYYHHmm"
+            ).toDate(),
+            stationId: this.selectedStation.split(" ")[0],
+            availabilityId: this.selectedDT.split(" ")[0],
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
+      }
+      if (this.type == "P") {
+        try {
+          const b = await axiosInstance.post("/downtime/paint", {
+            startAt: moment(
+              moment(this.startAtDate).format("DDMMYY") +
+                moment(this.startAtTime).format("HHmm"),
+              "DDMMYYHHmm"
+            ).toDate(),
+            endAt: moment(
+              moment(this.endAtDate).format("DDMMYY") +
+                moment(this.endAtTime).format("HHmm"),
+              "DDMMYYHHmm"
+            ).toDate(),
+            stationId: this.selectedStation.split(" ")[0],
+            availabilityId: this.selectedDT.split(" ")[0],
+            extendedAvailabilityId: parseInt(this.selectedDTCA2.split(" ")[0]),
+            employee: {
+              employeeId: this.selectName.split(" ")[0],
+              shift: this.selectedDayNight,
+              workingTimeType: this.selectedOT,
+              group: this.selectedGroup,
+            },
+          });
+          this.error = "success";
+          this.dialogcheck = false;
+        } catch (error) {
+          console.log("error :", error.response);
+          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+        } finally {
+          this.snackbar = true;
+        }
       }
     },
     updateValue(event) {

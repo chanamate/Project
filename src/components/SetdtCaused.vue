@@ -1,13 +1,14 @@
 <template>
   <v-card
     color="#CFCFCF"
-    height="300px"
+    :height="type !== 'P' ? '300px' : '260px'"
     class="py-3 overflow-y-auto mt-2 mb-3"
     elevation="8"
   >
-    <div class="text-h6 ml-3">
+    <div v-if="type !== 'P'" class="text-h6 ml-3">
       Select the problem that caused the downtime :
     </div>
+    <div v-if="type == 'P'" class="text-h6 ml-3">Failure Mode :</div>
     <v-card
       color="#CFCFCF"
       class="py-3 overflow-y-auto mt-2 mb-3"
@@ -26,7 +27,7 @@
                   update(item.availabilityId + ` ` + item.details);
                 "
               >
-                {{ item.details }}
+                {{ item.availabilityId + ` ` + item.details }}
               </v-card>
             </v-item>
           </v-col>
@@ -84,8 +85,8 @@ export default {
         break;
       case "P":
         this.lineId = 3;
-        const PP = await axiosInstance.get(`/availability-lose/extended/3`);
-        this.dt_f = PP.slice(0, 11);
+        const PP = await axiosInstance.get(`/availability-lose/${this.lineId}`);
+        this.dt_f = PP;
         break;
     }
     console.log(

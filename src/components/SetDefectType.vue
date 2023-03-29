@@ -1,7 +1,7 @@
 <template>
   <v-item-group mandatory :model-value="selectedDefectType">
     <v-card elevation="3" color="#CFCFCF">
-      <div class="ml-4 mt-4 text-h6">Action :</div>
+      <div class="ml-4 mt-4 text-h6">Defect Type :</div>
       <v-col class="pb-3 pt-1" v-for="(item, index) in defectType" :key="index">
         <v-item v-slot="{ isSelected, toggle }" :value="item.type">
           <v-card

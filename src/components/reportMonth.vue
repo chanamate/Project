@@ -215,6 +215,7 @@
       </v-col>
       <v-col cols="5">
         <Bar v-if="loaded" :data="chartDataDF" />
+        <Bar v-if="loaded" :data="chartDataDFPaint" />
       </v-col>
     </div>
   </div>
@@ -408,6 +409,33 @@ export default {
             label: "REWORK",
             backgroundColor: "#FFFF00",
             data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
+          },
+        ],
+      };
+    },
+    chartDataDFPaint() {
+      return {
+        labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
+        datasets: [
+          {
+            label: "PS",
+            backgroundColor: "#FF0000",
+            data: [1, 2, 3],
+          },
+          {
+            label: "RP",
+            backgroundColor: "#FF7F00",
+            data: [1, 2, 3],
+          },
+          {
+            label: "RW",
+            backgroundColor: "#FFFF00",
+            data: [1, 2, 3],
+          },
+          {
+            label: "RT",
+            backgroundColor: "#FF69B4",
+            data: [1, 2, 3],
           },
         ],
       };

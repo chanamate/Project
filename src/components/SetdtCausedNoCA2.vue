@@ -1,7 +1,7 @@
 <template>
   <v-card
     color="#CFCFCF"
-    height="300px"
+    height="220px"
     class="py-3 overflow-y-auto mt-2 mb-3"
     elevation="8"
   >
@@ -11,8 +11,8 @@
         color="red"
         v-model="CA2"
         hide-details
-        true-value="Conveyor's automatic stop"
-        false-value="Employee stop"
+        true-value="Conveyor's automatic stop (If failure mode is CA2 )"
+        false-value="Employee stop (If failure mode is not CA2 )"
         :label="`${CA2}`"
       ></v-switch>
     </div>
@@ -20,10 +20,10 @@
       color="#CFCFCF"
       class="py-3 overflow-y-auto mt-n3 mb-3"
       elevation="0"
-      v-if="CA2 == 'Employee stop'"
+      v-if="CA2 == 'Employee stop (If failure mode is not CA2 )'"
     >
       <v-col cols="12" class="pa-0">
-        <v-item-group mandatory :model-value="selectedDT">
+        <v-item-group mandatory :model-value="selectedDTCA2">
           <v-col class="pb-1 pt-1" v-for="(item, index) in dt_f" :key="index">
             <v-item v-slot="{ isSelected, toggle }" :value="item.details">
               <v-card
@@ -32,7 +32,13 @@
                 dark
                 @click="
                   toggle();
-                  update(item.digit + ` ` + item.details);
+                  update(
+                    item.extendedAvailabilityId +
+                      ` ` +
+                      item.digit +
+                      ` ` +
+                      item.details
+                  );
                 "
               >
                 {{ item.digit + " " + item.details }}
@@ -47,10 +53,10 @@
       color="#CFCFCF"
       class="py-3 overflow-y-auto mt-n3 mb-3"
       elevation="0"
-      v-if="CA2 !== 'Employee stop'"
+      v-if="CA2 !== 'Employee stop (If failure mode is not CA2 )'"
     >
       <v-col cols="12" class="pa-0">
-        <v-item-group mandatory :model-value="selectedDT">
+        <v-item-group mandatory :model-value="selectedDTCA2">
           <v-col
             class="pb-1 pt-1"
             v-for="(item, index) in dt_fCA2"
@@ -63,7 +69,13 @@
                 dark
                 @click="
                   toggle();
-                  update(item.digit + ` ` + item.details);
+                  update(
+                    item.extendedAvailabilityId +
+                      ` ` +
+                      item.digit +
+                      ` ` +
+                      item.details
+                  );
                 "
               >
                 {{ item.digit + " " + item.details }}
@@ -80,8 +92,8 @@
 import axiosInstance from "../utils/axios.instance";
 
 export default {
-  name: "selectedDT",
-  props: ["selectedDT"],
+  name: "selectedDTCA2",
+  props: ["selectedDTCA2"],
 
   computed: {
     type() {
@@ -93,7 +105,7 @@ export default {
     scrap: "",
     dt_f: "",
     lineId: null,
-    CA2: "Employee stop",
+    CA2: "Employee stop (If failure mode is not CA2 )",
   }),
 
   async mounted() {
@@ -106,7 +118,7 @@ export default {
     // ADD THIS SHIT
     update(e) {
       this.$emit("updateValue", {
-        key: "selectedDT", // VALUE NAME ที่ จะอัพเดท ใน parent()
+        key: "selectedDTCA2", // VALUE NAME ที่ จะอัพเดท ใน parent()
         value: e, // ค่าที่จะ UPDATE
       });
     },

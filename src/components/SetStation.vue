@@ -73,17 +73,28 @@ export default {
     switch (this.type) {
       case "F":
         this.lineId = 1;
+        let stationFF = await axiosInstance.get(`/station/line/${this.lineId}`);
+        stationFF = stationFF.slice(0, 9);
+        this.station = stationFF;
         break;
       case "S":
         this.lineId = 2;
+        let stationSS = await axiosInstance.get(`/station/line/${this.lineId}`);
+        stationSS = stationSS.slice(0, 9);
+        this.station = stationSS;
         break;
       case "P":
         this.lineId = 3;
+        let stationPP = await axiosInstance.get(`/station/line/${this.lineId}`);
+
+        this.station = stationPP.filter(
+          (item) => !item.stationName.includes("Inspection")
+        );
+        console.log("🚀stationPP:", stationPP);
+        console.log("🚀this.station:", this.station);
         break;
     }
-    let station = await axiosInstance.get(`/station/line/${this.lineId}`);
-    station = station.slice(0, 9);
-    this.station = station;
+
     // console.log("station", station);
   },
 };

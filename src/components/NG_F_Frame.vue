@@ -82,7 +82,7 @@
               <SetShitf class="mt-3" @updateValue="updateValue" />
 
               <!-- Station -->
-              <SetStation
+              <SetStationInspec
                 v-if="type == 'P'"
                 class="mt-3"
                 @updateValue="updateValue"
@@ -132,7 +132,7 @@
               <!-- Rework -->
               <v-card v-if="type == 'P'" elevation="5" color="#CFCFCF">
                 <v-tabs v-model="tab" bg-color="primary">
-                  <v-tab value="one">Defect Type</v-tab>
+                  <v-tab value="one">Details</v-tab>
                 </v-tabs>
 
                 <v-window v-model="tab">
