@@ -122,27 +122,27 @@ export default {
         width: 230,
       },
       {
-        title: "defectType",
+        title: "Defect Type",
         align: "end",
         key: "defectType",
         align: "start",
         width: 230,
       },
+      // {
+      //   title: "Operation",
+      //   align: "end",
+      //   key: "operation",
+      //   align: "start",
+      // },
       {
-        title: "operation",
-        align: "end",
-        key: "operation",
-        align: "start",
-      },
-      {
-        title: "failureDetail",
+        title: "Failure Detail",
         align: "end",
         key: "failureDetail",
         align: "start",
         width: 400,
       },
       {
-        title: "employee",
+        title: "Employee",
         align: "end",
         key: "employee",
         align: "start",
@@ -171,17 +171,14 @@ export default {
         take: 500,
       },
     });
-    console.log(
-      "🚀 ~ file: productDetails.vue:127 ~ this.products=b.products.map ~ b.products:",
-      b.products
-    );
+    console.log("🚀 ~ file: productDetails.vue:174 ~ mounted ~ b:", b);
+
     this.products = b.products.map((item) => {
       return {
         ...item,
         status: item.status == false ? "Not good" : "Good",
       };
     });
-    console.log("🚀 ~ file: pagination.vue:124 ~ mounted ~ b:", b);
   },
   methods: {
     async find() {
@@ -201,6 +198,7 @@ export default {
           take: 200,
         },
       });
+      console.log("🚀 ~ file: productDetails.vue:200 ~ find ~ b:", b);
       this.products = b.products.map((item) => {
         return {
           ...item,

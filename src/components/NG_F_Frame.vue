@@ -298,10 +298,11 @@
                         <td>{{ this.selectedDayNight }}</td>
                         <td>{{ this.selectedOT }}</td>
                       </tr>
-                      <tr v-if="type != 'P'">
+                      <tr>
                         <td>Station Inspection :</td>
                         <td colspan="2">{{ this.selectedStaInspecCheck }}</td>
                       </tr>
+
                       <tr>
                         <td>Defect Type :</td>
                         <td>
@@ -413,7 +414,7 @@ export default {
         this.selectName !== "" &&
         this.selectedDayNight !== "" &&
         this.selectedOT !== "" &&
-        this.selectedStation !== "" &&
+        this.selectedStaInspec !== "" &&
         this.selectedSRR !== "" &&
         this.selectedDefectType !== ""
       ) {
@@ -559,7 +560,7 @@ export default {
             paintAt: new Date(),
             lineId: 3,
             defect: {
-              stationId: this.selectedStation.split(" ")[0],
+              stationId: this.selectedStaInspec.split(" ")[0],
               failureDetailId: this.selectedSRR,
               defectTypeId: this.selectedDefectType.split(" ")[0],
             },
@@ -635,6 +636,12 @@ export default {
           break;
         case "OPS05":
           this.selectedStaInspecCheck = "OPS05 Q-Gate Inspection 2";
+          break;
+        case "OPP17":
+          this.selectedStaInspecCheck = "OPP17 Q-Gate Inspection 3";
+          break;
+        case "OPP23":
+          this.selectedStaInspecCheck = "OPP23 Q-Gate Inspection 4";
           break;
       }
     },

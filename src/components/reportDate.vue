@@ -189,11 +189,20 @@
       </table>
 
       <div class="html2pdf__page-break"></div>
-      <v-col cols="5">
-        <Bar v-if="loaded" :data="chartDataDT" />
+      <v-col cols="4">
+        <Bar v-if="loaded" :data="chartDataDTF" />
       </v-col>
-      <v-col cols="5">
-        <Bar v-if="loaded" :data="chartDataDF" />
+      <v-col
+        cols="4"
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      >
+        <Bar v-if="loaded" :data="chartDataDFSRR" />
+      </v-col>
+      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <Bar v-if="loaded" :data="chartDataDFP" />
       </v-col>
     </div>
   </div>
@@ -371,9 +380,27 @@ export default {
   //   // }
   //   // // console.log(Scrap);
   // },
+  // ="isSelected ? 'primary' : ''"
 
   computed: {
-    chartDataDF() {
+    chartDataDTF() {
+      return {
+        labels: this.station.map((n) => `${n.stationId}`),
+        datasets: [
+          {
+            label: "Downtime that affects Performance (min)",
+            backgroundColor: this.colorChart,
+            data: this.stationData,
+          },
+          {
+            label: "Downtime that affects Availability",
+            backgroundColor: "RGBA( 153, 50, 204, 1 )",
+            data: [],
+          },
+        ],
+      };
+    },
+    chartDataDFSRR() {
       return {
         labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
         datasets: [
@@ -387,22 +414,37 @@ export default {
             backgroundColor: "#FF7F00",
             data: [this.sumRepairIns1, this.sumRepairIns2, this.sumRepairIns3],
           },
-          {
-            label: "REWORK",
-            backgroundColor: "#FFFF00",
-            data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
-          },
+          // {
+          //   label: "REWORK",
+          //   backgroundColor: "#FFFF00",
+          //   data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
+          // },
         ],
       };
     },
-    chartDataDT() {
+    chartDataDFP() {
       return {
         labels: this.station.map((n) => `${n.stationId}`),
         datasets: [
           {
-            label: "Downtime (min)",
-            backgroundColor: "#00148E",
-            data: this.stationData,
+            label: "PS",
+            backgroundColor: "#FF0000",
+            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
+          },
+          {
+            label: "RP",
+            backgroundColor: "#FF7F00",
+            data: [this.sumrepairIns1, this.sumrepairIns2, this.sumrepairIns3],
+          },
+          {
+            label: "RW",
+            backgroundColor: "#FFFF00",
+            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
+          },
+          {
+            label: "RT",
+            backgroundColor: "#FF69B4",
+            data: [this.sumreworkIns1, this.sumreworkIns2, this.sumreworkIns3],
           },
         ],
       };
@@ -423,6 +465,32 @@ export default {
           shift: this.shiftInput,
         });
 
+        if (parseInt(this.selectedLine.split(" ")[0]) == 1) {
+          this.colorChart = [
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "RGBA( 153, 50, 204, 1 )",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+          ];
+        }
+        if (parseInt(this.selectedLine.split(" ")[0]) == 2) {
+          this.colorChart = [
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "rgba(0, 0, 139, 1)",
+            "RGBA( 153, 50, 204, 1 )",
+            "rgba(0, 0, 139, 1)",
+          ];
+        }
+        if (parseInt(this.selectedLine.split(" ")[0]) == 3) {
+          this.colorChart = "rgba(0, 0, 139, 1)";
+        }
         console.log("🚀 ~ file: test.vue:384 ~ genTableF ~ b:", b);
 
         // const b = await axiosInstance.post("/dashboard/date", {
@@ -526,7 +594,17 @@ export default {
         const s = await axiosInstance.get(
           `/station/line/${parseInt(this.selectedLine.split(" ")[0])}`
         );
-        this.station = s;
+        if (parseInt(this.selectedLine.split(" ")[0]) == 3) {
+          this.station = s.filter(
+            (item) => !item.stationName.includes("Inspection")
+          );
+        }
+        if (
+          parseInt(this.selectedLine.split(" ")[0]) == 1 ||
+          parseInt(this.selectedLine.split(" ")[0]) == 2
+        ) {
+          this.station = s;
+        }
         console.log(this.station);
         this.stationData = Array(this.station.length).fill(0);
         console.log(this.stationData);
@@ -545,7 +623,6 @@ export default {
             }
           }
         }
-
         this.loaded = true;
       } catch (e) {
         console.error(e);
@@ -627,6 +704,7 @@ export default {
     oee: "",
     station: [],
     stationData: [],
+    colorChart: [],
 
     loaded: false,
     // chartData: null,

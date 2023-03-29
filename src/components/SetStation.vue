@@ -90,8 +90,7 @@ export default {
         this.station = stationPP.filter(
           (item) => !item.stationName.includes("Inspection")
         );
-        console.log("🚀stationPP:", stationPP);
-        console.log("🚀this.station:", this.station);
+
         break;
     }
 

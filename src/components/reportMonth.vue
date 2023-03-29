@@ -308,6 +308,7 @@ export default {
         ...{ sum: dtCauseData[index] },
       }));
       this.dtCause = newA;
+      console.log("🚀 ~  this.dtCause:", this.dtCause);
 
       //Scrap-------------------------------------------------------------------------------
       const scrapCause = await axiosInstance.post(`/failure-detail/${1}`, {
@@ -359,7 +360,7 @@ export default {
       }));
       this.repairCause = newC;
 
-      //Repair-------------------------------------------------------------------------------
+      //Rework-------------------------------------------------------------------------------
       const reworkCause = await axiosInstance.post(`/failure-detail/${1}`, {
         type: "REWORK",
       });
