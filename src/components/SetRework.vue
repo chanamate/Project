@@ -76,6 +76,7 @@ export default {
       `/failure-detail/extended/${this.lineId}`
     );
     this.rework = rework;
+    console.log("🚀 ~ this.rework:", this.rework);
     // station = station.slice(4, 9); @@@@@@@@@@@@@@@@@@@@@@ใช้ตอน scrap @@@@@@@@@@@
     // station = station.filter((e) => {
     //   const re = new RegExp("inspection", "i");

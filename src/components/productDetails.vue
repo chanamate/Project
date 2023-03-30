@@ -188,11 +188,11 @@ export default {
       const b = await axiosInstance.post("/product/all/filter", {
         lineId: parseInt(this.selectedLine.split(" ")[0]),
         startAt: moment(
-          moment(this.date[0]).format("MMMM Do YYYY") + "09:00",
+          moment(this.date[0]).format("MMMM Do YYYY") + "00:01",
           "MMMM Do YYYYHH:mm"
         ).toDate(),
         endAt: moment(
-          moment(this.date[1]).format("MMMM Do YYYY") + "09:00",
+          moment(this.date[1]).format("MMMM Do YYYY") + "23:59",
           "MMMM Do YYYYHH:mm"
         ).toDate(),
         pagination: {

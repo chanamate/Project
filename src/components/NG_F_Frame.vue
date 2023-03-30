@@ -581,8 +581,9 @@ export default {
             lineId: 3,
             defect: {
               stationId: this.selectedStaInspec.split(" ")[0],
-              failureDetailId: this.selectedSRR,
-              defectTypeId: this.selectedDefectType.split(" ")[0],
+              // failureDetailId: this.selectedSRR,
+              failureDetailId: this.selectedDefectType,
+              defectTypeId: this.selectedSRR,
             },
             employee: {
               employeeId: this.selectName.split(" ")[0],
