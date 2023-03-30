@@ -597,7 +597,7 @@ export default {
           this.dialogcheck = false;
         } catch (error) {
           console.log("error :", error.response);
-          this.error = `${error.response.data.statusCode} ${error.response.statusText} \n ${error.response.data.message[0]}`;
+          this.error = `${error.response.data.statusCode} ${error.response.data.error} \n ${error.response.data.message}`;
         } finally {
           this.snackbar = true;
         }
