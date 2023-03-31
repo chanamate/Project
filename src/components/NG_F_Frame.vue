@@ -61,7 +61,7 @@
           </v-card>
         </v-item-group>
 
-        <v-item-group mandatory model-value="12" v-if="type == 'P'">
+        <v-item-group mandatory model-value="2" v-if="type == 'P'">
           <v-card elevation="0" class="ml-4 mt-n6">
             <v-col v-for="(item, index) in title" :key="index">
               <v-item v-slot="{ isSelected, toggle }" :value="item.id">
@@ -165,6 +165,16 @@
 
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
+                <div class="mt-1 mr-2 text-h5">Defect at :</div>
+
+                <Datepicker
+                  class="text-h6 w-50 mr-2"
+                  v-model="timestamp"
+                  placeholder="Select Date"
+                  utc
+                  auto-apply
+                  :format="format"
+                />
                 <!-- <v-btn class="mr-4"> PRINT </v-btn> -->
                 <v-btn
                   v-if="type != 'P'"
@@ -332,6 +342,12 @@
                           {{ this.selectedSRR }}
                         </td>
                       </tr>
+                      <tr>
+                        <td>Defect At :</td>
+                        <td colspan="2">
+                          {{ this.timestamp }}
+                        </td>
+                      </tr>
                     </table>
                     <v-btn
                       color="primary"
@@ -471,7 +487,7 @@ export default {
     lineId: null,
     scrap: "",
     cause: cause,
-    btn_img1: btn_img1,
+    timestamp: new Date(),
 
     tab: null,
     dialog: false,
@@ -547,10 +563,7 @@ export default {
             modelId: this.selectedValueModel,
             serialNumber: this.serialNumberSent,
             machineNumber: this.dataPin.machine,
-            timestamp: moment(
-              this.dataPin.date + this.dataPin.time,
-              "DDMMYYHH:mm"
-            ).toDate(),
+            timestamp: this.timestamp,
             defect: {
               stationId: this.selectedStaInspec,
               failureDetailId: this.selectedSRR,
@@ -577,12 +590,12 @@ export default {
         try {
           const b = await axiosInstance.post("/product/paint", {
             serialNumber: this.serialNumberSent,
-            paintAt: new Date(),
+            paintAt: this.timestamp,
             lineId: 3,
             defect: {
               stationId: this.selectedStaInspec.split(" ")[0],
               // failureDetailId: this.selectedSRR,
-              failureDetailId: this.selectedDefectType,
+              failureDetailId: this.selectedDefectType, //RT RP RW PS
               defectTypeId: this.selectedSRR,
             },
             employee: {

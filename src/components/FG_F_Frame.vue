@@ -98,6 +98,16 @@
 
               <!-- Enter -->
               <div cols="6" class="d-flex justify-end mt-4">
+                <div class="mt-1 mr-2 text-h5">Finished at :</div>
+
+                <Datepicker
+                  class="text-h6 w-50 mr-2"
+                  v-model="timestamp"
+                  placeholder="Select Date"
+                  utc
+                  auto-apply
+                  :format="format"
+                />
                 <v-btn
                   v-if="type !== 'P'"
                   @click="dialogcheck = true"
@@ -190,9 +200,11 @@ import moment from "moment";
 import axiosInstance from "../utils/axios.instance";
 import SetModel from "../components/SetModel.vue";
 import SetPinStampNumber from "../components/SetPinStampNumber.vue";
+import { ref } from "vue";
+import Datepicker from "@vuepic/vue-datepicker";
 // import { title } from "../assets/constant_F";
 export default {
-  components: { SetModel, SetPinStampNumber },
+  components: { Datepicker, SetModel, SetPinStampNumber },
   name: "FG_F_Frame",
   computed: {
     type() {
@@ -245,6 +257,7 @@ export default {
     error: "",
     modelCheck: "",
     serialNumberSent: "",
+    timestamp: new Date(),
   }),
   methods: {
     async submitFS() {
@@ -269,10 +282,7 @@ export default {
           modelId: this.selectedValueModel,
           serialNumber: this.serialNumberSent,
           machineNumber: this.dataPin.machine,
-          timestamp: moment(
-            this.dataPin.date + this.dataPin.time,
-            "DDMMYYHH:mm"
-          ).toDate(),
+          timestamp: this.timestamp,
         });
         this.error = "success";
         this.dialogcheck = false;
@@ -293,7 +303,7 @@ export default {
       try {
         const b = await axiosInstance.post("/product/paint", {
           serialNumber: this.serialNumberSent,
-          paintAt: new Date(),
+          paintAt: this.timestamp,
           lineId: 3,
         });
         this.error = "success";

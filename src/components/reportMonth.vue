@@ -141,7 +141,12 @@
         </tr>
 
         <!-- scrapDefects -->
-        <tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
         </tr>
         <tr v-for="(item, index) in this.scrapCause" :key="index">
@@ -155,7 +160,12 @@
         </tr>
 
         <!-- repairDefects -->
-        <tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
         </tr>
         <tr v-for="(item, index) in this.repairCause" :key="index">

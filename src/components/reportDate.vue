@@ -121,7 +121,12 @@
         </tr>
 
         <!-- scrapDefects -->
-        <tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
         </tr>
         <tr v-for="(item, index) in this.scrapDefects" :key="index">
@@ -136,7 +141,12 @@
         </tr>
 
         <!-- repairDefects -->
-        <tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
         </tr>
         <tr v-for="(item, index) in this.repairDefects" :key="index">
@@ -148,6 +158,68 @@
           <td colspan="2"></td>
           <td>TOTAL :</td>
           <th>{{ this.sumRepairDefects }}</th>
+        </tr>
+
+        <!-- -------------------------------------------------------------------------- -->
+
+        <!-- RTDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRTDefects" class="text-center">RT</td>
+        </tr>
+        <tr v-for="(item, index) in this.RTDefects" :key="index">
+          <td>{{ item.details }}</td>
+          <td>{{ item.station }}</td>
+          <td class="text-center">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRTDefects !== 1">
+          <td colspan="2"></td>
+          <td>TOTAL :</td>
+          <th>{{ this.sumRTDefects }}</th>
+        </tr>
+
+        <!-- RPDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRPDefects" class="text-center">RP</td>
+        </tr>
+        <tr v-for="(item, index) in this.RPDefects" :key="index">
+          <td>{{ item.details }}</td>
+          <td>{{ item.station }}</td>
+          <td class="text-center">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRPDefects !== 1">
+          <td colspan="2"></td>
+          <td>TOTAL :</td>
+          <th>{{ this.sumRPDefects }}</th>
+        </tr>
+
+        <!-- RWDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRWDefects" class="text-center">RW</td>
+        </tr>
+        <tr v-for="(item, index) in this.RWDefects" :key="index">
+          <td>{{ item.details }}</td>
+          <td>{{ item.station }}</td>
+          <td class="text-center">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRWDefects !== 1">
+          <td colspan="2"></td>
+          <td>TOTAL :</td>
+          <th>{{ this.sumRWDefects }}</th>
+        </tr>
+
+        <!-- PSDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countPSDefects" class="text-center">PS</td>
+        </tr>
+        <tr v-for="(item, index) in this.PSDefects" :key="index">
+          <td>{{ item.details }}</td>
+          <td>{{ item.station }}</td>
+          <td class="text-center">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countPSDefects !== 1">
+          <td colspan="2"></td>
+          <td>TOTAL :</td>
+          <th>{{ this.sumPSDefects }}</th>
         </tr>
 
         <!-- reworkDefects -->
@@ -424,27 +496,27 @@ export default {
     },
     chartDataDFP() {
       return {
-        labels: this.station.map((n) => `${n.stationId}`),
+        labels: this.stationForP.map((n) => `${n.stationId} ${n.stationName}`),
         datasets: [
           {
             label: "PS",
             backgroundColor: "#FF0000",
-            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
+            data: [this.sumRTIns1, this.sumRTIns2],
           },
           {
             label: "RP",
             backgroundColor: "#FF7F00",
-            data: [this.sumrepairIns1, this.sumrepairIns2, this.sumrepairIns3],
+            data: [this.sumRPIns1, this.sumRPIns2],
           },
           {
             label: "RW",
             backgroundColor: "#FFFF00",
-            data: [this.sumScrapIns1, this.sumScrapIns2, this.sumScrapIns3],
+            data: [this.sumRWIns1, this.sumRWIns2],
           },
           {
             label: "RT",
             backgroundColor: "#FF69B4",
-            data: [this.sumreworkIns1, this.sumreworkIns2, this.sumreworkIns3],
+            data: [this.sumPSIns1, this.sumPSIns2],
           },
         ],
       };
@@ -502,7 +574,6 @@ export default {
         this.startAt = moment(b.startAt).format("DD/MM/YY");
         this.shift = b.workingTime.time;
         this.group = b.group;
-        console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
         this.downtimeDefect = b.downtimeDefect;
 
         this.actual = b.actual;
@@ -512,7 +583,7 @@ export default {
         this.performance = b.performance + "%";
         this.quality = b.quality + "%";
 
-        // SCRAP
+        // SCRAP------------------------------------------------------
         this.scrapDefects = b.failureDefect.filter(
           (defect) => defect.type === "SCRAP"
         );
@@ -536,7 +607,7 @@ export default {
           }
         }
 
-        // REPAIR
+        // REPAIR------------------------------------------------------
         this.repairDefects = b.failureDefect.filter(
           (defect) => defect.type === "REPAIR"
         );
@@ -563,7 +634,7 @@ export default {
           }
         }
 
-        // REWORK
+        // REWORK------------------------------------------------------
         this.reworkDefects = b.failureDefect.filter(
           (defect) => defect.type === "REWORK"
         );
@@ -589,6 +660,80 @@ export default {
             }
           }
         }
+
+        // RT------------------------------------------------------
+        this.RTDefects = b.failureDefect.filter(
+          (defect) => defect.type === "RT"
+        );
+        for (let i = 0; i < b.failureTotal; i++) {
+          if (this.RTDefects[i] && this.RTDefects[i].sum) {
+            this.sumRTDefects = this.sumRTDefects + this.RTDefects[i].sum;
+            this.countRTDefects = this.countRTDefects + 1;
+            if (this.RTDefects[i].station == "Inspection 3") {
+              this.sumRTIns1 = this.sumRTIns1 + this.RTDefects[i].sum;
+              // console.log("this.sumRTIns1", this.sumRTIns1);
+            }
+            if (this.RTDefects[i].station == "Inspection 4") {
+              this.sumRTIns2 = this.sumRTIns2 + this.RTDefects[i].sum;
+              // console.log("this.sumRTIns1", this.sumRTIns2);
+            }
+          }
+        }
+
+        // RP------------------------------------------------------
+        this.RPDefects = b.failureDefect.filter(
+          (defect) => defect.type === "RP"
+        );
+        for (let i = 0; i < b.failureTotal; i++) {
+          if (this.RPDefects[i] && this.RPDefects[i].sum) {
+            this.sumRPDefects = this.sumRPDefects + this.RPDefects[i].sum;
+            this.countRPDefects = this.countRPDefects + 1;
+            if (this.RPDefects[i].station == "Inspection 3") {
+              this.sumRPIns1 = this.sumRPIns1 + this.RPDefects[i].sum;
+              // console.log("this.sumRPIns1", this.sumRPIns1);
+            }
+            if (this.RPDefects[i].station == "Inspection 4") {
+              this.sumRPIns2 = this.sumRPIns2 + this.RPDefects[i].sum;
+              // console.log("this.sumRPIns1", this.sumRPIns2);
+            }
+          }
+        }
+        // RW------------------------------------------------------
+        this.RWDefects = b.failureDefect.filter(
+          (defect) => defect.type === "RW"
+        );
+        for (let i = 0; i < b.failureTotal; i++) {
+          if (this.RWDefects[i] && this.RWDefects[i].sum) {
+            this.sumRWDefects = this.sumRWDefects + this.RWDefects[i].sum;
+            this.countRWDefects = this.countRWDefects + 1;
+            if (this.RWDefects[i].station == "Inspection 3") {
+              this.sumRWIns1 = this.sumRWIns1 + this.RWDefects[i].sum;
+              // console.log("this.sumRWIns1", this.sumRWIns1);
+            }
+            if (this.RWDefects[i].station == "Inspection 4") {
+              this.sumRWIns2 = this.sumRWIns2 + this.RWDefects[i].sum;
+              // console.log("this.sumRWIns1", this.sumRWIns2);
+            }
+          }
+        }
+        // PS------------------------------------------------------
+        this.PSDefects = b.failureDefect.filter(
+          (defect) => defect.type === "PS"
+        );
+        for (let i = 0; i < b.failureTotal; i++) {
+          if (this.PSDefects[i] && this.PSDefects[i].sum) {
+            this.sumPSDefects = this.sumPSDefects + this.PSDefects[i].sum;
+            this.countPSDefects = this.countPSDefects + 1;
+            if (this.PSDefects[i].station == "Inspection 3") {
+              this.sumPSIns1 = this.sumPSIns1 + this.PSDefects[i].sum;
+              // console.log("this.sumPSIns1", this.sumPSIns1);
+            }
+            if (this.PSDefects[i].station == "Inspection 4") {
+              this.sumPSIns2 = this.sumPSIns2 + this.PSDefects[i].sum;
+              // console.log("this.sumPSIns1", this.sumPSIns2);
+            }
+          }
+        }
         // this.lineId = parseInt(this.selectedLine.split(" ")[0]);
         // const s = await axiosInstance.get(`/station/line/${this.lineId}`);
         const s = await axiosInstance.get(
@@ -598,6 +743,10 @@ export default {
           this.station = s.filter(
             (item) => !item.stationName.includes("Inspection")
           );
+          this.stationForP = s.filter((e) => {
+            const re = new RegExp("inspection", "i");
+            return re.test(e.stationName);
+          });
         }
         if (
           parseInt(this.selectedLine.split(" ")[0]) == 1 ||
@@ -695,6 +844,30 @@ export default {
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
+
+    RTDefects: 0,
+    sumRTDefects: 0,
+    countRTDefects: 1,
+    sumRTIns1: 0,
+    sumRTIns2: 0,
+
+    RPDefects: 0,
+    sumRPDefects: 0,
+    countRPDefects: 1,
+    sumRPIns1: 0,
+    sumRPIns2: 0,
+
+    RWDefects: 0,
+    sumRWDefects: 0,
+    countRWDefects: 1,
+    sumRWIns1: 0,
+    sumRWIns2: 0,
+
+    PSDefects: 0,
+    sumPSDefects: 0,
+    countPSDefects: 1,
+    sumPSIns1: 0,
+    sumPSIns2: 0,
 
     availability: "",
     performance: "",

@@ -7,8 +7,8 @@
         v-model="date"
         placeholder="Select Date"
         :enableTimePicker="false"
-        locale="th"
         utc
+        auto-apply
         :format="format"
       />
       <Datepicker
@@ -16,6 +16,7 @@
         v-model="time"
         placeholder="Select Time"
         timePicker
+        auto-apply
         utc
       />
     </v-row>
