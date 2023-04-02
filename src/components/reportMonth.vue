@@ -387,7 +387,7 @@
         </v-card> -->
         <v-card
           width="700px"
-          color="rgb(212, 212, 212)"
+          color="#F2F2F2"
           class="mt-3 ml-2"
           v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
         >
@@ -395,7 +395,7 @@
         </v-card>
         <v-card
           width="700px"
-          color="rgb(212, 212, 212)"
+          color="#F2F2F2"
           class="mt-3 ml-2"
           v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
         >
@@ -403,7 +403,7 @@
         </v-card>
         <v-card
           width="700px"
-          color="rgb(212, 212, 212)"
+          color="#F2F2F2"
           class="mt-3 ml-2"
           v-if="parseInt(this.selectedLine.split(' ')[0]) == 2"
         >
@@ -414,7 +414,7 @@
       <div class="ml-2" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
         <v-card
           width="725px"
-          color="rgb(212, 212, 212)"
+          color="#F2F2F2"
           class="mt-3 ml-2"
           v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
         >
@@ -422,7 +422,7 @@
         </v-card>
         <v-card
           width="725px"
-          color="rgb(212, 212, 212)"
+          color="#F2F2F2"
           class="mt-3 ml-2"
           v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
         >

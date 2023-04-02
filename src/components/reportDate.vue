@@ -284,7 +284,7 @@
 
       <v-card
         width="725px"
-        color="rgb(212, 212, 212)"
+        color="#F2F2F2"
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
       >
@@ -293,7 +293,7 @@
 
       <v-card
         width="725px"
-        color="rgb(212, 212, 212)"
+        color="#F2F2F2"
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
       >
@@ -302,7 +302,7 @@
 
       <v-card
         width="725px"
-        color="rgb(212, 212, 212)"
+        color="#F2F2F2"
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 1"
       >
@@ -311,7 +311,7 @@
 
       <v-card
         width="725px"
-        color="rgb(212, 212, 212)"
+        color="#F2F2F2"
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 2"
       >
@@ -320,8 +320,8 @@
 
       <v-card
         width="725px"
-        color="rgb(212, 212, 212)"
-        class="mt-3 ml-2"
+        color="#F2F2F2"
+        class="my-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
       >
         <Bar v-if="loaded" :data="chartDataDFP" />
