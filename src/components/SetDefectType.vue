@@ -80,10 +80,10 @@ export default {
       type: "PS",
     });
     this.defectType.push(RT[0], RP[0], RW[0], PS[0]);
-    console.log(
-      "🚀 ~ file: SetDefectType.vue:83 ~ created ~ this.defectType:",
-      this.defectType
-    );
+    // console.log(
+    //   "🚀 ~ file: SetDefectType.vue:83 ~ created ~ this.defectType:",
+    //   this.defectType
+    // );
     // console.log("defectType", this.defectType);
     // console.log("station", station);
   },

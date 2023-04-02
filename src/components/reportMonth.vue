@@ -464,7 +464,7 @@ export default {
   //     // ) {
   //     //   this.station = s;
   //     // }
-  //     // DOWNTIME-------------------------------------------------------------------------------
+  //     // DOWNTIME---------------------------------------------------------------------------------------
   //     const dtCause = await axiosInstance.get(
   //       `/availability-lose/${parseInt(this.selectedLine.split(" ")[0])}`
   //     );
@@ -490,7 +490,7 @@ export default {
   //     this.dtCause = newA;
   //     console.log("🚀 ~  this.dtCause:", this.dtCause);
 
-  //     //Scrap-------------------------------------------------------------------------------
+  //     //Scrap---------------------------------------------------------------------------------------
   //     const scrapCause = await axiosInstance.post(
   //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
   //       {
@@ -519,7 +519,7 @@ export default {
   //     this.scrapCause = newB;
   //     this.scrapCauseNotZ = this.scrapCause.filter((n) => n.sum !== 0);
 
-  //     //Repair-------------------------------------------------------------------------------
+  //     //Repair---------------------------------------------------------------------------------------
   //     const repairCause = await axiosInstance.post(
   //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
   //       {
@@ -548,7 +548,7 @@ export default {
   //     this.repairCause = newC;
   //     this.repairCauseNotZ = this.repairCause.filter((n) => n.sum !== 0);
 
-  //     //Rework-------------------------------------------------------------------------------
+  //     //Rework---------------------------------------------------------------------------------------
   //     const reworkCause = await axiosInstance.post(
   //       `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
   //       {
@@ -577,7 +577,7 @@ export default {
   //     this.reworkCause = newD;
   //     this.reworkCauseNotZ = this.reworkCause.filter((n) => n.sum !== 0);
 
-  //     // ----------------------------------------------------------------------------------
+  //     // ------------------------------------------------------------------------------------------
 
   //     this.loaded = true;
   //   } catch (e) {
@@ -721,7 +721,7 @@ export default {
         // ) {
         //   this.station = s;
         // }
-        // DOWNTIME-------------------------------------------------------------------------------
+        // DOWNTIME---------------------------------------------------------------------------------------
         const dtCause = await axiosInstance.get(
           `/availability-lose/${parseInt(this.selectedLine.split(" ")[0])}`
         );
@@ -745,9 +745,9 @@ export default {
           ...{ sum: dtCauseData[index] },
         }));
         this.dtCause = newA;
-        console.log("🚀 ~  this.dtCause:", this.dtCause);
+        // console.log("🚀 ~  this.dtCause:", this.dtCause);
 
-        //Scrap-------------------------------------------------------------------------------
+        //Scrap---------------------------------------------------------------------------------------
         const scrapCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -776,7 +776,7 @@ export default {
         this.scrapCause = newB;
         this.scrapCauseNotZ = this.scrapCause.filter((n) => n.sum !== 0);
 
-        //Repair-------------------------------------------------------------------------------
+        //Repair---------------------------------------------------------------------------------------
         const repairCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -805,12 +805,8 @@ export default {
         }));
         this.repairCause = newC;
         this.repairCauseNotZ = this.repairCause.filter((n) => n.sum !== 0);
-        console.log(
-          "🚀 ~ file: reportMonth.vue:768 ~ genTableF ~  this.repairCauseNotZ:",
-          this.repairCauseNotZ
-        );
 
-        //Rework-------------------------------------------------------------------------------
+        //Rework---------------------------------------------------------------------------------------
         const reworkCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -840,7 +836,7 @@ export default {
         this.reworkCause = newD;
         this.reworkCauseNotZ = this.reworkCause.filter((n) => n.sum !== 0);
 
-        //RT-------------------------------------------------------------------------------
+        //RT---------------------------------------------------------------------------------------
         const RTCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -867,7 +863,7 @@ export default {
         this.RTCause = newRT;
         this.RTCauseNotZ = this.RTCause.filter((n) => n.sum !== 0);
 
-        //RP-------------------------------------------------------------------------------
+        //RP---------------------------------------------------------------------------------------
         const RPCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -894,7 +890,7 @@ export default {
         this.RPCause = newRP;
         this.RPCauseNotZ = this.RPCause.filter((n) => n.sum !== 0);
 
-        //RW-------------------------------------------------------------------------------
+        //RW---------------------------------------------------------------------------------------
         const RWCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -921,7 +917,7 @@ export default {
         this.RWCause = newRW;
         this.RWCauseNotZ = this.RWCause.filter((n) => n.sum !== 0);
 
-        //PS-------------------------------------------------------------------------------
+        //PS---------------------------------------------------------------------------------------
         const PSCause = await axiosInstance.post(
           `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
           {
@@ -948,12 +944,15 @@ export default {
         this.PSCause = newPS;
         this.PSCauseNotZ = this.PSCause.filter((n) => n.sum !== 0);
 
-        // ----------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------------------
         const extended = await axiosInstance.get(
-          `/availability-lose/extended/3`
+          `/failure-detail/extended/${parseInt(
+            this.selectedLine.split(" ")[0]
+          )}`
         );
-
-        // ----------------------------------------------------------------------------------
+        console.log("🚀 ~ extended:", extended);
+        // this.extendedRT = extended
+        // ------------------------------------------------------------------------------------------
         switch (this.month.month) {
           case 0:
             this.monthShow = "January";

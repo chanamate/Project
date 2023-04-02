@@ -271,7 +271,10 @@ export default {
       const month = date.getMonth() + 1;
       const year = date.getFullYear();
 
-      return `${day}/${month}/${year}`;
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+
+      return `${day}/${month}/${year} ${hour}:${minute}`;
     },
   }),
   methods: {
