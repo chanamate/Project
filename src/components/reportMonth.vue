@@ -178,6 +178,16 @@
           <th>{{ this.sumPSDefects }}</th>
         </tr>
       </table>
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+      >
+        <Bar v-if="loaded" :data="chartDataDT" />
+      </v-card>
+
       <table class="my-2" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
         <tr>
           <td rowspan="2">TARGET</td>
@@ -210,21 +220,17 @@
       ></div>
       <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 
-      <table class="my-2">
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+      <table
+        class="my-2"
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      >
+        <tr>
           <th colspan="5">MONTHLY REPORT</th>
         </tr>
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+        <tr>
           <th colspan="3">LINE : FABRICATION OF F FRAME</th>
           <th>SHIFT:{{ this.shiftSelect }}</th>
           <th>
@@ -232,34 +238,19 @@
             {{ this.month.year }}
           </th>
         </tr>
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+        <tr>
           <td></td>
           <td class="text-center">TYPE</td>
           <td colspan="2">FAILURE DETAILS</td>
           <td>Total Parts</td>
         </tr>
 
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+        <tr>
           <td rowspan="1000" class="text-center">DEFECT TYPE</td>
         </tr>
 
         <!-- scrapDefects -->
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+        <tr>
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
         </tr>
         <tr v-for="(item, index) in this.scrapCause" :key="index">
@@ -273,12 +264,7 @@
         </tr>
 
         <!-- repairDefects -->
-        <tr
-          v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
-          "
-        >
+        <tr>
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
         </tr>
         <tr v-for="(item, index) in this.repairCause" :key="index">
@@ -307,13 +293,7 @@
         </tr> -->
       </table>
 
-      <table
-        class="my-2"
-        v-if="
-          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-          parseInt(this.selectedLine.split(' ')[0]) == 2
-        "
-      >
+      <table class="my-2">
         <tr>
           <td rowspan="2">TARGET</td>
           <td class="text-center">{{ this.target }}</td>
@@ -341,6 +321,7 @@
       </table>
 
       <div class="html2pdf__page-break"></div>
+
       <div
         class="ml-2"
         v-if="
@@ -348,28 +329,58 @@
           parseInt(this.selectedLine.split(' ')[0]) == 2
         "
       >
-        <v-col cols="5">
+        <!-- <v-card
+          width="725px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+        >
           <Bar v-if="loaded" :data="chartDataDT" />
-        </v-col>
-        <v-col cols="5">
+        </v-card> -->
+        <v-card
+          width="700px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+        >
           <Bar v-if="loaded" :data="chartDataDFScrap" />
-          <Bar v-if="loaded" :data="chartDataDFRepair" />
-        </v-col>
+        </v-card>
+        <v-card
+          width="700px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+        >
+          <Bar v-if="loaded" :data="chartDataDFRepair_1" />
+        </v-card>
+        <v-card
+          width="700px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) == 2"
+        >
+          <Bar v-if="loaded" :data="chartDataDFRepair_2" />
+        </v-card>
       </div>
 
       <div class="ml-2" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
-        <v-col cols="5">
+        <v-card
+          width="725px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
+        >
           <Bar v-if="loaded" :data="chartDataDT_P" />
-        </v-col>
-        <v-col cols="5">
-          <Bar v-if="loaded" :data="chartDataDFScrap" />
-          <Bar v-if="loaded" :data="chartDataDFRepair" />
-        </v-col>
+        </v-card>
+        <v-card
+          width="725px"
+          color="rgb(212, 212, 212)"
+          class="mt-3 ml-2"
+          v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
+        >
+          <Bar v-if="loaded" :data="chartDataDFPaint" />
+        </v-card>
       </div>
-
-      <v-col cols="5">
-        <!-- <Bar v-if="loaded" :data="chartDataDFPaint" /> -->
-      </v-col>
     </div>
   </div>
 </template>
@@ -611,41 +622,57 @@ export default {
         ],
       };
     },
-    chartDataDFRepair() {
+    chartDataDFRepair_1() {
       return {
-        labels: this.repairCauseNotZ.map((n) => `${n.details}`),
+        labels: this.repairCauseNotZ
+          .slice(0, 10)
+          .map((n) => `${n.details.split(":")[0]}`),
         datasets: [
           {
-            label: "SCRAP",
+            label: "REPAIR",
             backgroundColor: "#FF0000",
-            data: this.repairCauseNotZ.map((n) => `${n.sum}`),
+            data: this.repairCauseNotZ.slice(0, 10).map((n) => `${n.sum}`),
+          },
+        ],
+      };
+    },
+    chartDataDFRepair_2() {
+      return {
+        labels: this.repairCauseNotZ
+          .slice(11, 20)
+          .map((n) => `${n.details.split(":")[0]}`),
+        datasets: [
+          {
+            label: "REPAIR",
+            backgroundColor: "#FF0000",
+            data: this.repairCauseNotZ.slice(11, 20).map((n) => `${n.sum}`),
           },
         ],
       };
     },
     chartDataDFPaint() {
       return {
-        labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
+        labels: ["ACTION"],
         datasets: [
           {
-            label: "PS",
+            label: "RT",
             backgroundColor: "#FF0000",
-            data: [1, 2, 3],
+            data: [this.sumRTDefects],
           },
           {
             label: "RP",
             backgroundColor: "#FF7F00",
-            data: [1, 2, 3],
+            data: [this.sumRPDefects],
           },
           {
             label: "RW",
             backgroundColor: "#FFDF00",
-            data: [1, 2, 3],
+            data: [this.sumRWDefects],
           },
           {
-            label: "RT",
+            label: "PS",
             backgroundColor: "#FF69B4",
-            data: [1, 2, 3],
+            data: [this.sumPSDefects],
           },
         ],
       };
@@ -778,6 +805,10 @@ export default {
         }));
         this.repairCause = newC;
         this.repairCauseNotZ = this.repairCause.filter((n) => n.sum !== 0);
+        console.log(
+          "🚀 ~ file: reportMonth.vue:768 ~ genTableF ~  this.repairCauseNotZ:",
+          this.repairCauseNotZ
+        );
 
         //Rework-------------------------------------------------------------------------------
         const reworkCause = await axiosInstance.post(
@@ -916,6 +947,11 @@ export default {
         }));
         this.PSCause = newPS;
         this.PSCauseNotZ = this.PSCause.filter((n) => n.sum !== 0);
+
+        // ----------------------------------------------------------------------------------
+        const extended = await axiosInstance.get(
+          `/availability-lose/extended/3`
+        );
 
         // ----------------------------------------------------------------------------------
         switch (this.month.month) {

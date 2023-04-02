@@ -123,8 +123,8 @@
         <!-- scrapDefects -->
         <tr
           v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
+            parseInt(this.selectedLine.split(' ')[0]) !== 3 &&
+            this.countScrapDefects !== 1
           "
         >
           <td :rowspan="this.countScrapDefects" class="text-center">Scrap</td>
@@ -143,8 +143,8 @@
         <!-- repairDefects -->
         <tr
           v-if="
-            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-            parseInt(this.selectedLine.split(' ')[0]) == 2
+            (parseInt(this.selectedLine.split(' ')[0]) !== 3) &
+            (this.countRepairDefects !== 1)
           "
         >
           <td :rowspan="this.countRepairDefects" class="text-center">Repair</td>
@@ -163,11 +163,16 @@
         <!-- -------------------------------------------------------------------------- -->
 
         <!-- RTDefects -->
-        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 3 &&
+            this.countRTDefects !== 1
+          "
+        >
           <td :rowspan="this.countRTDefects" class="text-center">RT</td>
         </tr>
         <tr v-for="(item, index) in this.RTDefects" :key="index">
-          <td>{{ item.details }}</td>
+          <td>{{ item.extendedDetails }}</td>
           <td>{{ item.station }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
@@ -178,11 +183,16 @@
         </tr>
 
         <!-- RPDefects -->
-        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 3 &&
+            this.countRPDefects !== 1
+          "
+        >
           <td :rowspan="this.countRPDefects" class="text-center">RP</td>
         </tr>
         <tr v-for="(item, index) in this.RPDefects" :key="index">
-          <td>{{ item.details }}</td>
+          <td>{{ item.extendedDetails }}</td>
           <td>{{ item.station }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
@@ -193,11 +203,16 @@
         </tr>
 
         <!-- RWDefects -->
-        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 3 &&
+            this.countRWDefects !== 1
+          "
+        >
           <td :rowspan="this.countRWDefects" class="text-center">RW</td>
         </tr>
         <tr v-for="(item, index) in this.RWDefects" :key="index">
-          <td>{{ item.details }}</td>
+          <td>{{ item.extendedDetails }}</td>
           <td>{{ item.station }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
@@ -208,11 +223,16 @@
         </tr>
 
         <!-- PSDefects -->
-        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 3 &&
+            this.countPSDefects !== 1
+          "
+        >
           <td :rowspan="this.countPSDefects" class="text-center">PS</td>
         </tr>
         <tr v-for="(item, index) in this.PSDefects" :key="index">
-          <td>{{ item.details }}</td>
+          <td>{{ item.extendedDetails }}</td>
           <td>{{ item.station }}</td>
           <td class="text-center">{{ item.sum }}</td>
         </tr>
@@ -261,18 +281,51 @@
       </table>
 
       <div class="html2pdf__page-break"></div>
-      <v-col cols="4">
-        <Bar v-if="loaded" :data="chartDataDTF" />
-      </v-col>
-      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 1">
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+      >
+        <Bar v-if="loaded" :data="chartDataDT_FS" />
+      </v-card>
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
+      >
+        <Bar v-if="loaded" :data="chartDataDT_P" />
+      </v-card>
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) == 1"
+      >
         <Bar v-if="loaded" :data="chartDataDFSRR_F" />
-      </v-col>
-      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 2">
+      </v-card>
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) == 2"
+      >
         <Bar v-if="loaded" :data="chartDataDFSRR_S" />
-      </v-col>
-      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+      </v-card>
+
+      <v-card
+        width="725px"
+        color="rgb(212, 212, 212)"
+        class="mt-3 ml-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
+      >
         <Bar v-if="loaded" :data="chartDataDFP" />
-      </v-col>
+      </v-card>
     </div>
   </div>
 </template>
@@ -452,7 +505,7 @@ export default {
   // ="isSelected ? 'primary' : ''"
 
   computed: {
-    chartDataDTF() {
+    chartDataDT_FS() {
       return {
         labels: this.station.map((n) => `${n.stationId}`),
         datasets: [
@@ -465,6 +518,18 @@ export default {
             label: "Downtime that affects Availability",
             backgroundColor: "RGBA( 153, 50, 204, 1 )",
             data: [],
+          },
+        ],
+      };
+    },
+    chartDataDT_P() {
+      return {
+        labels: this.station.map((n) => `${n.stationId}`),
+        datasets: [
+          {
+            label: "Downtime (min)",
+            backgroundColor: this.colorChart,
+            data: this.stationData,
           },
         ],
       };

@@ -79,7 +79,7 @@ export default {
         color: "#3949AB",
       },
       {
-        name: "Paint",
+        name: "Powder Coat Painting",
         id: "3",
         url: "/FG_F/P",
         color: "primary",
