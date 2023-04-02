@@ -69,11 +69,11 @@
           <th colspan="5">MONTHLY REPORT</th>
         </tr>
         <tr>
-          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
+          <th colspan="3">LINE : {{ this.selectedLineShow }}</th>
           <th>SHIFT:{{ this.shiftSelect }}</th>
           <th>
-            MONTH : <br />
-            {{ this.startAt }}
+            {{ this.monthShow }}
+            {{ this.month.year }}
           </th>
         </tr>
         <tr>
@@ -108,36 +108,149 @@
 
         <tr>
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.downtimeTotal }}</th>
         </tr>
-      </table>
 
-      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-      <div class="html2pdf__page-break"></div>
-      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
-      <table class="my-2">
-        <tr>
-          <th colspan="5">MONTHLY REPORT</th>
-        </tr>
-        <tr>
-          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
-          <th>SHIFT:{{ this.shiftSelect }}</th>
-          <th>
-            MONTH : <br />
-            {{ this.startAt }}
-          </th>
-        </tr>
-        <tr>
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
           <td></td>
           <td class="text-center">TYPE</td>
           <td colspan="2">FAILURE DETAILS</td>
           <td>Total Parts</td>
         </tr>
 
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td rowspan="1000" class="text-center">DEFECT TYPE</td>
+        </tr>
+        <!-- RTDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRTDefects" class="text-center">RT</td>
+        </tr>
+        <tr v-for="(item, index) in this.RTCause" :key="index">
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRTDefects !== 1">
+          <td colspan="2"></td>
+          <td class="text-right">TOTAL :</td>
+          <th>{{ this.sumRTDefects }}</th>
+        </tr>
+
+        <!-- RPDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRPDefects" class="text-center">RP</td>
+        </tr>
+        <tr v-for="(item, index) in this.RPCause" :key="index">
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRPDefects !== 1">
+          <td colspan="2"></td>
+          <td class="text-right">TOTAL :</td>
+          <th>{{ this.sumRPDefects }}</th>
+        </tr>
+
+        <!-- RWDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countRWDefects" class="text-center">RW</td>
+        </tr>
+        <tr v-for="(item, index) in this.RWCause" :key="index">
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countRWDefects !== 1">
+          <td colspan="2"></td>
+          <td class="text-right">TOTAL :</td>
+          <th>{{ this.sumRWDefects }}</th>
+        </tr>
+
+        <!-- PSDefects -->
+        <tr v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+          <td :rowspan="this.countPSDefects" class="text-center">PS</td>
+        </tr>
+        <tr v-for="(item, index) in this.PSCause" :key="index">
+          <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+        </tr>
+        <tr v-if="this.countPSDefects !== 1">
+          <td colspan="2"></td>
+          <td class="text-right">TOTAL :</td>
+          <th>{{ this.sumPSDefects }}</th>
+        </tr>
+      </table>
+      <table class="my-2" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
         <tr>
-          <td rowspan="100" class="text-center">DEFECT TYPE</td>
+          <td rowspan="2">TARGET</td>
+          <td class="text-center">{{ this.target }}</td>
+          <td rowspan="2">ACTUAL</td>
+          <td class="text-center">{{ this.actual }}</td>
+        </tr>
+      </table>
+
+      <table v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <tr>
+          <th rowspan="3">OEE : {{ this.oee }}</th>
+          <th>AVAILABILITY : {{ this.availability }}</th>
+        </tr>
+        <tr>
+          <th>PERFORMANCE : {{ this.performance }}</th>
+        </tr>
+        <tr>
+          <th>QUALITY RATE : {{ this.quality }}</th>
+        </tr>
+      </table>
+
+      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+      <div
+        class="html2pdf__page-break"
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      ></div>
+      <!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
+
+      <table class="my-2">
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
+          <th colspan="5">MONTHLY REPORT</th>
+        </tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
+          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
+          <th>SHIFT:{{ this.shiftSelect }}</th>
+          <th>
+            {{ this.monthShow }}
+            {{ this.month.year }}
+          </th>
+        </tr>
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
+          <td></td>
+          <td class="text-center">TYPE</td>
+          <td colspan="2">FAILURE DETAILS</td>
+          <td>Total Parts</td>
+        </tr>
+
+        <tr
+          v-if="
+            parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+            parseInt(this.selectedLine.split(' ')[0]) == 2
+          "
+        >
+          <td rowspan="1000" class="text-center">DEFECT TYPE</td>
         </tr>
 
         <!-- scrapDefects -->
@@ -155,7 +268,7 @@
         </tr>
         <tr v-if="this.countScrapDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumScrapDefects }}</th>
         </tr>
 
@@ -174,9 +287,10 @@
         </tr>
         <tr v-if="this.countRepairDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumRepairDefects }}</th>
         </tr>
+        <!-- -------------------------------------------------------------------------- -->
 
         <!-- reworkDefects -->
         <!-- <tr>
@@ -188,12 +302,18 @@
         </tr>
         <tr v-if="this.countReworkDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumReworkDefects }}</th>
         </tr> -->
       </table>
 
-      <table class="my-2">
+      <table
+        class="my-2"
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      >
         <tr>
           <td rowspan="2">TARGET</td>
           <td class="text-center">{{ this.target }}</td>
@@ -202,7 +322,12 @@
         </tr>
       </table>
 
-      <table>
+      <table
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      >
         <tr>
           <th rowspan="3">OEE : {{ this.oee }}</th>
           <th>AVAILABILITY : {{ this.availability }}</th>
@@ -216,14 +341,32 @@
       </table>
 
       <div class="html2pdf__page-break"></div>
+      <div
+        class="ml-2"
+        v-if="
+          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
+          parseInt(this.selectedLine.split(' ')[0]) == 2
+        "
+      >
+        <v-col cols="5">
+          <Bar v-if="loaded" :data="chartDataDT" />
+        </v-col>
+        <v-col cols="5">
+          <Bar v-if="loaded" :data="chartDataDFScrap" />
+          <Bar v-if="loaded" :data="chartDataDFRepair" />
+        </v-col>
+      </div>
 
-      <v-col cols="5">
-        <Bar v-if="loaded" :data="chartDataDT" />
-      </v-col>
-      <v-col cols="5">
-        <Bar v-if="loaded" :data="chartDataDFScrap" />
-        <Bar v-if="loaded" :data="chartDataDFRepair" />
-      </v-col>
+      <div class="ml-2" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <v-col cols="5">
+          <Bar v-if="loaded" :data="chartDataDT_P" />
+        </v-col>
+        <v-col cols="5">
+          <Bar v-if="loaded" :data="chartDataDFScrap" />
+          <Bar v-if="loaded" :data="chartDataDFRepair" />
+        </v-col>
+      </div>
+
       <v-col cols="5">
         <!-- <Bar v-if="loaded" :data="chartDataDFPaint" /> -->
       </v-col>
@@ -444,6 +587,18 @@ export default {
         ],
       };
     },
+    chartDataDT_P() {
+      return {
+        labels: this.dtCause.map((n) => `${n.availabilityId}`),
+        datasets: [
+          {
+            label: "Downtime (min)",
+            backgroundColor: "#00148E",
+            data: this.dtCause.map((n) => `${n.sum}`),
+          },
+        ],
+      };
+    },
     chartDataDFScrap() {
       return {
         labels: this.scrapCauseNotZ.map((n) => `${n.details}`),
@@ -484,7 +639,7 @@ export default {
           },
           {
             label: "RW",
-            backgroundColor: "#FFFF00",
+            backgroundColor: "#FFDF00",
             data: [1, 2, 3],
           },
           {
@@ -501,11 +656,13 @@ export default {
     async genTableF() {
       this.reload = false;
       this.loaded = false;
+      console.log("🚀 ~  this.month:", this.month);
       try {
+        this.selectedLineShow = this.selectedLine.slice(2);
         const b = await axiosInstance.post("/dashboard/month", {
-          lineId: 1,
-          month: new Date().getMonth(),
-          year: new Date().getFullYear(),
+          lineId: parseInt(this.selectedLine.split(" ")[0]),
+          month: this.month.month + 1,
+          year: this.month.year,
           shift: this.shiftInput,
         });
         console.log("🚀 ~ file: test.vue:234 ~ mounted ~ b:", b);
@@ -652,8 +809,153 @@ export default {
         this.reworkCause = newD;
         this.reworkCauseNotZ = this.reworkCause.filter((n) => n.sum !== 0);
 
-        // ----------------------------------------------------------------------------------
+        //RT-------------------------------------------------------------------------------
+        const RTCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "RT",
+          }
+        );
+        // console.log("🚀", RTCause);
+        const RTData = Array(RTCause.length).fill(0);
+        this.RTTotal = b.failureDefect.filter((defect) => defect.type === "RT");
+        this.countRTDefects = RTCause.length + 1;
+        for (let i = 0; i < this.RTTotal.length; i++) {
+          this.sumRTDefects = this.sumRTDefects + this.RTTotal[i].sum;
+          for (let j = 0; j < RTCause.length; j++) {
+            if (RTCause[j].details == this.RTTotal[i].details) {
+              RTData[j] = RTData[j] + this.RTTotal[i].sum;
+              // console.log(RTData);
+            }
+          }
+        }
+        const newRT = RTCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: RTData[index] },
+        }));
+        this.RTCause = newRT;
+        this.RTCauseNotZ = this.RTCause.filter((n) => n.sum !== 0);
 
+        //RP-------------------------------------------------------------------------------
+        const RPCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "RP",
+          }
+        );
+        // console.log("🚀", RPCause);
+        const RPData = Array(RPCause.length).fill(0);
+        this.RPTotal = b.failureDefect.filter((defect) => defect.type === "RP");
+        this.countRPDefects = RPCause.length + 1;
+        for (let i = 0; i < this.RPTotal.length; i++) {
+          this.sumRPDefects = this.sumRPDefects + this.RPTotal[i].sum;
+          for (let j = 0; j < RPCause.length; j++) {
+            if (RPCause[j].details == this.RPTotal[i].details) {
+              RPData[j] = RPData[j] + this.RPTotal[i].sum;
+              // console.log(RPData);
+            }
+          }
+        }
+        const newRP = RPCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: RPData[index] },
+        }));
+        this.RPCause = newRP;
+        this.RPCauseNotZ = this.RPCause.filter((n) => n.sum !== 0);
+
+        //RW-------------------------------------------------------------------------------
+        const RWCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "RW",
+          }
+        );
+        // console.log("🚀", RWCause);
+        const RWData = Array(RWCause.length).fill(0);
+        this.RWTotal = b.failureDefect.filter((defect) => defect.type === "RW");
+        this.countRWDefects = RWCause.length + 1;
+        for (let i = 0; i < this.RWTotal.length; i++) {
+          this.sumRWDefects = this.sumRWDefects + this.RWTotal[i].sum;
+          for (let j = 0; j < RWCause.length; j++) {
+            if (RWCause[j].details == this.RWTotal[i].details) {
+              RWData[j] = RWData[j] + this.RWTotal[i].sum;
+              // console.log(RWData);
+            }
+          }
+        }
+        const newRW = RWCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: RWData[index] },
+        }));
+        this.RWCause = newRW;
+        this.RWCauseNotZ = this.RWCause.filter((n) => n.sum !== 0);
+
+        //PS-------------------------------------------------------------------------------
+        const PSCause = await axiosInstance.post(
+          `/failure-detail/${parseInt(this.selectedLine.split(" ")[0])}`,
+          {
+            type: "PS",
+          }
+        );
+        // console.log("🚀", PSCause);
+        const PSData = Array(PSCause.length).fill(0);
+        this.PSTotal = b.failureDefect.filter((defect) => defect.type === "PS");
+        this.countPSDefects = PSCause.length + 1;
+        for (let i = 0; i < this.PSTotal.length; i++) {
+          this.sumPSDefects = this.sumPSDefects + this.PSTotal[i].sum;
+          for (let j = 0; j < PSCause.length; j++) {
+            if (PSCause[j].details == this.PSTotal[i].details) {
+              PSData[j] = PSData[j] + this.PSTotal[i].sum;
+              // console.log(PSData);
+            }
+          }
+        }
+        const newPS = PSCause.map((elem, index) => ({
+          ...elem,
+          ...{ sum: PSData[index] },
+        }));
+        this.PSCause = newPS;
+        this.PSCauseNotZ = this.PSCause.filter((n) => n.sum !== 0);
+
+        // ----------------------------------------------------------------------------------
+        switch (this.month.month) {
+          case 0:
+            this.monthShow = "January";
+            break;
+          case 1:
+            this.monthShow = "February";
+            break;
+          case 2:
+            this.monthShow = "March";
+            break;
+          case 3:
+            this.monthShow = "April";
+            break;
+          case 4:
+            this.monthShow = "May";
+            break;
+          case 5:
+            this.monthShow = "June";
+            break;
+          case 6:
+            this.monthShow = "July";
+            break;
+          case 7:
+            this.monthShow = "August";
+            break;
+          case 8:
+            this.monthShow = "September";
+            break;
+          case 9:
+            this.monthShow = "October";
+            break;
+          case 10:
+            this.monthShow = "November";
+            break;
+          case 11:
+            this.monthShow = "December";
+            break;
+        }
         this.loaded = true;
       } catch (e) {
         console.error(e);
@@ -686,10 +988,12 @@ export default {
     reload: true,
     line: [],
     selectedLine: "",
+    selectedLineShow: "",
     shiftInput: "",
     shiftSelect: "",
     startAt: "",
     month: new Date(),
+    monthShow: "",
 
     lineId: null,
     genTable: true,
@@ -700,11 +1004,20 @@ export default {
     scrapCause: null,
     repairCause: null,
     reworkCause: null,
+    RTCause: null,
+    RPCause: null,
+    RWCause: null,
+    PSCause: null,
+
     dtCauseData: null,
     downtimeTotal: null,
     scrapTotal: null,
     repairTotal: null,
     reworkTotal: null,
+    RTTotal: null,
+    RPTotal: null,
+    RWTotal: null,
+    PSTotal: null,
 
     sumScrapDefects: null,
     sumScrapIns1: null,
@@ -721,15 +1034,43 @@ export default {
     sumReworkIns2: null,
     sumReworkIns3: null,
 
+    sumRTDefects: null,
+    sumRTIns1: null,
+    sumRTIns2: null,
+    sumRTIns3: null,
+
+    sumRPDefects: null,
+    sumRPIns1: null,
+    sumRPIns2: null,
+    sumRPIns3: null,
+
+    sumRWDefects: null,
+    sumRWIns1: null,
+    sumRWIns2: null,
+    sumRWIns3: null,
+
+    sumPSDefects: null,
+    sumPSIns1: null,
+    sumPSIns2: null,
+    sumPSIns3: null,
+
     // นับ row ในตาราง
     countDowntimeDefect: 0,
     countScrapDefects: 1,
     countRepairDefects: 1,
     countReworkDefects: 1,
+    countRTDefects: 1,
+    countRPDefects: 1,
+    countRWDefects: 1,
+    countPSDefects: 1,
 
     scrapCauseNotZ: [],
     repairCauseNotZ: [],
     reworkCauseNotZ: [],
+    RTCauseNotZ: [],
+    RPCauseNotZ: [],
+    RWCauseNotZ: [],
+    PSCauseNotZ: [],
 
     availability: "",
     performance: "",

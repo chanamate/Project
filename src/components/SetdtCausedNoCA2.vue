@@ -1,7 +1,7 @@
 <template>
   <v-card
     color="#CFCFCF"
-    height="220px"
+    height="300px"
     class="py-3 overflow-y-auto mt-2 mb-3"
     elevation="8"
   >

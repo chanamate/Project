@@ -129,7 +129,7 @@
                 <v-card
                   color="white"
                   width="600"
-                  height="280"
+                  min-height="300"
                   class="d-flex justify-center px-4"
                 >
                   <div align="center" class="text-h4 my-4">
@@ -149,6 +149,12 @@
                         <td></td>
                         <td>{{ this.dataPin.pinNumber }}</td>
                         <td>{{ this.dataPin.machine }}</td>
+                      </tr>
+                      <tr>
+                        <td>Defect At :</td>
+                        <td colspan="2">
+                          {{ this.timestampShow }}
+                        </td>
                       </tr>
                     </table>
                     <v-btn
@@ -252,12 +258,21 @@ export default {
       },
     ],
     dataPin: { pinNumber: null, machine: null },
+
     dialogcheck: false,
     snackbar: false,
     error: "",
     modelCheck: "",
     serialNumberSent: "",
     timestamp: new Date(),
+    timestampShow: null,
+    format: (date) => {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      return `${day}/${month}/${year}`;
+    },
   }),
   methods: {
     async submitFS() {
@@ -318,6 +333,9 @@ export default {
     updateValue(event) {
       this[event.key] = event.value;
       // console.log("modelId", this.selectedValueModel);
+      this.timestampShow = moment(this.timestamp).format(
+        " DD MMMM YYYY, h:mm:ss a"
+      );
       switch (this.selectedValueModel) {
         case 1:
           this.modelCheck = "Model F01";

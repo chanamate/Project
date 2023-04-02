@@ -189,7 +189,7 @@
                       />
 
                       <!-- Station -->
-                      <SetStation class="mt-2" @updateValue="updateValue" />
+                      <SetStation  v-if="type !== 'P'" class="mt-2" @updateValue="updateValue" />
                       <SetdtCaused
                         v-if="type == 'P'"
                         @updateValue="updateValue"
@@ -284,14 +284,8 @@
                         @updateValue="updateValue"
                       />
 
-                      <v-divider
-                        v-if="type !== 'P'"
-                        class="mt-3 mr-3"
-                        thickness="3"
-                      />
-
                       <!-- Station -->
-                      <SetStation class="mt-2" @updateValue="updateValue" />
+                      <SetStation v-if="type !== 'P'" class="mt-2" @updateValue="updateValue" />
                       <SetdtCaused
                         v-if="type == 'P'"
                         @updateValue="updateValue"
@@ -797,7 +791,8 @@ export default {
                 moment(this.endAtTime).format("HHmm"),
               "DDMMYYHHmm"
             ).toDate(),
-            stationId: this.selectedStation.split(" ")[0],
+            stationId: this.selectedDT.split(" ")[0],
+            // stationId: this.selectedStation.split(" ")[0],
             availabilityId: this.selectedDT.split(" ")[0],
             extendedAvailabilityId: parseInt(this.selectedDTCA2.split(" ")[0]),
             employee: {

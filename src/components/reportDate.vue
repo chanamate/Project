@@ -74,7 +74,7 @@
           <th width="10px">DATE : {{ this.startAt }}</th>
         </tr>
         <tr>
-          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
+          <th colspan="3">LINE : {{ this.selectedLineShow }}</th>
           <th>SHIFT:{{ shift }}</th>
           <th>GROUP : <br />{{ this.group }}</th>
         </tr>
@@ -104,7 +104,7 @@
 
         <tr>
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumdowntimeDefect }}</th>
         </tr>
 
@@ -136,7 +136,7 @@
         </tr>
         <tr v-if="this.countScrapDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumScrapDefects }}</th>
         </tr>
 
@@ -156,7 +156,7 @@
         </tr>
         <tr v-if="this.countRepairDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumRepairDefects }}</th>
         </tr>
 
@@ -173,7 +173,7 @@
         </tr>
         <tr v-if="this.countRTDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumRTDefects }}</th>
         </tr>
 
@@ -188,7 +188,7 @@
         </tr>
         <tr v-if="this.countRPDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumRPDefects }}</th>
         </tr>
 
@@ -203,7 +203,7 @@
         </tr>
         <tr v-if="this.countRWDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumRWDefects }}</th>
         </tr>
 
@@ -218,7 +218,7 @@
         </tr>
         <tr v-if="this.countPSDefects !== 1">
           <td colspan="2"></td>
-          <td>TOTAL :</td>
+          <td class="text-right">TOTAL :</td>
           <th>{{ this.sumPSDefects }}</th>
         </tr>
 
@@ -264,14 +264,11 @@
       <v-col cols="4">
         <Bar v-if="loaded" :data="chartDataDTF" />
       </v-col>
-      <v-col
-        cols="4"
-        v-if="
-          parseInt(this.selectedLine.split(' ')[0]) == 1 ||
-          parseInt(this.selectedLine.split(' ')[0]) == 2
-        "
-      >
-        <Bar v-if="loaded" :data="chartDataDFSRR" />
+      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 1">
+        <Bar v-if="loaded" :data="chartDataDFSRR_F" />
+      </v-col>
+      <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 2">
+        <Bar v-if="loaded" :data="chartDataDFSRR_S" />
       </v-col>
       <v-col cols="4" v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
         <Bar v-if="loaded" :data="chartDataDFP" />
@@ -472,7 +469,7 @@ export default {
         ],
       };
     },
-    chartDataDFSRR() {
+    chartDataDFSRR_F() {
       return {
         labels: ["Inspection 1", "Inspection 2", "Q-Gate Inspection 3"],
         datasets: [
@@ -494,6 +491,28 @@ export default {
         ],
       };
     },
+    chartDataDFSRR_S() {
+      return {
+        labels: ["Inspection S", "Q-Gate Inspection 2"],
+        datasets: [
+          {
+            label: "SCRAP",
+            backgroundColor: "#FF0000",
+            data: [this.sumScrapIns4, this.sumScrapIns5],
+          },
+          {
+            label: "REPAIR",
+            backgroundColor: "#FF7F00",
+            data: [this.sumRepairIns4, this.sumRepairIns5],
+          },
+          // {
+          //   label: "REWORK",
+          //   backgroundColor: "#FFFF00",
+          //   data: [this.sumReworkIns1, this.sumReworkIns2, this.sumReworkIns3],
+          // },
+        ],
+      };
+    },
     chartDataDFP() {
       return {
         labels: this.stationForP.map((n) => `${n.stationId} ${n.stationName}`),
@@ -501,7 +520,7 @@ export default {
           {
             label: "PS",
             backgroundColor: "#FF0000",
-            data: [this.sumRTIns1, this.sumRTIns2],
+            data: [this.sumPSIns1, this.sumPSIns2],
           },
           {
             label: "RP",
@@ -510,13 +529,13 @@ export default {
           },
           {
             label: "RW",
-            backgroundColor: "#FFFF00",
+            backgroundColor: "#FFDF00",
             data: [this.sumRWIns1, this.sumRWIns2],
           },
           {
             label: "RT",
             backgroundColor: "#FF69B4",
-            data: [this.sumPSIns1, this.sumPSIns2],
+            data: [this.sumRTIns1, this.sumRTIns2],
           },
         ],
       };
@@ -528,6 +547,7 @@ export default {
       this.reload = false;
       this.loaded = false;
       try {
+        this.selectedLineShow = this.selectedLine.slice(2);
         let b = await axiosInstance.post("/dashboard/date", {
           lineId: parseInt(this.selectedLine.split(" ")[0]),
           targetDate: moment(
@@ -544,7 +564,7 @@ export default {
             "rgba(0, 0, 139, 1)",
             "rgba(0, 0, 139, 1)",
             "rgba(0, 0, 139, 1)",
-            "RGBA( 153, 50, 204, 1 )",
+            "RGBA(153, 50, 204, 1 )",
             "rgba(0, 0, 139, 1)",
             "rgba(0, 0, 139, 1)",
             "rgba(0, 0, 139, 1)",
@@ -587,6 +607,7 @@ export default {
         this.scrapDefects = b.failureDefect.filter(
           (defect) => defect.type === "SCRAP"
         );
+        console.log("🚀this.scrapDefects:", this.scrapDefects);
         for (let i = 0; i < b.failureTotal; i++) {
           if (this.scrapDefects[i] && this.scrapDefects[i].sum) {
             this.sumScrapDefects =
@@ -603,6 +624,14 @@ export default {
             if (this.scrapDefects[i].station == "Q-Gate Inspection 3") {
               this.sumScrapIns3 = this.sumScrapIns3 + this.scrapDefects[i].sum;
               // console.log("this.sumScrapIns1", this.sumScrapIns3);
+            }
+            if (this.scrapDefects[i].station == "Inspection S") {
+              this.sumScrapIns4 = this.sumScrapIns4 + this.scrapDefects[i].sum;
+              // console.log("this.sumScrapIns1", this.sumScrapIns4);
+            }
+            if (this.scrapDefects[i].station == "Q-Gate Inspection 2") {
+              this.sumScrapIns5 = this.sumScrapIns5 + this.scrapDefects[i].sum;
+              // console.log("this.sumScrapIns1", this.sumScrapIns5);
             }
           }
         }
@@ -630,6 +659,16 @@ export default {
               this.sumRepairIns3 =
                 this.sumRepairIns3 + this.repairDefects[i].sum;
               // console.log("this.sumRepairIns1", this.sumRepairIns3);
+            }
+            if (this.repairDefects[i].station == "Inspection S") {
+              this.sumRepairIns4 =
+                this.sumRepairIns4 + this.repairDefects[i].sum;
+              // console.log("this.sumRepairIns1", this.sumRepairIns4);
+            }
+            if (this.repairDefects[i].station == "Q-Gate Inspection 2") {
+              this.sumRepairIns5 =
+                this.sumRepairIns5 + this.repairDefects[i].sum;
+              // console.log("this.sumRepairIns1", this.sumRepairIns5);
             }
           }
         }
@@ -754,9 +793,9 @@ export default {
         ) {
           this.station = s;
         }
-        console.log(this.station);
+        // console.log(this.station);
         this.stationData = Array(this.station.length).fill(0);
-        console.log(this.stationData);
+        // console.log(this.stationData);
 
         // DOWNTIME
         for (let i = 0; i < b.downtimeDefect.length; i++) {
@@ -804,6 +843,7 @@ export default {
     reload: true,
     line: [],
     selectedLine: "",
+    selectedLineShow: "",
     shiftInput: "",
     date: new Date(),
     format: (date) => {
@@ -829,11 +869,15 @@ export default {
     sumScrapIns1: null,
     sumScrapIns2: null,
     sumScrapIns3: null,
+    sumScrapIns4: null,
+    sumScrapIns5: null,
 
     sumRepairDefects: null,
     sumRepairIns1: null,
     sumRepairIns2: null,
     sumRepairIns3: null,
+    sumRepairIns4: null,
+    sumRepairIns5: null,
 
     sumReworkDefects: null,
     sumReworkIns1: null,

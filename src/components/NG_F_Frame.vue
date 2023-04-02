@@ -294,7 +294,7 @@
                 <v-card
                   color="white"
                   width="600"
-                  height="500"
+                  min-height="500"
                   class="d-flex justify-center px-4"
                 >
                   <div align="center" class="text-h4 my-4">
@@ -333,7 +333,14 @@
                         <td colspan="2">{{ this.selectedStaInspecCheck }}</td>
                       </tr>
 
-                      <tr>
+                      <tr v-if="type != 'P'">
+                        <td>Defect Type :</td>
+                        <td colspan="2">
+                          {{ this.selectedSRR }}
+                        </td>
+                      </tr>
+
+                      <tr v-if="type == 'P'">
                         <td>Defect Type :</td>
                         <td>
                           {{ this.selectedDefectType }}
@@ -342,10 +349,11 @@
                           {{ this.selectedSRR }}
                         </td>
                       </tr>
+
                       <tr>
                         <td>Defect At :</td>
                         <td colspan="2">
-                          {{ this.timestamp }}
+                          {{ this.timestampShow }}
                         </td>
                       </tr>
                     </table>
@@ -488,6 +496,7 @@ export default {
     scrap: "",
     cause: cause,
     timestamp: new Date(),
+    timestampShow: null,
 
     tab: null,
     dialog: false,
@@ -520,6 +529,13 @@ export default {
     selectedStation: "",
     serialNumberSent: "",
     dataPin: { pinNumber: null, machine: null },
+    format: (date) => {
+      const day = date.getDate();
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+
+      return `${day}/${month}/${year}`;
+    },
   }),
 
   methods: {
@@ -631,7 +647,9 @@ export default {
         this.selectedReworkC = this.selectedRework;
         this.selectedSRR = this.selectedRework.split(" ")[0];
       }
-
+      this.timestampShow = moment(this.timestamp).format(
+        " DD MMMM YYYY, h:mm:ss a"
+      );
       switch (this.selectedValueModel) {
         case 1:
           this.modelCheck = "Model F01";

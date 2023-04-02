@@ -1,7 +1,7 @@
 <template>
   <v-card
     color="#CFCFCF"
-    :height="type !== 'P' ? '300px' : '260px'"
+    :height="type !== 'P' ? '300px' : '360px'"
     class="py-3 overflow-y-auto mt-2 mb-3"
     elevation="8"
   >
