@@ -4,8 +4,8 @@
     <li class="dropdown">
       <router-link to="/home" class="dropbtn">Home</router-link>
       <!-- <div class="dropdown-content">
-            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
-            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/F">Fabrication of F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication of S Frame</router-link>
             <router-link to="/FG_F/P">Paint</router-link>
           </div> -->
     </li>
@@ -67,13 +67,13 @@ export default {
   data: () => ({
     title: [
       {
-        name: "Fabrication F Frame",
+        name: "Fabrication of F Frame",
         id: "1",
         url: "/FG_F/F",
         color: "#0288D1",
       },
       {
-        name: "Fabrication S Frame",
+        name: "Fabrication of S Frame",
         id: "2",
         url: "/FG_F/S",
         color: "#3949AB",

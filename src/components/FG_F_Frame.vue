@@ -4,8 +4,8 @@
     <li class="dropdown">
       <router-link to="/home" class="dropbtn">Home</router-link>
       <!-- <div class="dropdown-content">
-            <router-link to="/FG_F/F">Fabrication F Frame</router-link>
-            <router-link to="/FG_F/S">Fabrication S Frame</router-link>
+            <router-link to="/FG_F/F">Fabrication of F Frame</router-link>
+            <router-link to="/FG_F/S">Fabrication of S Frame</router-link>
             <router-link to="/FG_F/P">Paint</router-link>
           </div> -->
     </li>
@@ -31,7 +31,7 @@
           class="text-h4 my-4"
           v-if="type == 'F' || type == 'S'"
         >
-          Input data for Finished Goods : Fabrication {{ type }} Frame
+          Input data for Finished Goods : Fabrication of {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
           Input data for Finished Goods : Powder Coat Painting
