@@ -678,7 +678,7 @@ export default {
         datasets: [
           {
             label: "REPAIR",
-            backgroundColor: "#FF0000",
+            backgroundColor: "#FF7F00",
             data: this.repairCauseNotZ.slice(0, 10).map((n) => `${n.sum}`),
           },
         ],
@@ -692,7 +692,7 @@ export default {
         datasets: [
           {
             label: "REPAIR",
-            backgroundColor: "#FF0000",
+            backgroundColor: "#FF7F00",
             data: this.repairCauseNotZ.slice(11, 20).map((n) => `${n.sum}`),
           },
         ],
