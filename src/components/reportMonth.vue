@@ -95,7 +95,7 @@
           </td>
         </tr>
         <tr v-for="(item, index) in this.dtCause" :key="index">
-          <td v-if="item.sum !== 0">
+          <td v-if="item.sum !== 0" class="text-center">
             {{ item.availabilityId }}
           </td>
           <td colspan="2" v-if="item.sum !== 0">
@@ -128,12 +128,7 @@
         </tr>
         <tr v-for="(item, index) in this.RTCause" :key="index">
           <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
-          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
-        </tr>
-        <tr v-if="this.countRTDefects !== 1">
-          <td colspan="2"></td>
-          <td class="text-right">TOTAL :</td>
-          <th>{{ this.sumRTDefects }}</th>
+          <th class="text-center" v-if="item.sum !== 0">{{ item.sum }}</th>
         </tr>
 
         <!-- RPDefects -->
@@ -142,12 +137,7 @@
         </tr>
         <tr v-for="(item, index) in this.RPCause" :key="index">
           <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
-          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
-        </tr>
-        <tr v-if="this.countRPDefects !== 1">
-          <td colspan="2"></td>
-          <td class="text-right">TOTAL :</td>
-          <th>{{ this.sumRPDefects }}</th>
+          <th class="text-center" v-if="item.sum !== 0">{{ item.sum }}</th>
         </tr>
 
         <!-- RWDefects -->
@@ -156,12 +146,7 @@
         </tr>
         <tr v-for="(item, index) in this.RWCause" :key="index">
           <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
-          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
-        </tr>
-        <tr v-if="this.countRWDefects !== 1">
-          <td colspan="2"></td>
-          <td class="text-right">TOTAL :</td>
-          <th>{{ this.sumRWDefects }}</th>
+          <th class="text-center" v-if="item.sum !== 0">{{ item.sum }}</th>
         </tr>
 
         <!-- PSDefects -->
@@ -170,12 +155,7 @@
         </tr>
         <tr v-for="(item, index) in this.PSCause" :key="index">
           <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
-          <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
-        </tr>
-        <tr v-if="this.countPSDefects !== 1">
-          <td colspan="2"></td>
-          <td class="text-right">TOTAL :</td>
-          <th>{{ this.sumPSDefects }}</th>
+          <th class="text-center" v-if="item.sum !== 0">{{ item.sum }}</th>
         </tr>
       </table>
 
@@ -231,7 +211,7 @@
           <th colspan="5">MONTHLY REPORT</th>
         </tr>
         <tr>
-          <th colspan="3">LINE : FABRICATION OF F FRAME</th>
+          <th colspan="3">LINE : {{ this.selectedLineShow }}</th>
           <th>SHIFT:{{ this.shiftSelect }}</th>
           <th>
             {{ this.monthShow }}
@@ -293,7 +273,10 @@
         </tr> -->
       </table>
 
-      <table class="my-2">
+      <table
+        class="my-2"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+      >
         <tr>
           <td rowspan="2">TARGET</td>
           <td class="text-center">{{ this.target }}</td>
@@ -319,6 +302,71 @@
           <th>QUALITY RATE : {{ this.quality }}</th>
         </tr>
       </table>
+      <!-- -------------------------------------------------------------------------- -->
+
+      <div
+        class="html2pdf__page-break"
+        v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
+      ></div>
+
+      <div v-if="parseInt(this.selectedLine.split(' ')[0]) == 3">
+        <table class="mt-3">
+          <tr>
+            <td></td>
+            <td colspan="2" class="text-center">details</td>
+            <td class="text-center">sum</td>
+          </tr>
+
+          <tr>
+            <td :rowspan="this.countExtendedRTNotZ" class="text-center">RT</td>
+          </tr>
+          <tr v-for="(item, index) in this.extendedRTNotZ" :key="index">
+            <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+            <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">TOTAL :</td>
+            <th>{{ this.sumRTDefects }}</th>
+          </tr>
+
+          <tr>
+            <td :rowspan="this.countExtendedRPNotZ" class="text-center">RP</td>
+          </tr>
+          <tr v-for="(item, index) in this.extendedRPNotZ" :key="index">
+            <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+            <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">TOTAL :</td>
+            <th>{{ this.sumRPDefects }}</th>
+          </tr>
+
+          <tr>
+            <td :rowspan="this.countExtendedRWNotZ" class="text-center">RW</td>
+          </tr>
+          <tr v-for="(item, index) in this.extendedRWNotZ" :key="index">
+            <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+            <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">TOTAL :</td>
+            <th>{{ this.sumRWDefects }}</th>
+          </tr>
+
+          <tr>
+            <td :rowspan="this.countExtendedPSNotZ" class="text-center">PS</td>
+          </tr>
+          <tr v-for="(item, index) in this.extendedPSNotZ" :key="index">
+            <td colspan="2" v-if="item.sum !== 0">{{ item.details }}</td>
+            <td class="text-center" v-if="item.sum !== 0">{{ item.sum }}</td>
+          </tr>
+          <tr>
+            <td colspan="3" v>TOTAL :</td>
+            <th>{{ this.sumPSDefects }}</th>
+          </tr>
+        </table>
+      </div>
+      <!-- -------------------------------------------------------------------------- -->
 
       <div class="html2pdf__page-break"></div>
 
@@ -843,7 +891,7 @@ export default {
             type: "RT",
           }
         );
-        // console.log("🚀", RTCause);
+        console.log("🚀", RTCause);
         const RTData = Array(RTCause.length).fill(0);
         this.RTTotal = b.failureDefect.filter((defect) => defect.type === "RT");
         this.countRTDefects = RTCause.length + 1;
@@ -951,7 +999,88 @@ export default {
           )}`
         );
         console.log("🚀 ~ extended:", extended);
-        // this.extendedRT = extended
+        this.extendedRT = Array(extended.length).fill(0);
+        this.extendedRP = Array(extended.length).fill(0);
+        this.extendedRW = Array(extended.length).fill(0);
+        this.extendedPS = Array(extended.length).fill(0);
+        for (let i = 0; i < b.failureDefect.length; i++) {
+          for (let j = 0; j < extended.length; j++) {
+            if ("RT" == b.failureDefect[i].type) {
+              if (
+                extended[j].extendedFailureId ==
+                b.failureDefect[i].extendedDetailId
+              ) {
+                this.extendedRT[j] =
+                  this.extendedRT[j] + b.failureDefect[i].sum;
+              }
+            }
+            if ("RP" == b.failureDefect[i].type) {
+              if (
+                extended[j].extendedFailureId ==
+                b.failureDefect[i].extendedDetailId
+              ) {
+                this.extendedRP[j] =
+                  this.extendedRP[j] + b.failureDefect[i].sum;
+              }
+            }
+            if ("RW" == b.failureDefect[i].type) {
+              if (
+                extended[j].extendedFailureId ==
+                b.failureDefect[i].extendedDetailId
+              ) {
+                this.extendedRW[j] =
+                  this.extendedRW[j] + b.failureDefect[i].sum;
+              }
+            }
+            if ("PS" == b.failureDefect[i].type) {
+              if (
+                extended[j].extendedFailureId ==
+                b.failureDefect[i].extendedDetailId
+              ) {
+                this.extendedPS[j] =
+                  this.extendedPS[j] + b.failureDefect[i].sum;
+              }
+            }
+          }
+        }
+        const newRT_1 = extended.map((elem, index) => ({
+          ...elem,
+          ...{ sum: this.extendedRT[index] },
+        }));
+        this.extendedRT = newRT_1;
+        this.extendedRTNotZ = this.extendedRT.filter((n) => n.sum !== 0);
+
+        const newRP_1 = extended.map((elem, index) => ({
+          ...elem,
+          ...{ sum: this.extendedRP[index] },
+        }));
+        this.extendedRP = newRP_1;
+        this.extendedRPNotZ = this.extendedRP.filter((n) => n.sum !== 0);
+
+        const newRW_1 = extended.map((elem, index) => ({
+          ...elem,
+          ...{ sum: this.extendedRW[index] },
+        }));
+        this.extendedRW = newRW_1;
+        this.extendedRWNotZ = this.extendedRW.filter((n) => n.sum !== 0);
+
+        const newPS_1 = extended.map((elem, index) => ({
+          ...elem,
+          ...{ sum: this.extendedPS[index] },
+        }));
+        this.extendedPS = newPS_1;
+        this.extendedPSNotZ = this.extendedPS.filter((n) => n.sum !== 0);
+
+        this.countExtendedRTNotZ = this.extendedRTNotZ.length + 1;
+        this.countExtendedRPNotZ = this.extendedRPNotZ.length + 1;
+        this.countExtendedRWNotZ = this.extendedRWNotZ.length + 1;
+        this.countExtendedPSNotZ = this.extendedPSNotZ.length + 1;
+
+        console.log("🚀 ~ this.extendedRT:", this.extendedRTNotZ);
+        console.log("🚀 ~ this.extendedRP:", this.extendedRPNotZ);
+        console.log("🚀 ~ this.extendedRW:", this.extendedRWNotZ);
+        console.log("🚀 ~ this.extendedPS:", this.extendedPSNotZ);
+
         // ------------------------------------------------------------------------------------------
         switch (this.month.month) {
           case 0:
@@ -1106,6 +1235,21 @@ export default {
     RPCauseNotZ: [],
     RWCauseNotZ: [],
     PSCauseNotZ: [],
+
+    extendedRT: [],
+    extendedRP: [],
+    extendedRW: [],
+    extendedPS: [],
+
+    countExtendedRTNotZ: 0,
+    countExtendedRPNotZ: 0,
+    countExtendedRWNotZ: 0,
+    countExtendedPSNotZ: 0,
+
+    extendedRTNotZ: [],
+    extendedRPNotZ: [],
+    extendedRWNotZ: [],
+    extendedPSNotZ: [],
 
     availability: "",
     performance: "",
