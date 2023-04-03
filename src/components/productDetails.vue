@@ -67,6 +67,23 @@
     item-value="name"
     class="elevation-1"
     :search="search"
+    v-if="parseInt(this.selectedLine.split(' ')[0]) !== 3"
+  >
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="getColor(item.raw.status)">
+        {{ item.raw.status }}
+      </v-chip>
+    </template>
+  </v-data-table>
+
+  <v-data-table
+    v-model:items-per-page="itemsPerPage"
+    :headers="headers_P"
+    :items="products"
+    item-value="name"
+    class="elevation-1"
+    :search="search"
+    v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
   >
     <template v-slot:item.status="{ item }">
       <v-chip :color="getColor(item.raw.status)">
@@ -102,6 +119,51 @@ export default {
     },
     itemsPerPage: 10,
     headers: [
+      {
+        title: "Pin stamp Number",
+        align: "start",
+        key: "pinStampNumber",
+        align: "start",
+        width: 230,
+      },
+      {
+        title: "model",
+        align: "end",
+        key: "model",
+        align: "start",
+        width: 130,
+      },
+      {
+        title: "status",
+        align: "end",
+        key: "status",
+        align: "start",
+        width: 130,
+      },
+      {
+        title: "Defect Type",
+        align: "end",
+        key: "defectType",
+        align: "start",
+        width: 100,
+      },
+
+      {
+        title: "Failure Detail",
+        align: "end",
+        key: "failureDetail",
+        align: "start",
+        width: 600,
+      },
+      {
+        title: "Employee",
+        align: "end",
+        key: "employee",
+        align: "start",
+        width: 400,
+      },
+    ],
+    headers_P: [
       {
         title: "Pin stamp Number",
         align: "start",
