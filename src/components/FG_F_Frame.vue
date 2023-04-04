@@ -151,7 +151,7 @@
                         <td>{{ this.dataPin.machine }}</td>
                       </tr>
                       <tr>
-                        <td>Defect At :</td>
+                        <td>Finished at :</td>
                         <td colspan="2">
                           {{ this.timestampShow }}
                         </td>
