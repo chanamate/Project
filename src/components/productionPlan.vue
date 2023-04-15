@@ -420,9 +420,8 @@ export default {
 
         // Day @@@@@@@
         const dateDay = moment(this.dateRange[i]).toDate();
-
         // const dateDay = moment(
-        //   moment(this.dateRange[i]).format("MMM Do YY") + "09:00",
+        //   moment(this.dateRange[i]).format("MMM Do YY") + "00:10",
         //   "MMM Do YYHH:mm"
         // ).toDate();
         const targetDay = parseInt(this.targetDay[i]);
@@ -432,6 +431,10 @@ export default {
 
         // Night @@@@@@@
         const dateNight = moment(this.dateRange[i]).toDate();
+        // const dateNight = moment(
+        //   moment(this.dateRange[i]).format("MMM Do YY") + "00:10",
+        //   "MMM Do YYHH:mm"
+        // ).toDate();
         const targetNight = parseInt(this.targetNight[i]);
         const groupNight = this.selectedGroupNight[i];
         const workingTimeTypeNight = this.selectedOTNight[i];

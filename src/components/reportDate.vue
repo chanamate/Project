@@ -306,7 +306,7 @@
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 1"
       >
-        <Bar v-if="loaded" :data="chartDataDFSRR_F" />
+        <Bar v-if="loaded" :data="chartDataDFSRR_F" :options="options" />
       </v-card>
 
       <v-card
@@ -315,7 +315,7 @@
         class="mt-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 2"
       >
-        <Bar v-if="loaded" :data="chartDataDFSRR_S" />
+        <Bar v-if="loaded" :data="chartDataDFSRR_S" :options="options" />
       </v-card>
 
       <v-card
@@ -324,7 +324,7 @@
         class="my-3 ml-2"
         v-if="parseInt(this.selectedLine.split(' ')[0]) == 3"
       >
-        <Bar v-if="loaded" :data="chartDataDFP" />
+        <Bar v-if="loaded" :data="chartDataDFP" :options="options" />
       </v-card>
     </div>
   </div>
@@ -1002,6 +1002,18 @@ export default {
     // },
     chartOptions: {
       responsive: true,
+    },
+    options: {
+      barThickness: 30,
+      scales: {
+        y: {
+          min: 0,
+          ticks: {
+            stepSize: 1,
+            autoSkip: false,
+          },
+        },
+      },
     },
   }),
   async created() {
