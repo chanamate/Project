@@ -28,7 +28,7 @@
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
         <v-card-title align="center" class="text-h4 my-4" v-if="type !== 'P'">
-          Add uantity that come out of Bottleneck : Fabrication {{ type }} Frame
+          Output of Bottleneck : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
           Powder Coat Painting Don't have Bottle Neck
@@ -84,7 +84,7 @@
             <v-col cols="4">
               <v-card>
                 <div class="ml-4 mt-4 text-h5">
-                  Add quantity input of Bottle Neck :
+                  Add uantity that come out of :
                 </div>
                 <div class="d-flex justify-center pa-4 text-h4">
                   <v-icon class="mx-2 pb-3" color="red" @click="removeAmount()">
