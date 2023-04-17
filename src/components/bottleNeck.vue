@@ -28,7 +28,7 @@
       <!-- หัวข้อบนสุด -->
       <v-col cols="12">
         <v-card-title align="center" class="text-h4 my-4" v-if="type !== 'P'">
-          Output of Bottleneck : Fabrication {{ type }} Frame
+          Output of Bottle Neck : Fabrication {{ type }} Frame
         </v-card-title>
         <v-card-title align="center" class="text-h4 my-4" v-if="type == 'P'">
           Powder Coat Painting Don't have Bottle Neck
