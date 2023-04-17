@@ -84,7 +84,7 @@
             <v-col cols="4">
               <v-card>
                 <div class="ml-4 mt-4 text-h5">
-                  Add uantity that come out of :
+                  Add quantity that come out of :
                 </div>
                 <div class="d-flex justify-center pa-4 text-h4">
                   <v-icon class="mx-2 pb-3" color="red" @click="removeAmount()">
